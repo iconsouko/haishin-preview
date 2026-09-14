@@ -3,11 +3,14 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
 <title>配信プレビューさん | カスタム背景の見え方チェック</title>
-<meta name="description" content="ColorSingのカスタム背景画像が、実際の配信でどう見えるかを確認できるツールです。" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Reggae+One&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet" />
+
+<meta
+  name="description"
+  content="ColorSingのカスタム背景画像が、実際の配信画面でどう見えるか確認できるプレビューです。"
+/>
+
 <style>
   :root {
     --ink: 20 19 28;
@@ -19,6 +22,7 @@
     --teal: 47 182 166;
     --gold: 245 185 66;
   }
+
   html.light {
     --ink: 250 247 241;
     --panel: 255 255 255;
@@ -26,384 +30,1815 @@
     --paper: 30 27 41;
     --muted: 96 90 112;
   }
-  * { box-sizing: border-box; }
-  html, body { height: 100%; margin: 0; }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+  }
+
   body {
     background: rgb(var(--ink));
     color: rgb(var(--paper));
-    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-family:
+      -apple-system,
+      BlinkMacSystemFont,
+      "Helvetica Neue",
+      "Hiragino Kaku Gothic ProN",
+      "Hiragino Sans",
+      "Yu Gothic",
+      Meiryo,
+      sans-serif;
+
     -webkit-font-smoothing: antialiased;
-    transition: background-color .25s ease, color .25s ease;
+    transition:
+      background-color .25s ease,
+      color .25s ease;
   }
-  .display { font-family: 'Reggae One', cursive; }
+
+  button {
+    font: inherit;
+  }
+
+  /* =========================================================
+     ページ全体
+     ========================================================= */
+
+  header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    max-width: 700px;
+    margin: 0 auto;
+
+    padding: 32px 24px 0;
+  }
+
+  header h1 {
+    margin: 0;
+    font-size: 26px;
+    letter-spacing: .02em;
+  }
+
+  header p {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: rgb(var(--muted));
+  }
+
+  .theme-btn {
+    flex-shrink: 0;
+
+    width: 36px;
+    height: 36px;
+
+    border-radius: 999px;
+    border: 2px solid rgb(var(--line));
+
+    background: rgb(var(--panel));
+    color: rgb(var(--paper));
+
+    font-size: 16px;
+    cursor: pointer;
+  }
+
   main {
     max-width: 700px;
     margin: 0 auto;
     padding: 24px;
   }
-  header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 32px 24px 0;
-  }
-  header h1 { margin: 0; font-size: 26px; letter-spacing: .02em; }
-  header p { margin: 4px 0 0; font-size: 13px; color: rgb(var(--muted)); }
-  .theme-btn {
-    flex-shrink: 0;
-    width: 36px; height: 36px;
-    border-radius: 999px;
-    border: 2px solid rgb(var(--line));
-    background: rgb(var(--panel));
-    font-size: 16px;
-    cursor: pointer;
-  }
+
+  /* =========================================================
+     アップロード
+     ========================================================= */
+
   .upload-btn {
     width: 100%;
     padding: 20px;
+
     border-radius: 20px;
     border: 2px solid rgb(var(--teal) / .4);
+
     background: rgb(var(--teal) / .1);
     color: rgb(var(--teal));
+
     font-size: 16px;
     font-weight: 700;
+
     cursor: pointer;
+
+    transition:
+      background-color .2s ease,
+      transform .2s ease;
   }
+
+  .upload-btn:hover {
+    background: rgb(var(--teal) / .16);
+  }
+
+  .upload-btn:active {
+    transform: scale(.99);
+  }
+
   @keyframes softPulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: .55; }
+    0%,
+    100% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: .55;
+    }
   }
-  .pulse { animation: softPulse 1.8s ease-in-out infinite; }
+
+  .pulse {
+    animation: softPulse 1.8s ease-in-out infinite;
+  }
+
+  /* =========================================================
+     プレビュー本体
+     1536 : 2048
+     ========================================================= */
+
   .preview {
     position: relative;
+
     margin-top: 16px;
+
     width: 100%;
     aspect-ratio: 1536 / 2048;
+
     border-radius: 20px;
     border: 2px solid rgb(var(--line));
+
     background: rgb(var(--panel));
+
     overflow: hidden;
   }
-  .preview canvas { width: 100%; height: 100%; display: block; }
-  .shade {
-    position: absolute; top: 0; bottom: 0;
-    background: rgba(0,0,0,.55);
-    pointer-events: none;
-    width: 0%;
+
+  #canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
   }
-  .shade.left { left: 0; border-right: 2px dashed rgba(255,255,255,.85); }
-  .shade.right { right: 0; border-left: 2px dashed rgba(255,255,255,.85); }
+
+  /* =========================================================
+     端末による見切れ
+     ========================================================= */
+
+  .shade {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+
+    background: rgba(0, 0, 0, .55);
+
+    pointer-events: none;
+
+    width: 0;
+  }
+
+  .shade.left {
+    left: 0;
+    border-right: 2px dashed rgba(255, 255, 255, .85);
+  }
+
+  .shade.right {
+    right: 0;
+    border-left: 2px dashed rgba(255, 255, 255, .85);
+  }
+
   .badge {
-    position: absolute; top: 8px; left: 50%;
+    position: absolute;
+
+    top: 8px;
+    left: 50%;
+
     transform: translateX(-50%);
+
     white-space: nowrap;
+
     border-radius: 999px;
+
     padding: 6px 14px;
+
     font-size: 11px;
     font-weight: 700;
+
     color: rgb(var(--ink));
-    box-shadow: 0 2px 8px rgba(0,0,0,.25);
+
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .25);
+
     display: none;
+
+    z-index: 100;
   }
-  .badge.warn { background: rgb(var(--gold)); }
-  .badge.ok { background: rgb(var(--teal)); }
+
+  .badge.warn {
+    background: rgb(var(--gold));
+  }
+
+  .badge.ok {
+    background: rgb(var(--teal));
+  }
+
+  /* =========================================================
+     初期表示
+     ========================================================= */
+
   .placeholder {
-    position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    text-align: center; padding: 0 32px;
-    font-size: 14px; color: rgb(var(--paper) / .5);
+    position: absolute;
+    inset: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+
+    padding: 0 32px;
+
+    font-size: 14px;
+
+    color: rgb(var(--paper) / .5);
+
     pointer-events: none;
+
+    z-index: 2;
   }
+
+  /* =========================================================
+     UIガイド全体
+     ========================================================= */
+
+  #uiGuide {
+    position: absolute;
+    inset: 0;
+
+    pointer-events: none;
+
+    display: none;
+
+    /*
+      ここが今回の重要部分。
+
+      公式テンプレート画像は一切使用していません。
+
+      1536×2048の公式テンプレートから読み取った
+      x / y / width / height を、
+      CSSの割合に変換して配置しています。
+    */
+  }
+
+  #uiGuide.visible {
+    display: block;
+  }
+
+  /* =========================================================
+     共通UI
+     ========================================================= */
+
+  .fake-ui {
+    position: absolute;
+
+    user-select: none;
+
+    color: white;
+
+    text-shadow:
+      0 1px 2px rgba(0, 0, 0, .45),
+      0 0 3px rgba(0, 0, 0, .25);
+  }
+
+  /* =========================================================
+     上部プロフィール
+     公式テンプレート：
+     x=314 y=116 w=102 h=102
+     ========================================================= */
+
+  .creator-avatar {
+    position: absolute;
+
+    left: calc(314 / 1536 * 100%);
+    top: calc(116 / 2048 * 100%);
+
+    width: calc(102 / 1536 * 100%);
+    aspect-ratio: 1;
+
+    border-radius: 50%;
+
+    overflow: hidden;
+
+    border: 2px solid rgba(255, 255, 255, .9);
+
+    box-shadow:
+      0 2px 7px rgba(0, 0, 0, .35);
+
+    background:
+      linear-gradient(
+        135deg,
+        #ffd166,
+        #ef476f 45%,
+        #8338ec
+      );
+  }
+
+  .creator-avatar::before {
+    content: "♪";
+
+    position: absolute;
+    inset: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 24px;
+    font-weight: 900;
+
+    color: white;
+  }
+
+  /* 名前
+     x=426 y=127 w=250 h=34
+  */
+
+  .creator-name {
+    position: absolute;
+
+    left: calc(426 / 1536 * 100%);
+    top: calc(127 / 2048 * 100%);
+
+    width: calc(250 / 1536 * 100%);
+    height: calc(34 / 2048 * 100%);
+
+    display: flex;
+    align-items: center;
+
+    font-size: clamp(7px, 1.35vw, 15px);
+    font-weight: 800;
+  }
+
+  /* 情報
+     x=426 y=175 w=316 h=34
+  */
+
+  .creator-info {
+    position: absolute;
+
+    left: calc(426 / 1536 * 100%);
+    top: calc(175 / 2048 * 100%);
+
+    width: calc(316 / 1536 * 100%);
+    height: calc(34 / 2048 * 100%);
+
+    display: flex;
+    align-items: center;
+
+    font-size: clamp(6px, 1.1vw, 13px);
+
+    opacity: .92;
+  }
+
+  /* =========================================================
+     上部リスナーアイコン
+     ========================================================= */
+
+  .listener-avatar {
+    position: absolute;
+
+    width: calc(71 / 1536 * 100%);
+    aspect-ratio: 1;
+
+    border-radius: 50%;
+
+    border: 2px solid rgba(255, 255, 255, .85);
+
+    box-shadow:
+      0 2px 7px rgba(0, 0, 0, .3);
+
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: clamp(7px, 1.3vw, 14px);
+    font-weight: 900;
+  }
+
+  .listener-avatar.a {
+    left: calc(769 / 1536 * 100%);
+    top: calc(131 / 2048 * 100%);
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+  }
+
+  .listener-avatar.b {
+    left: calc(878 / 1536 * 100%);
+    top: calc(131 / 2048 * 100%);
+    background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+  }
+
+  .listener-avatar.c {
+    left: calc(959 / 1536 * 100%);
+    top: calc(131 / 2048 * 100%);
+    background: linear-gradient(135deg, #84fab0, #8fd3f4);
+  }
+
+  .listener-avatar.d {
+    left: calc(1040 / 1536 * 100%);
+    top: calc(131 / 2048 * 100%);
+    background: linear-gradient(135deg, #f6d365, #fda085);
+  }
+
+  /* =========================================================
+     右上の×
+     公式テンプレート：
+     x=1173 y=139 w=55 h=55
+     ========================================================= */
+
+  .close-button {
+    position: absolute;
+
+    left: calc(1173 / 1536 * 100%);
+    top: calc(139 / 2048 * 100%);
+
+    width: calc(55 / 1536 * 100%);
+    height: calc(55 / 2048 * 100%);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: clamp(14px, 2.5vw, 28px);
+
+    color: white;
+
+    text-shadow:
+      0 2px 5px rgba(0, 0, 0, .5);
+  }
+
+  /* =========================================================
+     歌詞表示
+
+     これは「公式テンプレートの枠」ではありません。
+
+     添付された実際の配信画面を参考に、
+     配信中の歌詞が見える状態を再現するための
+     ダミー表示です。
+     ========================================================= */
+
+  .lyrics {
+    position: absolute;
+
+    left: 50%;
+    top: 20.5%;
+
+    transform: translateX(-50%);
+
+    width: 67%;
+
+    text-align: center;
+
+    color: white;
+
+    font-size: clamp(9px, 2.4vw, 25px);
+
+    font-weight: 900;
+
+    line-height: 1.18;
+
+    letter-spacing: .02em;
+
+    text-shadow:
+      0 2px 0 #007f9e,
+      2px 0 0 #007f9e,
+      -2px 0 0 #007f9e,
+      0 -2px 0 #007f9e,
+      0 3px 8px rgba(0, 0, 0, .55);
+  }
+
+  .lyrics .sub {
+    display: block;
+
+    margin-top: 4px;
+
+    font-size: .78em;
+  }
+
+  /* =========================================================
+     コメント欄
+
+     公式テンプレート：
+     x=315 y=1225 w=805 h=597
+     ========================================================= */
+
+  .comment-area {
+    position: absolute;
+
+    left: calc(315 / 1536 * 100%);
+    top: calc(1225 / 2048 * 100%);
+
+    width: calc(805 / 1536 * 100%);
+    height: calc(597 / 2048 * 100%);
+
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+
+    padding:
+      4%
+      2%
+      3%;
+  }
+
+  .comment {
+    width: fit-content;
+    max-width: 94%;
+
+    margin-top: 1.4%;
+
+    padding:
+      1.2% 2.5%;
+
+    border-radius: 999px;
+
+    background: rgba(20, 20, 30, .62);
+
+    color: white;
+
+    font-size: clamp(7px, 1.45vw, 15px);
+
+    font-weight: 700;
+
+    line-height: 1.25;
+
+    text-shadow:
+      0 1px 2px rgba(0, 0, 0, .5);
+
+    backdrop-filter: blur(2px);
+  }
+
+  .comment.highlight {
+    background: rgba(68, 168, 230, .72);
+  }
+
+  .comment .name {
+    margin-right: .5em;
+    opacity: .82;
+  }
+
+  /* =========================================================
+     右側ボタン
+
+     公式テンプレート：
+     x=1146
+     y=1505 / 1626 / 1747
+     w=71 h=71
+     ========================================================= */
+
+  .side-button {
+    position: absolute;
+
+    left: calc(1146 / 1536 * 100%);
+
+    width: calc(71 / 1536 * 100%);
+    aspect-ratio: 1;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(25, 25, 35, .58);
+
+    border:
+      1px solid rgba(255, 255, 255, .2);
+
+    box-shadow:
+      0 3px 8px rgba(0, 0, 0, .25);
+
+    color: white;
+
+    font-size: clamp(10px, 2vw, 20px);
+
+    backdrop-filter: blur(3px);
+  }
+
+  .side-button.one {
+    top: calc(1505 / 2048 * 100%);
+  }
+
+  .side-button.two {
+    top: calc(1626 / 2048 * 100%);
+  }
+
+  .side-button.three {
+    top: calc(1747 / 2048 * 100%);
+  }
+
+  /* =========================================================
+     コメント入力欄
+
+     公式テンプレート：
+     x=315 y=1854 w=563 h=100
+     ========================================================= */
+
+  .comment-input {
+    position: absolute;
+
+    left: calc(315 / 1536 * 100%);
+    top: calc(1854 / 2048 * 100%);
+
+    width: calc(563 / 1536 * 100%);
+    height: calc(100 / 2048 * 100%);
+
+    border-radius: 999px;
+
+    background: rgba(10, 10, 15, .74);
+
+    border:
+      1px solid rgba(255, 255, 255, .08);
+
+    display: flex;
+    align-items: center;
+
+    padding-left: 5%;
+
+    color: rgba(255, 255, 255, .65);
+
+    font-size: clamp(7px, 1.4vw, 15px);
+
+    box-shadow:
+      0 3px 8px rgba(0, 0, 0, .2);
+  }
+
+  .comment-input::before {
+    content: "◯";
+
+    margin-right: 3%;
+
+    font-size: .9em;
+
+    color: white;
+  }
+
+  /* =========================================================
+     下部ボタン
+
+     公式テンプレート：
+     x=903 / 1024 / 1146
+     y=1868
+     w=71 h=71
+     ========================================================= */
+
+  .bottom-button {
+    position: absolute;
+
+    top: calc(1868 / 2048 * 100%);
+
+    width: calc(71 / 1536 * 100%);
+    aspect-ratio: 1;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(20, 20, 30, .55);
+
+    border:
+      1px solid rgba(255, 255, 255, .2);
+
+    color: white;
+
+    font-size: clamp(10px, 2vw, 20px);
+
+    box-shadow:
+      0 3px 8px rgba(0, 0, 0, .25);
+
+    backdrop-filter: blur(3px);
+  }
+
+  .bottom-button.one {
+    left: calc(903 / 1536 * 100%);
+  }
+
+  .bottom-button.two {
+    left: calc(1024 / 1536 * 100%);
+  }
+
+  .bottom-button.three {
+    left: calc(1146 / 1536 * 100%);
+  }
+
+  /* =========================================================
+     UI表示切替ボタン
+     ========================================================= */
+
   .ui-toggle {
-    position: absolute; right: 8px; bottom: 8px;
-    width: 40px; height: 40px;
-    border-radius: 999px; border: none;
-    font-size: 18px; cursor: pointer;
+    position: absolute;
+
+    right: 8px;
+    bottom: 8px;
+
+    width: 40px;
+    height: 40px;
+
+    border-radius: 999px;
+    border: none;
+
+    font-size: 18px;
+
+    cursor: pointer;
+
     background: rgb(var(--ink) / .7);
     color: rgb(var(--paper));
-    box-shadow: 0 2px 8px rgba(0,0,0,.3);
+
+    box-shadow:
+      0 2px 8px rgba(0, 0, 0, .3);
+
+    z-index: 200;
   }
+
   .ui-toggle.active {
     background: rgb(var(--coral));
     color: rgb(var(--ink));
   }
-  #uiGuide {
-    position: absolute; inset: 0;
-    pointer-events: none;
-    display: none;
-  }
-  #uiGuide.visible { display: block; }
-  .ui-shape {
-    position: absolute;
-    background: rgba(255,255,255,.28);
-    border: 1.5px dashed rgba(255,255,255,.85);
-  }
-  .ui-shape.circle { border-radius: 50%; }
-  .ui-shape.pill { border-radius: 999px; }
-  .ui-shape.block { border-radius: 12px; }
+
+  /* =========================================================
+     端末選択
+     ========================================================= */
+
   .device-panel {
     margin-top: 16px;
+
     border-radius: 20px;
     border: 2px solid rgb(var(--line));
+
     background: rgb(var(--panel));
+
     padding: 20px;
   }
+
   .device-panel.prompt {
     border-color: rgb(var(--coral));
-    animation: softPulse 1.8s ease-in-out infinite;
+
+    animation:
+      softPulse 1.8s ease-in-out infinite;
   }
+
   .device-panel .label {
     margin: 0 0 8px;
+
     font-size: 12px;
     font-weight: 700;
+
     color: rgb(var(--muted));
   }
+
   .device-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+
+    grid-template-columns:
+      repeat(2, 1fr);
+
     gap: 8px;
   }
+
   @media (min-width: 480px) {
-    .device-grid { grid-template-columns: repeat(4, 1fr); }
+    .device-grid {
+      grid-template-columns:
+        repeat(4, 1fr);
+    }
   }
+
   .device-card {
     text-align: left;
+
     border-radius: 16px;
     border: 2px solid rgb(var(--line));
+
     background: transparent;
+
     color: rgb(var(--paper));
+
     padding: 12px;
+
     cursor: pointer;
   }
+
   .device-card.active {
     border-color: rgb(var(--coral));
-    background: rgb(var(--coral) / .1);
+
+    background:
+      rgb(var(--coral) / .1);
   }
+
   .device-card .row {
-    display: flex; align-items: center; gap: 8px;
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
   }
+
   .device-card .dot {
-    width: 16px; height: 16px; border-radius: 999px;
+    width: 16px;
+    height: 16px;
+
+    border-radius: 999px;
+
     border: 2px solid rgb(var(--line));
+
     flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
-  .device-card.active .dot { border-color: rgb(var(--coral)); }
+
+  .device-card.active .dot {
+    border-color:
+      rgb(var(--coral));
+  }
+
   .device-card.active .dot::after {
-    content: '';
-    width: 8px; height: 8px; border-radius: 999px;
-    background: rgb(var(--coral));
+    content: "";
+
+    width: 8px;
+    height: 8px;
+
+    border-radius: 999px;
+
+    background:
+      rgb(var(--coral));
   }
-  .device-card .name { font-size: 13px; font-weight: 700; }
-  .device-card .ratio { display: block; margin-top: 4px; font-size: 11px; color: rgb(var(--muted)); }
-  .device-note { margin-top: 8px; font-size: 12px; color: rgb(var(--muted)); }
+
+  .device-card .name {
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .device-card .ratio {
+    display: block;
+
+    margin-top: 4px;
+
+    font-size: 11px;
+
+    color: rgb(var(--muted));
+  }
+
+  .device-note {
+    margin-top: 8px;
+
+    font-size: 12px;
+
+    color: rgb(var(--muted));
+  }
 </style>
 </head>
+
 <body>
+
 <header>
   <div>
-    <h1 class="display">配信プレビューさん</h1>
+    <h1>配信プレビューさん</h1>
     <p>カスタム背景が配信でどう見えるか確認できます</p>
   </div>
-  <button class="theme-btn" id="themeBtn" aria-label="ライト/ダークモード切替">🌙</button>
+
+  <button
+    class="theme-btn"
+    id="themeBtn"
+    aria-label="ライト/ダークモード切替"
+  >
+    🌙
+  </button>
 </header>
 
+
 <main>
-  <button class="upload-btn pulse" id="uploadBtn">🖼 画像をアップロード</button>
-  <input type="file" id="fileInput" accept="image/png,image/jpeg" style="display:none" />
 
-  <div class="preview" id="preview">
-    <canvas id="canvas" width="1536" height="2048"></canvas>
+  <!-- =======================================================
+       画像アップロード
+       ======================================================= -->
 
-    <!-- 配信画面UIの模式ガイド（公式素材は使わず、実際の配信画面の配置を参考にした簡易図形のみ） -->
+  <button
+    class="upload-btn pulse"
+    id="uploadBtn"
+  >
+    🖼 画像をアップロード
+  </button>
+
+  <input
+    type="file"
+    id="fileInput"
+    accept="image/png,image/jpeg,image/webp"
+    style="display:none"
+  />
+
+
+  <!-- =======================================================
+       プレビュー
+       ======================================================= -->
+
+  <div
+    class="preview"
+    id="preview"
+  >
+
+    <canvas
+      id="canvas"
+      width="1536"
+      height="2048"
+    ></canvas>
+
+
+    <!-- =====================================================
+         ダミー配信UI
+
+         ★公式テンプレート画像はここでは使用していません。
+         ★すべてHTML/CSSで描画しています。
+         ★座標は1536×2048基準。
+         ===================================================== -->
+
     <div id="uiGuide">
-      <div class="ui-shape circle" style="left:2%; top:7%; width:11%; height:8.25%;" title="配信者アイコン"></div>
-      <div class="ui-shape block" style="left:15%; top:7.3%; width:22%; height:3%;" title="配信者名"></div>
-      <div class="ui-shape block" style="left:15%; top:10.8%; width:12%; height:2.3%;" title="いいね数など"></div>
-      <div class="ui-shape pill" style="left:0%; top:13%; width:52%; height:5%;" title="歌唱中の曲名・アーティスト名"></div>
 
-      <div class="ui-shape circle" style="left:60%; top:7%; width:9%; height:6.75%;" title="リスナーアイコン"></div>
-      <div class="ui-shape circle" style="left:71%; top:7%; width:9%; height:6.75%;" title="リスナーアイコン"></div>
-      <div class="ui-shape circle" style="left:82%; top:7%; width:9%; height:6.75%;" title="リスナーアイコン"></div>
-      <div class="ui-shape circle" style="left:93%; top:7%; width:9%; height:6.75%;" title="リスナーアイコン"></div>
 
-      <div class="ui-shape pill" style="left:35%; top:58%; width:30%; height:4%;" title="歌詞"></div>
+      <!-- =========================
+           配信者
+           ========================= -->
 
-      <div class="ui-shape block" style="left:0%; top:62%; width:100%; height:29%;" title="リスナーのコメント欄"></div>
+      <div class="creator-avatar"></div>
 
-      <div class="ui-shape circle" style="left:88%; top:73.5%; width:8%; height:6%;" title="丸ボタン"></div>
-      <div class="ui-shape circle" style="left:88%; top:81%; width:8%; height:6%;" title="丸ボタン"></div>
-      <div class="ui-shape circle" style="left:88%; top:88.5%; width:8%; height:6%;" title="丸ボタン"></div>
+      <div class="creator-name fake-ui">
+        あやの🍀
+      </div>
 
-      <div class="ui-shape pill" style="left:2%; top:92%; width:62%; height:5%;" title="コメント入力欄"></div>
-      <div class="ui-shape circle" style="left:67%; top:92.5%; width:6%; height:4.5%;" title="丸ボタン"></div>
-      <div class="ui-shape circle" style="left:77%; top:92.5%; width:6%; height:4.5%;" title="丸ボタン"></div>
-      <div class="ui-shape circle" style="left:87%; top:92.5%; width:6%; height:4.5%;" title="丸ボタン"></div>
+      <div class="creator-info fake-ui">
+        ♡ 33　　🎵 配信中
+      </div>
+
+
+      <!-- =========================
+           リスナーアイコン
+           ========================= -->
+
+      <div class="listener-avatar a">
+        A
+      </div>
+
+      <div class="listener-avatar b">
+        M
+      </div>
+
+      <div class="listener-avatar c">
+        Y
+      </div>
+
+      <div class="listener-avatar d">
+        R
+      </div>
+
+
+      <!-- =========================
+           閉じる
+           ========================= -->
+
+      <div class="close-button fake-ui">
+        ×
+      </div>
+
+
+      <!-- =========================
+           歌詞
+
+           これはテンプレートの枠ではなく、
+           実際の配信画面を再現するためのダミー。
+           ========================= -->
+
+      <div class="lyrics">
+        聴きびたりになっちゃうソング
+        <span class="sub">
+          ～見えてないのに～
+        </span>
+      </div>
+
+
+      <!-- =========================
+           コメント欄
+
+           公式テンプレート：
+           x 315
+           y 1225
+           w 805
+           h 597
+           ========================= -->
+
+      <div class="comment-area">
+
+        <div class="comment">
+          <span class="name">MOMOJIRI</span>
+          スーパーいいね♡
+        </div>
+
+        <div class="comment highlight">
+          <span class="name">✨龍</span>
+          「聴きびたり😊💛」
+        </div>
+
+        <div class="comment">
+          <span class="name">カアイ🍎🌈</span>
+          今日も楽しみ！
+        </div>
+
+        <div class="comment highlight">
+          <span class="name">ニュー</span>
+          素敵な歌声です✨
+        </div>
+
+        <div class="comment">
+          <span class="name">yu</span>
+          聴きびたり😊💛
+        </div>
+
+      </div>
+
+
+      <!-- =========================
+           右側ボタン
+           ========================= -->
+
+      <div class="side-button one">
+        ♡
+      </div>
+
+      <div class="side-button two">
+        🎁
+      </div>
+
+      <div class="side-button three">
+        ♪
+      </div>
+
+
+      <!-- =========================
+           コメント入力欄
+           ========================= -->
+
+      <div class="comment-input">
+        コメントを入力…
+      </div>
+
+
+      <!-- =========================
+           下部ボタン
+           ========================= -->
+
+      <div class="bottom-button one">
+        ☁
+      </div>
+
+      <div class="bottom-button two">
+        ♛
+      </div>
+
+      <div class="bottom-button three">
+        …
+      </div>
+
     </div>
-    <div class="shade left" id="shadeLeft"></div>
-    <div class="shade right" id="shadeRight"></div>
-    <div class="badge" id="badge"></div>
-    <div class="placeholder" id="placeholder">画像をアップロードすると、ここに表示されます</div>
-    <button class="ui-toggle" id="uiToggleBtn" aria-label="配信画面UIとの重なりを確認">👥</button>
+
+
+    <!-- =====================================================
+         端末による見切れ
+         ===================================================== -->
+
+    <div
+      class="shade left"
+      id="shadeLeft"
+    ></div>
+
+    <div
+      class="shade right"
+      id="shadeRight"
+    ></div>
+
+
+    <!-- =====================================================
+         端末メッセージ
+         ===================================================== -->
+
+    <div
+      class="badge"
+      id="badge"
+    ></div>
+
+
+    <!-- =====================================================
+         初期状態
+         ===================================================== -->
+
+    <div
+      class="placeholder"
+      id="placeholder"
+    >
+      画像をアップロードすると、<br>
+      実際の配信画面をイメージした<br>
+      プレビューを表示します
+    </div>
+
+
+    <!-- =====================================================
+         UI表示切替
+         ===================================================== -->
+
+    <button
+      class="ui-toggle"
+      id="uiToggleBtn"
+      aria-label="配信画面UIとの重なりを確認"
+    >
+      👥
+    </button>
+
   </div>
 
-  <div class="device-panel" id="devicePanel">
-    <p class="label">📱 端末を選択</p>
-    <div class="device-grid" id="deviceGrid"></div>
-    <p class="device-note" id="deviceNote"></p>
+
+  <!-- =======================================================
+       端末選択
+       ======================================================= -->
+
+  <div
+    class="device-panel"
+    id="devicePanel"
+  >
+
+    <p class="label">
+      📱 端末を選択
+    </p>
+
+    <div
+      class="device-grid"
+      id="deviceGrid"
+    ></div>
+
+    <p
+      class="device-note"
+      id="deviceNote"
+    ></p>
+
   </div>
+
 </main>
+
 
 <script>
 (function () {
-  var CANVAS_WIDTH = 1536, CANVAS_HEIGHT = 2048;
+
+  /*
+   * ==========================================================
+   * 基準キャンバス
+   * ==========================================================
+   *
+   * 公式テンプレートと同じ 1536 × 2048。
+   *
+   * ここを基準にしているため、画面上で縮小表示されても
+   * UI同士の位置関係は変わりません。
+   */
+
+  var CANVAS_WIDTH = 1536;
+  var CANVAS_HEIGHT = 2048;
+
+
+  /*
+   * ==========================================================
+   * 端末
+   * ==========================================================
+   */
 
   var DEVICES = [
-    { id: 'iphone', label: 'iPhone', ratioLabel: '19.5:9', aspect: 1179/2556, note: '上下は画面いっぱい、左右が見切れます' },
-    { id: 'xperia10vi', label: 'Xperia 10 VI', ratioLabel: '21:9', aspect: 1080/2520, note: '上下は画面いっぱい、左右が大きく見切れます' },
-    { id: 'other-major', label: 'その他の主要スマホ', ratioLabel: '20:9目安', aspect: 9/20, note: 'iPhone/Xperia以外の機種の目安です（Galaxy・Pixelなど）' },
-    { id: 'ipad', label: 'iPad（A16）', ratioLabel: '59:41', aspect: 1640/2360, note: '上下左右とも、ほぼ画面いっぱいに表示されます' }
+
+    {
+      id: "iphone",
+      label: "iPhone",
+      ratioLabel: "19.5:9",
+      aspect: 1179 / 2556,
+      note: "上下は画面いっぱい、左右が見切れます"
+    },
+
+    {
+      id: "xperia10vi",
+      label: "Xperia 10 VI",
+      ratioLabel: "21:9",
+      aspect: 1080 / 2520,
+      note: "上下は画面いっぱい、左右が大きく見切れます"
+    },
+
+    {
+      id: "other-major",
+      label: "その他の主要スマホ",
+      ratioLabel: "20:9目安",
+      aspect: 9 / 20,
+      note: "iPhone/Xperia以外の機種の目安です"
+    },
+
+    {
+      id: "ipad",
+      label: "iPad（A16）",
+      ratioLabel: "59:41",
+      aspect: 1640 / 2360,
+      note: "上下左右とも、ほぼ画面いっぱいに表示されます"
+    }
+
   ];
 
-  var canvas = document.getElementById('canvas');
-  var ctx = canvas.getContext('2d');
-  var uploadBtn = document.getElementById('uploadBtn');
-  var fileInput = document.getElementById('fileInput');
-  var overlayGuide = document.getElementById('uiGuide');
-  var shadeLeft = document.getElementById('shadeLeft');
-  var shadeRight = document.getElementById('shadeRight');
-  var badge = document.getElementById('badge');
-  var placeholder = document.getElementById('placeholder');
-  var uiToggleBtn = document.getElementById('uiToggleBtn');
-  var devicePanel = document.getElementById('devicePanel');
-  var deviceGrid = document.getElementById('deviceGrid');
-  var deviceNote = document.getElementById('deviceNote');
-  var themeBtn = document.getElementById('themeBtn');
+
+  /*
+   * ==========================================================
+   * DOM
+   * ==========================================================
+   */
+
+  var canvas =
+    document.getElementById("canvas");
+
+  var ctx =
+    canvas.getContext("2d");
+
+  var uploadBtn =
+    document.getElementById("uploadBtn");
+
+  var fileInput =
+    document.getElementById("fileInput");
+
+  var overlayGuide =
+    document.getElementById("uiGuide");
+
+  var shadeLeft =
+    document.getElementById("shadeLeft");
+
+  var shadeRight =
+    document.getElementById("shadeRight");
+
+  var badge =
+    document.getElementById("badge");
+
+  var placeholder =
+    document.getElementById("placeholder");
+
+  var uiToggleBtn =
+    document.getElementById("uiToggleBtn");
+
+  var devicePanel =
+    document.getElementById("devicePanel");
+
+  var deviceGrid =
+    document.getElementById("deviceGrid");
+
+  var deviceNote =
+    document.getElementById("deviceNote");
+
+  var themeBtn =
+    document.getElementById("themeBtn");
+
+
+  /*
+   * ==========================================================
+   * 状態
+   * ==========================================================
+   */
 
   var bgImage = null;
+
   var selectedDeviceId = null;
+
   var showUiGuide = false;
 
+
+  /*
+   * ==========================================================
+   * 背景画像描画
+   * ==========================================================
+   *
+   * アップロード画像はcanvasに描画します。
+   *
+   * 「contain」ではなく「cover」にしています。
+   * これによりプレビュー領域を完全に背景で埋めます。
+   */
+
   function draw() {
-    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+    ctx.clearRect(
+      0,
+      0,
+      CANVAS_WIDTH,
+      CANVAS_HEIGHT
+    );
+
+
+    /*
+     * 画像未選択
+     */
+
     if (!bgImage) {
-      var grad = ctx.createLinearGradient(0, 0, 0, CANVAS_HEIGHT);
-      grad.addColorStop(0, '#1D1B29');
-      grad.addColorStop(1, '#14131C');
+
+      var grad =
+        ctx.createLinearGradient(
+          0,
+          0,
+          0,
+          CANVAS_HEIGHT
+        );
+
+      grad.addColorStop(
+        0,
+        "#1D1B29"
+      );
+
+      grad.addColorStop(
+        1,
+        "#14131C"
+      );
+
       ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-      placeholder.style.display = 'flex';
+
+      ctx.fillRect(
+        0,
+        0,
+        CANVAS_WIDTH,
+        CANVAS_HEIGHT
+      );
+
+      placeholder.style.display =
+        "flex";
+
       return;
     }
-    placeholder.style.display = 'none';
-    ctx.fillStyle = '#FFFFFF';
-    ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-    var scale = Math.min(CANVAS_WIDTH / bgImage.width, CANVAS_HEIGHT / bgImage.height);
-    var dw = bgImage.width * scale, dh = bgImage.height * scale;
-    var dx = (CANVAS_WIDTH - dw) / 2, dy = (CANVAS_HEIGHT - dh) / 2;
-    ctx.drawImage(bgImage, dx, dy, dw, dh);
+
+
+    placeholder.style.display =
+      "none";
+
+
+    /*
+     * 背景をcover
+     */
+
+    var scale =
+      Math.max(
+        CANVAS_WIDTH / bgImage.width,
+        CANVAS_HEIGHT / bgImage.height
+      );
+
+    var dw =
+      bgImage.width * scale;
+
+    var dh =
+      bgImage.height * scale;
+
+    var dx =
+      (CANVAS_WIDTH - dw) / 2;
+
+    var dy =
+      (CANVAS_HEIGHT - dh) / 2;
+
+
+    ctx.drawImage(
+      bgImage,
+      dx,
+      dy,
+      dw,
+      dh
+    );
   }
+
+
+  /*
+   * ==========================================================
+   * 端末による左右見切れ量
+   * ==========================================================
+   */
 
   function cropMarginX(aspect) {
-    var visibleWidthFraction = aspect * (CANVAS_HEIGHT / CANVAS_WIDTH);
-    var margin = (1 - visibleWidthFraction) / 2;
-    return Math.max(0, margin);
+
+    var visibleWidthFraction =
+      aspect *
+      (CANVAS_HEIGHT / CANVAS_WIDTH);
+
+    var margin =
+      (1 - visibleWidthFraction) / 2;
+
+    return Math.max(
+      0,
+      margin
+    );
   }
+
+
+  /*
+   * ==========================================================
+   * オーバーレイ更新
+   * ==========================================================
+   */
 
   function updateOverlays() {
-    var device = DEVICES.filter(function (d) { return d.id === selectedDeviceId; })[0] || null;
+
+    var device =
+      DEVICES.filter(function (d) {
+
+        return d.id === selectedDeviceId;
+
+      })[0] || null;
+
+
+    /*
+     * 端末表示
+     */
+
     if (device) {
-      var margin = cropMarginX(device.aspect);
+
+      var margin =
+        cropMarginX(
+          device.aspect
+        );
+
+
       if (margin > 0.001) {
-        shadeLeft.style.width = (margin * 100) + '%';
-        shadeRight.style.width = (margin * 100) + '%';
-        badge.style.display = 'block';
-        badge.className = 'badge warn';
-        badge.textContent = '⚠️ ' + device.label + 'は左右が見切れます';
+
+        shadeLeft.style.width =
+          (margin * 100) + "%";
+
+        shadeRight.style.width =
+          (margin * 100) + "%";
+
+
+        badge.style.display =
+          "block";
+
+        badge.className =
+          "badge warn";
+
+        badge.textContent =
+          "⚠️ " +
+          device.label +
+          "は左右が見切れます";
+
       } else {
-        shadeLeft.style.width = '0%';
-        shadeRight.style.width = '0%';
-        badge.style.display = 'block';
-        badge.className = 'badge ok';
-        badge.textContent = '✅ ' + device.label + 'はほぼ全体が見えます';
+
+        shadeLeft.style.width =
+          "0%";
+
+        shadeRight.style.width =
+          "0%";
+
+
+        badge.style.display =
+          "block";
+
+        badge.className =
+          "badge ok";
+
+        badge.textContent =
+          "✅ " +
+          device.label +
+          "はほぼ全体が見えます";
       }
-      deviceNote.textContent = device.note;
+
+
+      deviceNote.textContent =
+        device.note;
+
     } else {
-      shadeLeft.style.width = '0%';
-      shadeRight.style.width = '0%';
-      badge.style.display = 'none';
-      deviceNote.textContent = '';
+
+      shadeLeft.style.width =
+        "0%";
+
+      shadeRight.style.width =
+        "0%";
+
+      badge.style.display =
+        "none";
+
+      deviceNote.textContent =
+        "";
     }
 
-    overlayGuide.classList.toggle('visible', showUiGuide);
-    uiToggleBtn.classList.toggle('active', showUiGuide);
 
-    devicePanel.classList.toggle('prompt', !!bgImage && !selectedDeviceId);
+    /*
+     * 配信UI表示
+     */
+
+    overlayGuide.classList.toggle(
+      "visible",
+      showUiGuide
+    );
+
+    uiToggleBtn.classList.toggle(
+      "active",
+      showUiGuide
+    );
+
+
+    /*
+     * 画像をアップロードしたら
+     * 端末選択を促す
+     */
+
+    devicePanel.classList.toggle(
+      "prompt",
+      !!bgImage &&
+      !selectedDeviceId
+    );
   }
 
+
+  /*
+   * ==========================================================
+   * 端末ボタン生成
+   * ==========================================================
+   */
+
   function renderDeviceButtons() {
-    deviceGrid.innerHTML = '';
+
+    deviceGrid.innerHTML = "";
+
+
     DEVICES.forEach(function (d) {
-      var btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'device-card' + (selectedDeviceId === d.id ? ' active' : '');
+
+      var btn =
+        document.createElement("button");
+
+      btn.type = "button";
+
+      btn.className =
+        "device-card" +
+        (
+          selectedDeviceId === d.id
+            ? " active"
+            : ""
+        );
+
+
       btn.innerHTML =
-        '<span class="row"><span class="dot"></span><span class="name">' + d.label + '</span></span>' +
-        '<span class="ratio">' + d.ratioLabel + '</span>';
-      btn.addEventListener('click', function () {
-        selectedDeviceId = (selectedDeviceId === d.id) ? null : d.id;
-        renderDeviceButtons();
-        updateOverlays();
-      });
+        '<span class="row">' +
+          '<span class="dot"></span>' +
+          '<span class="name">' +
+            escapeHtml(d.label) +
+          '</span>' +
+        '</span>' +
+        '<span class="ratio">' +
+          escapeHtml(d.ratioLabel) +
+        '</span>';
+
+
+      btn.addEventListener(
+        "click",
+        function () {
+
+          selectedDeviceId =
+            selectedDeviceId === d.id
+              ? null
+              : d.id;
+
+          renderDeviceButtons();
+
+          updateOverlays();
+        }
+      );
+
+
       deviceGrid.appendChild(btn);
+
     });
   }
 
-  uploadBtn.addEventListener('click', function () { fileInput.click(); });
 
-  fileInput.addEventListener('change', function (e) {
-    var file = e.target.files && e.target.files[0];
-    if (!file) return;
-    var reader = new FileReader();
-    reader.onload = function () {
-      var img = new Image();
-      img.onload = function () {
-        bgImage = img;
-        uploadBtn.textContent = '🔄 画像を変更する';
-        uploadBtn.classList.remove('pulse');
-        draw();
-        updateOverlays();
-      };
-      img.src = reader.result;
-    };
-    reader.readAsDataURL(file);
-  });
+  /*
+   * ==========================================================
+   * HTMLエスケープ
+   * ==========================================================
+   */
 
-  uiToggleBtn.addEventListener('click', function () {
-    showUiGuide = !showUiGuide;
-    updateOverlays();
-  });
+  function escapeHtml(value) {
 
-  var THEME_KEY = 'haishin-preview:theme';
-  function applyTheme(theme) {
-    document.documentElement.classList.toggle('light', theme === 'light');
-    themeBtn.textContent = theme === 'light' ? '☀️' : '🌙';
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
   }
-  var savedTheme = localStorage.getItem(THEME_KEY) || 'dark';
-  applyTheme(savedTheme);
-  themeBtn.addEventListener('click', function () {
-    var current = document.documentElement.classList.contains('light') ? 'light' : 'dark';
-    var next = current === 'light' ? 'dark' : 'light';
-    applyTheme(next);
-    localStorage.setItem(THEME_KEY, next);
-  });
+
+
+  /*
+   * ==========================================================
+   * アップロード
+   * ==========================================================
+   */
+
+  uploadBtn.addEventListener(
+    "click",
+    function () {
+
+      fileInput.click();
+
+    }
+  );
+
+
+  fileInput.addEventListener(
+    "change",
+    function (e) {
+
+      var file =
+        e.target.files &&
+        e.target.files[0];
+
+
+      if (!file) {
+        return;
+      }
+
+
+      /*
+       * 画像形式チェック
+       */
+
+      if (
+        !file.type.startsWith("image/")
+      ) {
+
+        alert(
+          "画像ファイルを選択してください。"
+        );
+
+        return;
+      }
+
+
+      var reader =
+        new FileReader();
+
+
+      reader.onload =
+        function () {
+
+          var img =
+            new Image();
+
+
+          img.onload =
+            function () {
+
+              bgImage = img;
+
+
+              uploadBtn.textContent =
+                "🔄 画像を変更する";
+
+              uploadBtn.classList.remove(
+                "pulse"
+              );
+
+
+              draw();
+
+              updateOverlays();
+            };
+
+
+          img.onerror =
+            function () {
+
+              alert(
+                "画像を読み込めませんでした。"
+              );
+
+            };
+
+
+          img.src =
+            reader.result;
+        };
+
+
+      reader.readAsDataURL(file);
+
+    }
+  );
+
+
+  /*
+   * ==========================================================
+   * UI表示切替
+   * ==========================================================
+   */
+
+  uiToggleBtn.addEventListener(
+    "click",
+    function () {
+
+      showUiGuide =
+        !showUiGuide;
+
+      updateOverlays();
+
+    }
+  );
+
+
+  /*
+   * ==========================================================
+   * テーマ
+   * ==========================================================
+   */
+
+  var THEME_KEY =
+    "haishin-preview:theme";
+
+
+  function applyTheme(theme) {
+
+    document.documentElement
+      .classList
+      .toggle(
+        "light",
+        theme === "light"
+      );
+
+
+    themeBtn.textContent =
+      theme === "light"
+        ? "☀️"
+        : "🌙";
+  }
+
+
+  var savedTheme =
+    localStorage.getItem(
+      THEME_KEY
+    ) || "dark";
+
+
+  applyTheme(
+    savedTheme
+  );
+
+
+  themeBtn.addEventListener(
+    "click",
+    function () {
+
+      var current =
+        document.documentElement
+          .classList
+          .contains("light")
+          ? "light"
+          : "dark";
+
+
+      var next =
+        current === "light"
+          ? "dark"
+          : "light";
+
+
+      applyTheme(next);
+
+
+      localStorage.setItem(
+        THEME_KEY,
+        next
+      );
+
+    }
+  );
+
+
+  /*
+   * ==========================================================
+   * 初期化
+   * ==========================================================
+   */
 
   renderDeviceButtons();
+
   draw();
+
   updateOverlays();
+
 })();
 </script>
+
 </body>
 </html>
