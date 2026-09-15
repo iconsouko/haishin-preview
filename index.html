@@ -30,7 +30,8 @@ html.light{
   box-sizing:border-box
 }
 
-html,body{
+html,
+body{
   height:100%;
   margin:0
 }
@@ -98,13 +99,23 @@ main{
 }
 
 @keyframes softPulse{
-  0%,100%{opacity:1}
-  50%{opacity:.55}
+  0%,100%{
+    opacity:1
+  }
+
+  50%{
+    opacity:.55
+  }
 }
 
 .pulse{
   animation:softPulse 1.8s ease-in-out infinite
 }
+
+
+/* =========================================================
+   プレビュー
+   ========================================================= */
 
 .preview{
   position:relative;
@@ -132,9 +143,9 @@ main{
   position:absolute;
   top:0;
   bottom:0;
+  width:0;
   background:rgba(0,0,0,.55);
   pointer-events:none;
-  width:0;
   z-index:80
 }
 
@@ -148,18 +159,41 @@ main{
 
 
 /* =========================================================
-   左右の境界線
+   端末の境界線
+   ★ width:2px の実体線にして、細い見切れ幅でも確実に表示
    ========================================================= */
 
 .crop-line{
   position:absolute;
   top:0;
   bottom:0;
-  width:0;
-  border-left:2px dashed rgba(255,255,255,.9);
+
+  /*
+   * width:0 + border-left ではなく、
+   * 2px幅の実体を持たせる。
+   */
+  width:2px;
+
+  /*
+   * 縦の点線
+   */
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,.95) 0,
+      rgba(255,255,255,.95) 5px,
+      transparent 5px,
+      transparent 10px
+    );
+
   pointer-events:none;
+
+  /*
+   * 見切れ部分より必ず前面
+   */
   z-index:95;
-  display:none
+
+  display:none;
 }
 
 .crop-line.left{
@@ -172,7 +206,7 @@ main{
 
 
 /* =========================================================
-   プレビューについての注意書き
+   プレビュー注意書き
    ========================================================= */
 
 .preview-note{
@@ -189,7 +223,9 @@ main{
 }
 
 
-/* ========================================================= */
+/* =========================================================
+   端末状態バッジ
+   ========================================================= */
 
 .badge{
   position:absolute;
@@ -215,6 +251,11 @@ main{
   background:rgb(var(--teal))
 }
 
+
+/* =========================================================
+   プレースホルダー
+   ========================================================= */
+
 .placeholder{
   position:absolute;
   inset:0;
@@ -228,6 +269,11 @@ main{
   pointer-events:none;
   z-index:2
 }
+
+
+/* =========================================================
+   配信UI
+   ========================================================= */
 
 #uiGuide{
   position:absolute;
@@ -257,7 +303,6 @@ main{
   position:absolute;
 
   left:calc(314 / 1536 * 100%);
-
   top:calc(151 / 2048 * 100%);
 
   width:calc(102 / 1536 * 100%);
@@ -265,7 +310,15 @@ main{
   border-radius:50%;
   overflow:hidden;
   border:2px solid rgba(255,255,255,.9);
-  background:linear-gradient(135deg,#ffd166,#ef476f 45%,#8338ec);
+
+  background:
+    linear-gradient(
+      135deg,
+      #ffd166,
+      #ef476f 45%,
+      #8338ec
+    );
+
   box-shadow:0 2px 7px rgba(0,0,0,.35)
 }
 
@@ -283,80 +336,119 @@ main{
 
 .creator-name{
   left:calc(426 / 1536 * 100%);
-
   top:calc(160 / 2048 * 100%);
 
   width:calc(250 / 1536 * 100%);
   height:calc(34 / 2048 * 100%);
+
   display:flex;
   align-items:center;
+
   font-size:clamp(7px,1.35vw,15px);
   font-weight:800
 }
 
 .creator-info{
   left:calc(426 / 1536 * 100%);
-
   top:calc(207 / 2048 * 100%);
 
   width:calc(316 / 1536 * 100%);
   height:calc(34 / 2048 * 100%);
+
   display:flex;
   align-items:center;
+
   font-size:clamp(6px,1.1vw,13px);
   opacity:.92
 }
 
+
+/* =========================================================
+   リスナーアイコン
+   ========================================================= */
+
 .listener-avatar{
   position:absolute;
+
   width:calc(71 / 1536 * 100%);
   aspect-ratio:1;
+
   border-radius:50%;
   border:2px solid rgba(255,255,255,.85);
+
   box-shadow:0 2px 7px rgba(0,0,0,.3);
+
   overflow:hidden;
+
   display:flex;
   align-items:center;
   justify-content:center;
+
   font-size:clamp(7px,1.3vw,14px);
   font-weight:900;
+
   color:#fff
 }
 
 .listener-avatar.a{
   left:calc(769 / 1536 * 100%);
   top:calc(160 / 2048 * 100%);
-  background:linear-gradient(135deg,#ff9a9e,#fad0c4)
+
+  background:
+    linear-gradient(
+      135deg,
+      #ff9a9e,
+      #fad0c4
+    )
 }
 
 .listener-avatar.b{
   left:calc(878 / 1536 * 100%);
   top:calc(160 / 2048 * 100%);
-  background:linear-gradient(135deg,#a18cd1,#fbc2eb)
+
+  background:
+    linear-gradient(
+      135deg,
+      #a18cd1,
+      #fbc2eb
+    )
 }
 
 .listener-avatar.c{
   left:calc(959 / 1536 * 100%);
   top:calc(160 / 2048 * 100%);
-  background:linear-gradient(135deg,#84fab0,#8fd3f4)
+
+  background:
+    linear-gradient(
+      135deg,
+      #84fab0,
+      #8fd3f4
+    )
 }
 
 .listener-avatar.d{
   left:calc(1040 / 1536 * 100%);
   top:calc(160 / 2048 * 100%);
-  background:linear-gradient(135deg,#f6d365,#fda085)
+
+  background:
+    linear-gradient(
+      135deg,
+      #f6d365,
+      #fda085
+    )
 }
 
 .close-button{
   left:calc(1173 / 1536 * 100%);
-
   top:calc(171 / 2048 * 100%);
 
   width:calc(55 / 1536 * 100%);
   height:calc(55 / 2048 * 100%);
+
   display:flex;
   align-items:center;
   justify-content:center;
+
   font-size:clamp(14px,2.5vw,28px)
 }
 
@@ -367,18 +459,24 @@ main{
 
 .lyrics{
   position:absolute;
-  left:50%;
 
+  left:50%;
   top:calc(1208 / 2048 * 100%);
 
   transform:translateX(-50%);
 
   width:62%;
+
   text-align:center;
+
   color:rgba(255,255,255,.96);
+
   font-size:clamp(9px,2.1vw,23px);
+
   font-weight:800;
+
   line-height:1.2;
+
   text-shadow:0 2px 5px rgba(0,0,0,.65)
 }
 
@@ -408,14 +506,23 @@ main{
 .comment{
   width:fit-content;
   max-width:96%;
+
   margin-top:1.5%;
+
   padding:1.25% 2.5%;
+
   border-radius:999px;
+
   background:rgba(45,45,55,.76);
+
   color:#fff;
+
   font-size:clamp(7px,1.45vw,15px);
+
   font-weight:700;
+
   line-height:1.25;
+
   text-shadow:0 1px 2px rgba(0,0,0,.5)
 }
 
@@ -435,10 +542,12 @@ main{
 
 .side-button{
   position:absolute;
+
   left:calc(1146 / 1536 * 100%);
 
   width:calc(71 / 1536 * 100%);
   aspect-ratio:1;
+
   border-radius:50%;
 
   display:flex;
@@ -446,10 +555,13 @@ main{
   justify-content:center;
 
   background:rgba(80,82,91,.78);
+
   border:1px solid rgba(255,255,255,.18);
+
   box-shadow:0 3px 8px rgba(0,0,0,.25);
 
   color:#fff;
+
   font-size:clamp(10px,2vw,20px)
 }
 
@@ -467,21 +579,22 @@ main{
 
 
 /* =========================================================
-   コメント入力欄
+   コメント入力
    ========================================================= */
 
 .comment-input{
   position:absolute;
 
   left:calc(315 / 1536 * 100%);
-
   top:calc(1856 / 2048 * 100%);
 
   width:calc(563 / 1536 * 100%);
   height:calc(100 / 2048 * 100%);
 
   border-radius:999px;
+
   background:rgba(35,35,42,.82);
+
   border:1px solid rgba(255,255,255,.12);
 
   display:flex;
@@ -490,6 +603,7 @@ main{
   padding-left:5%;
 
   color:rgba(255,255,255,.7);
+
   font-size:clamp(7px,1.4vw,15px)
 }
 
@@ -505,6 +619,7 @@ main{
 
   width:calc(71 / 1536 * 100%);
   aspect-ratio:1;
+
   border-radius:50%;
 
   display:flex;
@@ -512,6 +627,7 @@ main{
   justify-content:center;
 
   background:rgba(80,82,91,.78);
+
   border:1px solid rgba(255,255,255,.18);
 
   color:#fff;
@@ -535,11 +651,12 @@ main{
 
 
 /* =========================================================
-   UI表示切替
+   UI切替ボタン
    ========================================================= */
 
 .ui-toggle{
   position:absolute;
+
   right:8px;
   bottom:8px;
 
@@ -547,12 +664,15 @@ main{
   height:40px;
 
   border-radius:999px;
+
   border:none;
 
   font-size:18px;
+
   cursor:pointer;
 
   background:rgb(var(--ink)/.7);
+
   color:rgb(var(--paper));
 
   box-shadow:0 2px 8px rgba(0,0,0,.3);
@@ -574,6 +694,7 @@ main{
   margin-top:16px;
 
   border-radius:20px;
+
   border:2px solid rgb(var(--line));
 
   background:rgb(var(--panel));
@@ -583,26 +704,38 @@ main{
 
 .device-panel.prompt{
   border-color:rgb(var(--coral));
-  animation:softPulse 1.8s ease-in-out infinite
+
+  animation:
+    softPulse
+    1.8s
+    ease-in-out
+    infinite
 }
 
 .device-panel .label{
   margin:0 0 8px;
+
   font-size:12px;
+
   font-weight:700;
+
   color:rgb(var(--muted))
 }
 
 .device-grid{
   display:grid;
-  grid-template-columns:repeat(2,1fr);
+
+  grid-template-columns:
+    repeat(2,1fr);
+
   gap:8px
 }
 
 @media(min-width:480px){
 
   .device-grid{
-    grid-template-columns:repeat(4,1fr)
+    grid-template-columns:
+      repeat(4,1fr)
   }
 
 }
@@ -611,9 +744,11 @@ main{
   text-align:left;
 
   border-radius:16px;
+
   border:2px solid rgb(var(--line));
 
   background:transparent;
+
   color:rgb(var(--paper));
 
   padding:12px;
@@ -623,12 +758,16 @@ main{
 
 .device-card.active{
   border-color:rgb(var(--coral));
-  background:rgb(var(--coral)/.1)
+
+  background:
+    rgb(var(--coral)/.1)
 }
 
 .device-card .row{
   display:flex;
+
   align-items:center;
+
   gap:8px
 }
 
@@ -643,7 +782,9 @@ main{
   flex-shrink:0;
 
   display:flex;
+
   align-items:center;
+
   justify-content:center
 }
 
@@ -664,6 +805,7 @@ main{
 
 .device-card .name{
   font-size:13px;
+
   font-weight:700
 }
 
@@ -679,7 +821,9 @@ main{
 
 .device-note{
   margin-top:8px;
+
   font-size:12px;
+
   color:rgb(var(--muted))
 }
 </style>
@@ -701,6 +845,7 @@ main{
 
   </div>
 
+
   <button
     class="theme-btn"
     id="themeBtn"
@@ -711,6 +856,7 @@ main{
 
 </header>
 
+
 <main>
 
 <button
@@ -719,6 +865,7 @@ main{
 >
   🖼 画像をアップロード
 </button>
+
 
 <input
   type="file"
@@ -751,6 +898,12 @@ main{
     id="shadeRight"
   ></div>
 
+
+  <!--
+    境界線を見切れ領域とは独立して描画。
+    iPad（A16）のような見切れ幅が小さい端末でも
+    左右の線が確実に表示される。
+  -->
 
   <div
     class="crop-line left"
@@ -798,13 +951,16 @@ main{
       A
     </div>
 
+
     <div class="listener-avatar b">
       B
     </div>
 
+
     <div class="listener-avatar c">
       C
     </div>
+
 
     <div class="listener-avatar d">
       D
@@ -893,9 +1049,11 @@ main{
       ♡
     </div>
 
+
     <div class="side-button two">
       🎁
     </div>
+
 
     <div class="side-button three">
       ♪
@@ -911,9 +1069,11 @@ main{
       ☁
     </div>
 
+
     <div class="bottom-button two">
       ♛
     </div>
+
 
     <div class="bottom-button three">
       …
@@ -934,11 +1094,12 @@ main{
 
 
 <!-- =======================================================
-     プレビューの重要な注意書き
+     重要な注意書き
      ======================================================= -->
 
 <p class="preview-note">
-  ※ <strong>あくまでも目安です。</strong>実際の配信画面では、端末・画面サイズ・表示環境などにより見え方が異なる場合があります。
+  ※ <strong>あくまでも目安です。</strong>
+  実際の配信画面では、端末・画面サイズ・表示環境などにより見え方が異なる場合があります。
 </p>
 
 
@@ -972,45 +1133,77 @@ main{
 (function(){
 
   const W = 1536;
+
   const H = 2048;
 
+
+  /* =========================================================
+     対応端末
+     ========================================================= */
 
   const DEVICES = [
 
     {
       id:"iphone",
+
       label:"iPhone",
+
       ratioLabel:"19.5:9",
+
       aspect:1179/2556,
-      note:"上下は画面いっぱい、左右が見切れます"
+
+      note:
+        "上下は画面いっぱい、左右が見切れます"
     },
+
 
     {
       id:"xperia10vi",
+
       label:"Xperia 10 VI",
+
       ratioLabel:"21:9",
+
       aspect:1080/2520,
-      note:"上下は画面いっぱい、左右が大きく見切れます"
+
+      note:
+        "上下は画面いっぱい、左右が大きく見切れます"
     },
+
 
     {
       id:"other-major",
+
       label:"その他の主要スマホ",
+
       ratioLabel:"20:9目安",
+
       aspect:9/20,
-      note:"iPhone/Xperia以外の機種の目安です"
+
+      note:
+        "iPhone/Xperia以外の機種の目安です"
     },
+
 
     {
       id:"ipad",
+
       label:"iPad（A16）",
+
       ratioLabel:"59:41",
+
       aspect:1640/2360,
-      note:"上下左右とも、ほぼ画面いっぱいに表示されます"
+
+      note:
+        "上下左右とも、ほぼ画面いっぱいに表示されます"
     }
 
   ];
 
+
+  /* =========================================================
+     DOM
+     ========================================================= */
 
   const canvas =
     document.getElementById("canvas");
@@ -1084,7 +1277,7 @@ main{
 
 
   /* =========================================================
-     背景画像を描画
+     背景画像描画
      ========================================================= */
 
   function draw(){
@@ -1154,36 +1347,42 @@ main{
 
     ctx.drawImage(
       bgImage,
+
       (W - dw) / 2,
+
       0,
+
       dw,
+
       H
     );
   }
 
 
   /* =========================================================
-     左右の見切れ幅
+     左右の見切れ幅を計算
      ========================================================= */
 
   function margin(aspect){
 
     return Math.max(
       0,
+
       (1 - aspect * (H / W)) / 2
     );
   }
 
 
   /* =========================================================
-     プレビュー状態を更新
+     プレビュー状態更新
      ========================================================= */
 
   function update(){
 
     const d =
       DEVICES.find(
-        x => x.id === selectedDeviceId
+        x =>
+          x.id === selectedDeviceId
       ) || null;
 
 
@@ -1199,7 +1398,9 @@ main{
           m * 100 + "%";
 
 
-        /* 見切れ部分 */
+        /* -----------------------------------------
+           見切れ領域
+           ----------------------------------------- */
 
         shadeLeft.style.width =
           width;
@@ -1209,14 +1410,26 @@ main{
           width;
 
 
-        /* 左右の境界線 */
+        /* -----------------------------------------
+           境界線
+           
+           左線：
+           見切れ領域の右端
+
+           右線：
+           右側見切れ領域の左端
+           ----------------------------------------- */
 
         cropLineLeft.style.left =
-          (m * 100) + "%";
+          "calc(" +
+          (m * 100) +
+          "% - 1px)";
 
 
         cropLineRight.style.left =
-          (100 - m * 100) + "%";
+          "calc(" +
+          (100 - m * 100) +
+          "% - 1px)";
 
 
         cropLineLeft.style.display =
@@ -1241,6 +1454,10 @@ main{
           "は左右が見切れます";
 
       }else{
+
+        /* -----------------------------------------
+           見切れなし
+           ----------------------------------------- */
 
         shadeLeft.style.width =
           "0%";
@@ -1303,6 +1520,10 @@ main{
     }
 
 
+    /* -----------------------------------------
+       配信UI
+       ----------------------------------------- */
+
     guide.classList.toggle(
       "visible",
       showUiGuide
@@ -1315,9 +1536,15 @@ main{
     );
 
 
+    /* -----------------------------------------
+       端末選択促進
+       ----------------------------------------- */
+
     panel.classList.toggle(
       "prompt",
-      !!bgImage && !selectedDeviceId
+
+      !!bgImage &&
+      !selectedDeviceId
     );
   }
 
@@ -1329,16 +1556,36 @@ main{
   function esc(v){
 
     return String(v)
-      .replace(/&/g,"&amp;")
-      .replace(/</g,"&lt;")
-      .replace(/>/g,"&gt;")
-      .replace(/"/g,"&quot;")
-      .replace(/'/g,"&#039;");
+
+      .replace(
+        /&/g,
+        "&amp;"
+      )
+
+      .replace(
+        /</g,
+        "&lt;"
+      )
+
+      .replace(
+        />/g,
+        "&gt;"
+      )
+
+      .replace(
+        /"/g,
+        "&quot;"
+      )
+
+      .replace(
+        /'/g,
+        "&#039;"
+      );
   }
 
 
   /* =========================================================
-     端末ボタンを生成
+     端末ボタン生成
      ========================================================= */
 
   function render(){
@@ -1347,62 +1594,70 @@ main{
       "";
 
 
-    DEVICES.forEach(d => {
+    DEVICES.forEach(
+      d => {
 
-      const b =
-        document.createElement("button");
-
-
-      b.type =
-        "button";
-
-
-      b.className =
-        "device-card" +
-        (
-          selectedDeviceId === d.id
-            ? " active"
-            : ""
-        );
+        const b =
+          document.createElement(
+            "button"
+          );
 
 
-      b.innerHTML =
-        '<span class="row">' +
+        b.type =
+          "button";
 
-          '<span class="dot"></span>' +
 
-          '<span class="name">' +
-            esc(d.label) +
+        b.className =
+          "device-card" +
+
+          (
+            selectedDeviceId === d.id
+              ? " active"
+              : ""
+          );
+
+
+        b.innerHTML =
+
+          '<span class="row">' +
+
+            '<span class="dot"></span>' +
+
+            '<span class="name">' +
+              esc(d.label) +
+            '</span>' +
+
           '</span>' +
 
-        '</span>' +
-
-        '<span class="ratio">' +
-          esc(d.ratioLabel) +
-        '</span>';
+          '<span class="ratio">' +
+            esc(d.ratioLabel) +
+          '</span>';
 
 
-      b.onclick = () => {
+        b.onclick = () => {
 
-        selectedDeviceId =
-          selectedDeviceId === d.id
-            ? null
-            : d.id;
-
-
-        render();
-
-        update();
-      };
+          selectedDeviceId =
+            selectedDeviceId === d.id
+              ? null
+              : d.id;
 
 
-      grid.appendChild(b);
-    });
+          render();
+
+          update();
+        };
+
+
+        grid.appendChild(
+          b
+        );
+      }
+    );
   }
 
 
   /* =========================================================
-     アップロードボタン
+     アップロード
      ========================================================= */
 
   uploadBtn.onclick = () => {
@@ -1426,7 +1681,11 @@ main{
       return;
 
 
-    if(!f.type.startsWith("image/")){
+    if(
+      !f.type.startsWith(
+        "image/"
+      )
+    ){
 
       alert(
         "画像ファイルを選択してください。"
