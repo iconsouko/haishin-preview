@@ -123,7 +123,11 @@ main{
   display:block
 }
 
-/* 左右の見切れ部分 */
+
+/* =========================================================
+   見切れ部分
+   ========================================================= */
+
 .shade{
   position:absolute;
   top:0;
@@ -134,12 +138,6 @@ main{
   z-index:80
 }
 
-/*
-  境界線はshade本体のborderではなく、
-  独立した要素として描画する。
-  これによりiPhone選択時も左側の点線が
-  確実に表示される。
-*/
 .shade.left{
   left:0
 }
@@ -148,27 +146,33 @@ main{
   right:0
 }
 
-.shade.left::after{
-  content:"";
+
+/* =========================================================
+   左右の境界線
+   shadeとは完全に独立させる
+   ========================================================= */
+
+.crop-line{
   position:absolute;
   top:0;
-  right:-1px;
   bottom:0;
-  width:2px;
-  border-right:2px dashed rgba(255,255,255,.85);
-  box-sizing:border-box
+  width:0;
+  border-left:2px dashed rgba(255,255,255,.9);
+  pointer-events:none;
+  z-index:95;
+  display:none;
 }
 
-.shade.right::after{
-  content:"";
-  position:absolute;
-  top:0;
-  left:-1px;
-  bottom:0;
-  width:2px;
-  border-left:2px dashed rgba(255,255,255,.85);
-  box-sizing:border-box
+.crop-line.left{
+  left:0;
 }
+
+.crop-line.right{
+  left:0;
+}
+
+
+/* ========================================================= */
 
 .badge{
   position:absolute;
@@ -583,7 +587,10 @@ main{
 
 <main>
 
-<button class="upload-btn pulse" id="uploadBtn">
+<button
+  class="upload-btn pulse"
+  id="uploadBtn"
+>
   🖼 画像をアップロード
 </button>
 
@@ -594,7 +601,10 @@ main{
   style="display:none"
 >
 
-<div class="preview" id="preview">
+<div
+  class="preview"
+  id="preview"
+>
 
   <canvas
     id="canvas"
@@ -602,12 +612,36 @@ main{
     height="2048"
   ></canvas>
 
-  <div class="shade left" id="shadeLeft"></div>
-  <div class="shade right" id="shadeRight"></div>
+  <div
+    class="shade left"
+    id="shadeLeft"
+  ></div>
 
-  <div class="badge" id="badge"></div>
+  <div
+    class="shade right"
+    id="shadeRight"
+  ></div>
 
-  <div class="placeholder" id="placeholder">
+  <!-- 左右の境界線 -->
+  <div
+    class="crop-line left"
+    id="cropLineLeft"
+  ></div>
+
+  <div
+    class="crop-line right"
+    id="cropLineRight"
+  ></div>
+
+  <div
+    class="badge"
+    id="badge"
+  ></div>
+
+  <div
+    class="placeholder"
+    id="placeholder"
+  >
     画像をアップロードすると、<br>
     配信画面を再現したプレビューを表示します
   </div>
@@ -705,7 +739,10 @@ main{
 
 </div>
 
-<div class="device-panel" id="devicePanel">
+<div
+  class="device-panel"
+  id="devicePanel"
+>
 
   <p class="label">
     📱 端末を選択
@@ -732,6 +769,7 @@ main{
   const H = 2048;
 
   const DEVICES = [
+
     {
       id:"iphone",
       label:"iPhone",
@@ -739,6 +777,7 @@ main{
       aspect:1179/2556,
       note:"上下は画面いっぱい、左右が見切れます"
     },
+
     {
       id:"xperia10vi",
       label:"Xperia 10 VI",
@@ -746,6 +785,7 @@ main{
       aspect:1080/2520,
       note:"上下は画面いっぱい、左右が大きく見切れます"
     },
+
     {
       id:"other-major",
       label:"その他の主要スマホ",
@@ -753,6 +793,7 @@ main{
       aspect:9/20,
       note:"iPhone/Xperia以外の機種の目安です"
     },
+
     {
       id:"ipad",
       label:"iPad（A16）",
@@ -760,7 +801,9 @@ main{
       aspect:1640/2360,
       note:"上下左右とも、ほぼ画面いっぱいに表示されます"
     }
+
   ];
+
 
   const canvas =
     document.getElementById("canvas");
@@ -783,6 +826,12 @@ main{
   const shadeRight =
     document.getElementById("shadeRight");
 
+  const cropLineLeft =
+    document.getElementById("cropLineLeft");
+
+  const cropLineRight =
+    document.getElementById("cropLineRight");
+
   const badge =
     document.getElementById("badge");
 
@@ -804,21 +853,35 @@ main{
   const themeBtn =
     document.getElementById("themeBtn");
 
+
   let bgImage = null;
+
   let selectedDeviceId = null;
+
   let showUiGuide = false;
 
 
-  /* 背景画像を描画 */
+  /* =========================================================
+     背景画像を描画
+     ========================================================= */
+
   function draw(){
 
-    ctx.clearRect(0,0,W,H);
+    ctx.clearRect(
+      0,
+      0,
+      W,
+      H
+    );
 
     if(!bgImage){
 
       const g =
         ctx.createLinearGradient(
-          0,0,0,H
+          0,
+          0,
+          0,
+          H
         );
 
       g.addColorStop(
@@ -865,7 +928,10 @@ main{
   }
 
 
-  /* 左右の見切れ幅 */
+  /* =========================================================
+     左右の見切れ幅
+     ========================================================= */
+
   function margin(aspect){
 
     return Math.max(
@@ -875,7 +941,10 @@ main{
   }
 
 
-  /* プレビュー状態を更新 */
+  /* =========================================================
+     プレビュー状態を更新
+     ========================================================= */
+
   function update(){
 
     const d =
@@ -883,23 +952,56 @@ main{
         x => x.id === selectedDeviceId
       ) || null;
 
+
     if(d){
 
       const m =
         margin(d.aspect);
+
 
       if(m > .001){
 
         const width =
           m * 100 + "%";
 
+
         /*
-          左右のshadeをそれぞれ独立して設定。
-          iPhoneでも左側・右側の両方に
-          正確な見切れ幅を設定する。
-        */
-        shadeLeft.style.width = width;
-        shadeRight.style.width = width;
+         * 見切れ部分
+         */
+
+        shadeLeft.style.width =
+          width;
+
+        shadeRight.style.width =
+          width;
+
+
+        /*
+         * 境界線
+         *
+         * 左線は「見切れ幅」の終点
+         * 右線は「見切れ幅」の終点
+         *
+         * right側もleft座標として計算することで、
+         * Xperia 10 VIの右側でも確実に表示する。
+         */
+
+        const position =
+          m * 100 + "%";
+
+        cropLineLeft.style.left =
+          position;
+
+        cropLineRight.style.left =
+          (100 - m * 100) + "%";
+
+
+        cropLineLeft.style.display =
+          "block";
+
+        cropLineRight.style.display =
+          "block";
+
 
         badge.style.display =
           "block";
@@ -920,6 +1022,14 @@ main{
         shadeRight.style.width =
           "0%";
 
+
+        cropLineLeft.style.display =
+          "none";
+
+        cropLineRight.style.display =
+          "none";
+
+
         badge.style.display =
           "block";
 
@@ -932,6 +1042,7 @@ main{
           "はほぼ全体が見えます";
       }
 
+
       note.textContent =
         d.note;
 
@@ -943,12 +1054,21 @@ main{
       shadeRight.style.width =
         "0%";
 
+
+      cropLineLeft.style.display =
+        "none";
+
+      cropLineRight.style.display =
+        "none";
+
+
       badge.style.display =
         "none";
 
       note.textContent =
         "";
     }
+
 
     guide.classList.toggle(
       "visible",
@@ -967,7 +1087,10 @@ main{
   }
 
 
-  /* HTMLエスケープ */
+  /* =========================================================
+     HTMLエスケープ
+     ========================================================= */
+
   function esc(v){
 
     return String(v)
@@ -979,17 +1102,22 @@ main{
   }
 
 
-  /* 端末ボタンを生成 */
+  /* =========================================================
+     端末ボタンを生成
+     ========================================================= */
+
   function render(){
 
     grid.innerHTML = "";
+
 
     DEVICES.forEach(d => {
 
       const b =
         document.createElement("button");
 
-      b.type = "button";
+      b.type =
+        "button";
 
       b.className =
         "device-card" +
@@ -999,16 +1127,22 @@ main{
             : ""
         );
 
+
       b.innerHTML =
         '<span class="row">' +
+
           '<span class="dot"></span>' +
+
           '<span class="name">' +
             esc(d.label) +
           '</span>' +
+
         '</span>' +
+
         '<span class="ratio">' +
           esc(d.ratioLabel) +
         '</span>';
+
 
       b.onclick = () => {
 
@@ -1018,29 +1152,39 @@ main{
             : d.id;
 
         render();
+
         update();
       };
+
 
       grid.appendChild(b);
     });
   }
 
 
-  /* アップロードボタン */
+  /* =========================================================
+     アップロードボタン
+     ========================================================= */
+
   uploadBtn.onclick = () => {
 
     fileInput.click();
   };
 
 
-  /* 画像選択 */
+  /* =========================================================
+     画像選択
+     ========================================================= */
+
   fileInput.onchange = e => {
 
     const f =
       e.target.files &&
       e.target.files[0];
 
+
     if(!f) return;
+
 
     if(!f.type.startsWith("image/")){
 
@@ -1051,17 +1195,21 @@ main{
       return;
     }
 
+
     const r =
       new FileReader();
+
 
     r.onload = () => {
 
       const img =
         new Image();
 
+
       img.onload = () => {
 
-        bgImage = img;
+        bgImage =
+          img;
 
         uploadBtn.textContent =
           "🔄 画像を変更する";
@@ -1071,8 +1219,10 @@ main{
         );
 
         draw();
+
         update();
       };
+
 
       img.onerror = () => {
 
@@ -1081,15 +1231,20 @@ main{
         );
       };
 
+
       img.src =
         r.result;
     };
+
 
     r.readAsDataURL(f);
   };
 
 
-  /* 配信UI表示切替 */
+  /* =========================================================
+     配信UI表示切替
+     ========================================================= */
+
   toggle.onclick = () => {
 
     showUiGuide =
@@ -1099,9 +1254,13 @@ main{
   };
 
 
-  /* テーマ */
+  /* =========================================================
+     テーマ
+     ========================================================= */
+
   const KEY =
     "haishin-preview:theme";
+
 
   function apply(t){
 
@@ -1112,16 +1271,19 @@ main{
         t === "light"
       );
 
+
     themeBtn.textContent =
       t === "light"
         ? "☀️"
         : "🌙";
   }
 
+
   apply(
     localStorage.getItem(KEY) ||
     "dark"
   );
+
 
   themeBtn.onclick = () => {
 
@@ -1132,12 +1294,15 @@ main{
         ? "light"
         : "dark";
 
+
     const next =
       cur === "light"
         ? "dark"
         : "light";
 
+
     apply(next);
+
 
     localStorage.setItem(
       KEY,
@@ -1146,9 +1311,14 @@ main{
   };
 
 
-  /* 初期化 */
+  /* =========================================================
+     初期化
+     ========================================================= */
+
   render();
+
   draw();
+
   update();
 
 })();
