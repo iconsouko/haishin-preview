@@ -13,6 +13,10 @@
 
 <style>
 
+/* ==========================================================
+   THEME
+========================================================== */
+
 :root{
   --ink:20 19 28;
   --panel:29 27 41;
@@ -100,9 +104,11 @@ header p{
   height:36px;
 
   border-radius:999px;
+
   border:2px solid rgb(var(--line));
 
   background:rgb(var(--panel));
+
   color:rgb(var(--paper));
 
   font-size:16px;
@@ -134,19 +140,25 @@ main{
   padding:20px;
 
   border-radius:20px;
-  border:2px solid rgb(var(--teal)/.4);
 
-  background:rgb(var(--teal)/.1);
+  border:
+    2px solid rgb(var(--teal)/.4);
 
-  color:rgb(var(--teal));
+  background:
+    rgb(var(--teal)/.1);
+
+  color:
+    rgb(var(--teal));
 
   font-size:16px;
+
   font-weight:700;
 
   cursor:pointer;
 }
 
 @keyframes softPulse{
+
   0%,100%{
     opacity:1;
   }
@@ -154,10 +166,12 @@ main{
   50%{
     opacity:.55;
   }
+
 }
 
 .pulse{
-  animation:softPulse 1.8s ease-in-out infinite;
+  animation:
+    softPulse 1.8s ease-in-out infinite;
 }
 
 
@@ -172,13 +186,17 @@ main{
 
   border-radius:14px;
 
-  border:1px solid rgb(var(--gold)/.55);
+  border:
+    1px solid rgb(var(--gold)/.55);
 
-  background:rgb(var(--gold)/.10);
+  background:
+    rgb(var(--gold)/.10);
 
-  color:rgb(var(--paper));
+  color:
+    rgb(var(--paper));
 
   font-size:12px;
+
   line-height:1.6;
 
   text-align:center;
@@ -202,9 +220,11 @@ main{
 
   border-radius:20px;
 
-  border:2px solid rgb(var(--line));
+  border:
+    2px solid rgb(var(--line));
 
-  background:rgb(var(--panel));
+  background:
+    rgb(var(--panel));
 
   overflow:hidden;
 }
@@ -218,7 +238,14 @@ main{
 
 
 /* ==========================================================
-   左右の見切れ範囲
+   見切れ範囲
+
+   IMPORTANT:
+   シェードと境界線を分離しています。
+
+   以前は border を shade 自体に付けていましたが、
+   左側の境界線が背景との重なりで視認しづらくなる
+   ケースを避けるため、境界線を独立要素にしています。
 ========================================================== */
 
 .shade{
@@ -227,30 +254,67 @@ main{
   top:0;
   bottom:0;
 
-  background:rgba(0,0,0,.55);
+  width:0;
+
+  background:
+    rgba(0,0,0,.55);
 
   pointer-events:none;
-
-  width:0;
 
   z-index:80;
 }
 
 .shade.left{
   left:0;
-
-  border-right:2px dashed rgba(255,255,255,.85);
 }
 
 .shade.right{
   right:0;
-
-  border-left:2px dashed rgba(255,255,255,.85);
 }
 
 
 /* ==========================================================
-   バッジ
+   境界線
+
+   左右を完全に独立させています。
+
+   iPhoneなら左右同じ幅になるため、
+   左右の点線も必ず同じ位置関係になります。
+========================================================== */
+
+.boundary{
+  position:absolute;
+
+  top:0;
+  bottom:0;
+
+  width:0;
+
+  border-left:
+    2px dashed rgba(255,255,255,.95);
+
+  pointer-events:none;
+
+  z-index:90;
+
+  display:none;
+}
+
+.boundary.left{
+  left:0;
+}
+
+.boundary.right{
+  right:0;
+}
+
+.boundary.visible{
+  display:block;
+}
+
+
+/* ==========================================================
+   BADGE
 ========================================================== */
 
 .badge{
@@ -259,7 +323,8 @@ main{
   top:8px;
   left:50%;
 
-  transform:translateX(-50%);
+  transform:
+    translateX(-50%);
 
   white-space:nowrap;
 
@@ -268,11 +333,14 @@ main{
   padding:6px 14px;
 
   font-size:11px;
+
   font-weight:700;
 
-  color:rgb(var(--ink));
+  color:
+    rgb(var(--ink));
 
-  box-shadow:0 2px 8px rgba(0,0,0,.25);
+  box-shadow:
+    0 2px 8px rgba(0,0,0,.25);
 
   display:none;
 
@@ -280,11 +348,13 @@ main{
 }
 
 .badge.warn{
-  background:rgb(var(--gold));
+  background:
+    rgb(var(--gold));
 }
 
 .badge.ok{
-  background:rgb(var(--teal));
+  background:
+    rgb(var(--teal));
 }
 
 
@@ -300,6 +370,7 @@ main{
   display:flex;
 
   align-items:center;
+
   justify-content:center;
 
   text-align:center;
@@ -308,7 +379,8 @@ main{
 
   font-size:14px;
 
-  color:rgb(var(--paper)/.5);
+  color:
+    rgb(var(--paper)/.5);
 
   pointer-events:none;
 
@@ -318,41 +390,21 @@ main{
 
 /* ==========================================================
    ダミー配信UI
-==========================================================
-
-   重要：
-   添付された実際の配信画面は
-
-   709 × 1536 px
-
-   でした。
-
-   そのため、ダミーUIは
-   「1536×2048のキャンバス全体」
-   に直接配置するのではなく、
-
-   実際に端末画面として表示される
-   viewport領域の中に配置しています。
-
-   これにより、
-
-   709×1536
-        ↓
-   選択端末の表示領域
-
-   という比率を維持したまま、
-   各UIを配置できます。
-
 ========================================================== */
 
 #uiGuide{
   position:absolute;
 
   /*
-   * JSで端末ごとの表示領域を設定
+   * JavaScriptから端末比率に応じて
+   * 実際に見える領域を設定します。
    */
-  left:var(--viewport-left, 19.25%);
-  width:var(--viewport-width, 61.50%);
+
+  left:
+    var(--viewport-left, 19.25%);
+
+  width:
+    var(--viewport-width, 61.50%);
 
   top:0;
   bottom:0;
@@ -392,7 +444,8 @@ main{
 
   width:10.58%;
 
-  font-size:clamp(10px,2.2vw,23px);
+  font-size:
+    clamp(10px,2.2vw,23px);
 
   font-weight:800;
 
@@ -411,7 +464,8 @@ main{
 
   gap:6px;
 
-  font-size:clamp(10px,2vw,21px);
+  font-size:
+    clamp(10px,2vw,21px);
 
   font-weight:800;
 }
@@ -447,7 +501,8 @@ main{
 
   overflow:hidden;
 
-  border:2px solid rgba(255,255,255,.9);
+  border:
+    2px solid rgba(255,255,255,.9);
 
   background:
     linear-gradient(
@@ -473,7 +528,8 @@ main{
   align-items:center;
   justify-content:center;
 
-  font-size:clamp(16px,3vw,30px);
+  font-size:
+    clamp(16px,3vw,30px);
 
   font-weight:900;
 
@@ -491,7 +547,8 @@ main{
 
   align-items:center;
 
-  font-size:clamp(8px,1.7vw,17px);
+  font-size:
+    clamp(8px,1.7vw,17px);
 
   font-weight:800;
 }
@@ -507,7 +564,8 @@ main{
 
   align-items:center;
 
-  font-size:clamp(7px,1.35vw,14px);
+  font-size:
+    clamp(7px,1.35vw,14px);
 
   opacity:.92;
 }
@@ -526,7 +584,8 @@ main{
 
   border-radius:50%;
 
-  border:2px solid rgba(255,255,255,.85);
+  border:
+    2px solid rgba(255,255,255,.85);
 
   box-shadow:
     0 2px 7px rgba(0,0,0,.3);
@@ -538,7 +597,8 @@ main{
   align-items:center;
   justify-content:center;
 
-  font-size:clamp(7px,1.3vw,14px);
+  font-size:
+    clamp(7px,1.3vw,14px);
 
   font-weight:900;
 
@@ -612,15 +672,15 @@ main{
   align-items:center;
   justify-content:center;
 
-  font-size:clamp(16px,3vw,30px);
+  font-size:
+    clamp(16px,3vw,30px);
 
   line-height:1;
 }
 
 
 /* ==========================================================
-   曲名表示
-   添付スクショの上部UIを再現
+   曲名
 ========================================================== */
 
 .song-bar{
@@ -640,11 +700,13 @@ main{
 
   border-radius:999px;
 
-  background:rgba(220,220,220,.76);
+  background:
+    rgba(220,220,220,.76);
 
   color:#25252d;
 
-  font-size:clamp(7px,1.35vw,14px);
+  font-size:
+    clamp(7px,1.35vw,14px);
 
   font-weight:800;
 
@@ -666,7 +728,8 @@ main{
 
   border-radius:50%;
 
-  border:2px solid rgba(90,90,100,.65);
+  border:
+    2px solid rgba(90,90,100,.65);
 
   background:
     radial-gradient(
@@ -685,7 +748,7 @@ main{
 
 
 /* ==========================================================
-   配信モード表示
+   配信モード
 ========================================================== */
 
 .mode-line{
@@ -701,7 +764,8 @@ main{
 
   align-items:center;
 
-  font-size:clamp(7px,1.25vw,13px);
+  font-size:
+    clamp(7px,1.25vw,13px);
 
   font-weight:700;
 
@@ -711,21 +775,6 @@ main{
 
 /* ==========================================================
    歌詞
-
-   添付スクショでは
-
-          恋 心 よ
-
-   が画面中央より少し下、
-   コメント欄が始まる直前の位置にあります。
-
-   実測基準：
-   X ≒ 309px
-   Y ≒ 903px
-   W ≒ 91px
-   H ≒ 29px
-
-   709×1536基準で配置。
 ========================================================== */
 
 .lyrics{
@@ -736,13 +785,16 @@ main{
 
   width:25.5%;
 
-  transform:translateX(-50%);
+  transform:
+    translateX(-50%);
 
   text-align:center;
 
-  color:rgba(255,255,255,.96);
+  color:
+    rgba(255,255,255,.96);
 
-  font-size:clamp(11px,2.15vw,23px);
+  font-size:
+    clamp(11px,2.15vw,23px);
 
   font-weight:800;
 
@@ -757,13 +809,6 @@ main{
 
 /* ==========================================================
    コメント欄
-
-   実スクショ：
-   左 ≒ 14px
-   上 ≒ 945px
-   幅 ≒ 590px
-   高さ ≒ 425px
-
 ========================================================== */
 
 .comment-area{
@@ -813,7 +858,8 @@ main{
 
   color:#fff;
 
-  font-size:clamp(7px,1.45vw,15px);
+  font-size:
+    clamp(7px,1.45vw,15px);
 
   font-weight:700;
 
@@ -866,7 +912,8 @@ main{
 
   color:#fff;
 
-  font-size:clamp(10px,2vw,20px);
+  font-size:
+    clamp(10px,2vw,20px);
 }
 
 .side-button.one{
@@ -912,7 +959,8 @@ main{
   color:
     rgba(255,255,255,.7);
 
-  font-size:clamp(7px,1.4vw,15px);
+  font-size:
+    clamp(7px,1.4vw,15px);
 }
 
 
@@ -944,7 +992,8 @@ main{
 
   color:#fff;
 
-  font-size:clamp(10px,2vw,20px);
+  font-size:
+    clamp(10px,2vw,20px);
 
   box-shadow:
     0 3px 8px rgba(0,0,0,.25);
@@ -1014,7 +1063,8 @@ main{
 
   border-radius:20px;
 
-  border:2px solid rgb(var(--line));
+  border:
+    2px solid rgb(var(--line));
 
   background:
     rgb(var(--panel));
@@ -1064,7 +1114,8 @@ main{
 
   border-radius:16px;
 
-  border:2px solid rgb(var(--line));
+  border:
+    2px solid rgb(var(--line));
 
   background:transparent;
 
@@ -1098,7 +1149,8 @@ main{
 
   border-radius:999px;
 
-  border:2px solid rgb(var(--line));
+  border:
+    2px solid rgb(var(--line));
 
   flex-shrink:0;
 
@@ -1238,12 +1290,15 @@ main{
     ></canvas>
 
 
-    <!-- 左右の見切れ範囲 -->
+    <!-- ==================================================
+         見切れ範囲
+    ================================================== -->
 
     <div
       class="shade left"
       id="shadeLeft"
     ></div>
+
 
     <div
       class="shade right"
@@ -1251,7 +1306,28 @@ main{
     ></div>
 
 
-    <!-- 端末表示バッジ -->
+    <!-- ==================================================
+         境界線
+
+         左右を独立した要素にすることで、
+         iPhone選択時にも必ず両方表示。
+    ================================================== -->
+
+    <div
+      class="boundary left"
+      id="boundaryLeft"
+    ></div>
+
+
+    <div
+      class="boundary right"
+      id="boundaryRight"
+    ></div>
+
+
+    <!-- ==================================================
+         端末表示バッジ
+    ================================================== -->
 
     <div
       class="badge"
@@ -1259,7 +1335,9 @@ main{
     ></div>
 
 
-    <!-- 画像未選択時 -->
+    <!-- ==================================================
+         画像未選択
+    ================================================== -->
 
     <div
       class="placeholder"
@@ -1324,7 +1402,7 @@ main{
 
 
       <!-- -----------------------------------------------
-           リスナーアイコン
+           リスナー
       ------------------------------------------------ -->
 
       <div class="listener-avatar a">
@@ -1376,16 +1454,12 @@ main{
       ------------------------------------------------ -->
 
       <div class="mode-line">
-
         ♧ ノーギフト配信モード
-
       </div>
 
 
       <!-- -----------------------------------------------
            歌詞
-
-           実スクショの歌唱中表示
       ------------------------------------------------ -->
 
       <div class="lyrics">
@@ -1599,23 +1673,22 @@ main{
      基準キャンバス
   ====================================================== */
 
-  const CANVAS_WIDTH = 1536;
+  const CANVAS_WIDTH =
+    1536;
 
-  const CANVAS_HEIGHT = 2048;
+  const CANVAS_HEIGHT =
+    2048;
 
 
   /* ======================================================
      実際の配信画面スクショ基準
-
-     添付画像：
-     709 × 1536 px
-
-     この比率をUI配置の基準として使用。
   ====================================================== */
 
-  const REFERENCE_SCREEN_WIDTH = 709;
+  const REFERENCE_SCREEN_WIDTH =
+    709;
 
-  const REFERENCE_SCREEN_HEIGHT = 1536;
+  const REFERENCE_SCREEN_HEIGHT =
+    1536;
 
 
   /* ======================================================
@@ -1631,11 +1704,11 @@ main{
 
       ratioLabel:"19.5:9",
 
-      aspect:1179/2556,
+      aspect:
+        1179 / 2556,
 
       note:
         "上下は画面いっぱい、左右が見切れます"
-
     },
 
 
@@ -1646,11 +1719,11 @@ main{
 
       ratioLabel:"21:9",
 
-      aspect:1080/2520,
+      aspect:
+        1080 / 2520,
 
       note:
         "上下は画面いっぱい、左右が大きく見切れます"
-
     },
 
 
@@ -1661,11 +1734,11 @@ main{
 
       ratioLabel:"20:9目安",
 
-      aspect:9/20,
+      aspect:
+        9 / 20,
 
       note:
         "iPhone/Xperia以外の機種の目安です"
-
     },
 
 
@@ -1676,11 +1749,11 @@ main{
 
       ratioLabel:"59:41",
 
-      aspect:1640/2360,
+      aspect:
+        1640 / 2360,
 
       note:
         "上下左右とも、ほぼ画面いっぱいに表示されます"
-
     }
 
   ];
@@ -1691,70 +1764,115 @@ main{
   ====================================================== */
 
   const canvas =
-    document.getElementById("canvas");
+    document.getElementById(
+      "canvas"
+    );
 
 
   const ctx =
-    canvas.getContext("2d");
+    canvas.getContext(
+      "2d"
+    );
 
 
   const uploadBtn =
-    document.getElementById("uploadBtn");
+    document.getElementById(
+      "uploadBtn"
+    );
 
 
   const fileInput =
-    document.getElementById("fileInput");
+    document.getElementById(
+      "fileInput"
+    );
 
 
   const overlayGuide =
-    document.getElementById("uiGuide");
+    document.getElementById(
+      "uiGuide"
+    );
 
 
   const shadeLeft =
-    document.getElementById("shadeLeft");
+    document.getElementById(
+      "shadeLeft"
+    );
 
 
   const shadeRight =
-    document.getElementById("shadeRight");
+    document.getElementById(
+      "shadeRight"
+    );
+
+
+  const boundaryLeft =
+    document.getElementById(
+      "boundaryLeft"
+    );
+
+
+  const boundaryRight =
+    document.getElementById(
+      "boundaryRight"
+    );
 
 
   const badge =
-    document.getElementById("badge");
+    document.getElementById(
+      "badge"
+    );
 
 
   const placeholder =
-    document.getElementById("placeholder");
+    document.getElementById(
+      "placeholder"
+    );
 
 
   const uiToggleBtn =
-    document.getElementById("uiToggleBtn");
+    document.getElementById(
+      "uiToggleBtn"
+    );
 
 
   const devicePanel =
-    document.getElementById("devicePanel");
+    document.getElementById(
+      "devicePanel"
+    );
 
 
   const deviceGrid =
-    document.getElementById("deviceGrid");
+    document.getElementById(
+      "deviceGrid"
+    );
 
 
   const deviceNote =
-    document.getElementById("deviceNote");
+    document.getElementById(
+      "deviceNote"
+    );
 
 
   const themeBtn =
-    document.getElementById("themeBtn");
+    document.getElementById(
+      "themeBtn"
+    );
 
 
   /* ======================================================
      状態
   ====================================================== */
 
-  let bgImage = null;
+  let bgImage =
+    null;
 
-  let selectedDeviceId = null;
 
-  let showUiGuide = false;
+  let selectedDeviceId =
+    null;
+
+
+  let showUiGuide =
+    false;
 
 
   /* ======================================================
@@ -1832,11 +1950,13 @@ main{
     ------------------------------------------------ */
 
     const scale =
-      CANVAS_HEIGHT / bgImage.height;
+      CANVAS_HEIGHT /
+      bgImage.height;
 
 
     const dw =
-      bgImage.width * scale;
+      bgImage.width *
+      scale;
 
 
     const dh =
@@ -1844,7 +1964,10 @@ main{
 
 
     const dx =
-      (CANVAS_WIDTH - dw) / 2;
+      (
+        CANVAS_WIDTH -
+        dw
+      ) / 2;
 
 
     const dy =
@@ -1866,8 +1989,15 @@ main{
      端末比率による左右見切れ幅
   ====================================================== */
 
-  function cropMarginX(aspect){
+  function cropMarginX(
+    aspect
+  ){
 
+
+    /*
+     * 2048pxの高さを基準にした場合、
+     * 端末画面で実際に見える横幅の割合。
+     */
 
     const visibleWidthFraction =
       aspect *
@@ -1876,6 +2006,12 @@ main{
         CANVAS_WIDTH
       );
 
+
+    /*
+     * 左右それぞれの見切れ割合。
+     *
+     * 必ず左右同じ値になります。
+     */
 
     return Math.max(
       0,
@@ -1892,26 +2028,29 @@ main{
      UI表示領域を計算
   ====================================================== */
 
-  function updateViewportGuide(device){
+  function updateViewportGuide(
+    device
+  ){
 
+
+    /*
+     * 端末未選択時はiPhoneを基準。
+     */
 
     if(!device){
 
-      /*
-       * 端末未選択時はiPhoneを基準に表示。
-       *
-       * 添付された実配信画面が
-       * 縦長スマートフォン画面なので、
-       * UIを空間的に大きくズラさないため。
-       */
-
       device =
         DEVICES.find(
-          d => d.id === "iphone"
+          d =>
+            d.id === "iphone"
         );
 
     }
 
+
+    /*
+     * 端末画面の横幅割合。
+     */
 
     const visibleWidthFraction =
       device.aspect *
@@ -1920,6 +2059,12 @@ main{
         CANVAS_WIDTH
       );
 
+
+    /*
+     * 左右の見切れ幅。
+     *
+     * ここは必ず左右同じ。
+     */
 
     const margin =
       Math.max(
@@ -1930,6 +2075,10 @@ main{
         ) / 2
       );
 
+
+    /*
+     * ダミーUIを実際の表示領域に合わせる。
+     */
 
     overlayGuide.style.setProperty(
       "--viewport-left",
@@ -1950,6 +2099,119 @@ main{
 
 
   /* ======================================================
+     境界線を更新
+  ====================================================== */
+
+  function updateBoundaries(
+    device
+  ){
+
+
+    /*
+     * 端末未選択時は境界線を表示しない。
+     */
+
+    if(!device){
+
+      boundaryLeft.classList.remove(
+        "visible"
+      );
+
+      boundaryRight.classList.remove(
+        "visible"
+      );
+
+      return;
+
+    }
+
+
+    const margin =
+      cropMarginX(
+        device.aspect
+      );
+
+
+    /*
+     * 見切れが発生する端末だけ表示。
+     */
+
+    if(margin > 0.001){
+
+
+      /*
+       * LEFT
+       *
+       * 左端からmargin分。
+       */
+
+      boundaryLeft.style.left =
+        (
+          margin * 100
+        ) + "%";
+
+
+      /*
+       * RIGHT
+       *
+       * 右端からmargin分。
+       */
+
+      boundaryRight.style.right =
+        (
+          margin * 100
+        ) + "%";
+
+
+      /*
+       * 念のため反対側の指定をリセット。
+       */
+
+      boundaryLeft.style.right =
+        "auto";
+
+
+      boundaryRight.style.left =
+        "auto";
+
+
+      /*
+       * 両方を表示。
+       */
+
+      boundaryLeft.classList.add(
+        "visible"
+      );
+
+
+      boundaryRight.classList.add(
+        "visible"
+      );
+
+
+    }else{
+
+
+      /*
+       * iPadなど、
+       * 左右の見切れがない場合は非表示。
+       */
+
+      boundaryLeft.classList.remove(
+        "visible"
+      );
+
+
+      boundaryRight.classList.remove(
+        "visible"
+      );
+
+    }
+
+  }
+
+
+  /* ======================================================
      オーバーレイ更新
   ====================================================== */
 
@@ -1958,12 +2220,13 @@ main{
 
     const device =
       DEVICES.find(
-        d => d.id === selectedDeviceId
+        d =>
+          d.id === selectedDeviceId
       ) || null;
 
 
     /*
-     * UIの表示領域
+     * ダミーUIの表示領域。
      */
 
     updateViewportGuide(
@@ -1972,7 +2235,16 @@ main{
 
 
     /*
-     * 端末が選択されている場合
+     * 左右の境界線。
+     */
+
+    updateBoundaries(
+      device
+    );
+
+
+    /*
+     * 端末が選択されている場合。
      */
 
     if(device){
@@ -1987,6 +2259,10 @@ main{
       if(margin > 0.001){
 
 
+        /*
+         * 見切れ部分。
+         */
+
         shadeLeft.style.width =
           (
             margin * 100
@@ -1998,6 +2274,10 @@ main{
             margin * 100
           ) + "%";
 
+
+        /*
+         * 警告バッジ。
+         */
 
         badge.style.display =
           "block";
@@ -2015,6 +2295,10 @@ main{
 
       }else{
 
+
+        /*
+         * 見切れなし。
+         */
 
         shadeLeft.style.width =
           "0%";
@@ -2047,6 +2331,10 @@ main{
     }else{
 
 
+      /*
+       * 端末未選択。
+       */
+
       shadeLeft.style.width =
         "0%";
 
@@ -2066,7 +2354,7 @@ main{
 
 
     /*
-     * ダミーUI
+     * ダミーUI表示。
      */
 
     overlayGuide.classList.toggle(
@@ -2083,7 +2371,7 @@ main{
 
     /*
      * 画像アップロード後、
-     * 端末未選択なら端末選択を強調
+     * 端末未選択なら端末選択を強調。
      */
 
     devicePanel.classList.toggle(
@@ -2099,7 +2387,9 @@ main{
      HTMLエスケープ
   ====================================================== */
 
-  function escapeHtml(value){
+  function escapeHtml(
+    value
+  ){
 
     return String(value)
 
@@ -2195,13 +2485,21 @@ main{
           () => {
 
 
+            /*
+             * 同じ端末をもう一度押すと解除。
+             */
+
             selectedDeviceId =
-              selectedDeviceId === device.id
+              selectedDeviceId ===
+              device.id
+
                 ? null
+
                 : device.id;
 
 
             renderDeviceButtons();
+
 
             updateOverlays();
 
@@ -2254,9 +2552,9 @@ main{
       }
 
 
-      /* -----------------------------------------------
-         画像確認
-      ------------------------------------------------ */
+      /*
+       * 画像ファイル確認。
+       */
 
       if(
         !file.type.startsWith(
@@ -2273,9 +2571,9 @@ main{
       }
 
 
-      /* -----------------------------------------------
-         読み込み
-      ------------------------------------------------ */
+      /*
+       * FileReader。
+       */
 
       const reader =
         new FileReader();
@@ -2306,16 +2604,8 @@ main{
               );
 
 
-              /*
-               * 初回アップロード時は
-               * iPhoneを基準にUIを表示できるようにする。
-               *
-               * ただし端末選択そのものは
-               * ユーザーが明示的に選択する。
-               */
-
-
               draw();
+
 
               updateOverlays();
 
@@ -2324,6 +2614,7 @@ main{
 
           img.onerror =
             () => {
+
 
               alert(
                 "画像を読み込めませんでした。"
@@ -2373,7 +2664,9 @@ main{
     "haishin-preview:theme";
 
 
-  function applyTheme(theme){
+  function applyTheme(
+    theme
+  ){
 
 
     document.documentElement
@@ -2386,7 +2679,9 @@ main{
 
     themeBtn.textContent =
       theme === "light"
+
         ? "☀️"
+
         : "🌙";
 
   }
@@ -2407,14 +2702,20 @@ main{
       const current =
         document.documentElement
           .classList
-          .contains("light")
+          .contains(
+            "light"
+          )
+
           ? "light"
+
           : "dark";
 
 
       const next =
         current === "light"
+
           ? "dark"
+
           : "light";
 
 
