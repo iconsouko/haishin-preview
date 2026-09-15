@@ -149,7 +149,6 @@ main{
 
 /* =========================================================
    左右の境界線
-   shadeとは完全に独立させる
    ========================================================= */
 
 .crop-line{
@@ -160,15 +159,15 @@ main{
   border-left:2px dashed rgba(255,255,255,.9);
   pointer-events:none;
   z-index:95;
-  display:none;
+  display:none
 }
 
 .crop-line.left{
-  left:0;
+  left:0
 }
 
 .crop-line.right{
-  left:0;
+  left:0
 }
 
 
@@ -329,11 +328,27 @@ main{
   font-size:clamp(14px,2.5vw,28px)
 }
 
+
+/* =========================================================
+   歌詞
+   添付スクショの「恋心よ」の位置に合わせる
+   スクショ：709×1536
+   文字上端：約906px
+   1536×2048プレビューへ換算：約1208px
+   ========================================================= */
+
 .lyrics{
   position:absolute;
   left:50%;
-  top:47%;
+
+  /*
+   * 「恋心よ」の文字上端を
+   * プレビュー座標 約1208px に合わせる
+   */
+  top:calc(1208 / 2048 * 100%);
+
   transform:translateX(-50%);
+
   width:62%;
   text-align:center;
   color:rgba(255,255,255,.96);
@@ -342,6 +357,7 @@ main{
   line-height:1.2;
   text-shadow:0 2px 5px rgba(0,0,0,.65)
 }
+
 
 .comment-area{
   position:absolute;
@@ -571,6 +587,7 @@ main{
 <body>
 
 <header>
+
   <div>
     <h1>配信プレビューさん</h1>
     <p>カスタム背景が配信でどう見えるか確認できます</p>
@@ -583,6 +600,7 @@ main{
   >
     🌙
   </button>
+
 </header>
 
 <main>
@@ -622,7 +640,6 @@ main{
     id="shadeRight"
   ></div>
 
-  <!-- 左右の境界線 -->
   <div
     class="crop-line left"
     id="cropLineLeft"
@@ -768,6 +785,7 @@ main{
   const W = 1536;
   const H = 2048;
 
+
   const DEVICES = [
 
     {
@@ -874,6 +892,7 @@ main{
       H
     );
 
+
     if(!bgImage){
 
       const g =
@@ -909,14 +928,17 @@ main{
       return;
     }
 
+
     placeholder.style.display =
       "none";
+
 
     const s =
       H / bgImage.height;
 
     const dw =
       bgImage.width * s;
+
 
     ctx.drawImage(
       bgImage,
@@ -965,9 +987,7 @@ main{
           m * 100 + "%";
 
 
-        /*
-         * 見切れ部分
-         */
+        /* 見切れ部分 */
 
         shadeLeft.style.width =
           width;
@@ -977,20 +997,11 @@ main{
 
 
         /*
-         * 境界線
-         *
-         * 左線は「見切れ幅」の終点
-         * 右線は「見切れ幅」の終点
-         *
-         * right側もleft座標として計算することで、
-         * Xperia 10 VIの右側でも確実に表示する。
+         * 左右の境界線
          */
 
-        const position =
-          m * 100 + "%";
-
         cropLineLeft.style.left =
-          position;
+          (m * 100) + "%";
 
         cropLineRight.style.left =
           (100 - m * 100) + "%";
@@ -1119,6 +1130,7 @@ main{
       b.type =
         "button";
 
+
       b.className =
         "device-card" +
         (
@@ -1211,12 +1223,15 @@ main{
         bgImage =
           img;
 
+
         uploadBtn.textContent =
           "🔄 画像を変更する";
+
 
         uploadBtn.classList.remove(
           "pulse"
         );
+
 
         draw();
 
