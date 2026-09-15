@@ -123,6 +123,7 @@ main{
   display:block
 }
 
+/* 左右の見切れ部分 */
 .shade{
   position:absolute;
   top:0;
@@ -133,14 +134,40 @@ main{
   z-index:80
 }
 
+/*
+  境界線はshade本体のborderではなく、
+  独立した要素として描画する。
+  これによりiPhone選択時も左側の点線が
+  確実に表示される。
+*/
 .shade.left{
-  left:0;
-  border-right:2px dashed rgba(255,255,255,.85)
+  left:0
 }
 
 .shade.right{
-  right:0;
-  border-left:2px dashed rgba(255,255,255,.85)
+  right:0
+}
+
+.shade.left::after{
+  content:"";
+  position:absolute;
+  top:0;
+  right:-1px;
+  bottom:0;
+  width:2px;
+  border-right:2px dashed rgba(255,255,255,.85);
+  box-sizing:border-box
+}
+
+.shade.right::after{
+  content:"";
+  position:absolute;
+  top:0;
+  left:-1px;
+  bottom:0;
+  width:2px;
+  border-left:2px dashed rgba(255,255,255,.85);
+  box-sizing:border-box
 }
 
 .badge{
@@ -544,12 +571,21 @@ main{
     <h1>配信プレビューさん</h1>
     <p>カスタム背景が配信でどう見えるか確認できます</p>
   </div>
-  <button class="theme-btn" id="themeBtn" aria-label="ライト/ダークモード切替">🌙</button>
+
+  <button
+    class="theme-btn"
+    id="themeBtn"
+    aria-label="ライト/ダークモード切替"
+  >
+    🌙
+  </button>
 </header>
 
 <main>
 
-<button class="upload-btn pulse" id="uploadBtn">🖼 画像をアップロード</button>
+<button class="upload-btn pulse" id="uploadBtn">
+  🖼 画像をアップロード
+</button>
 
 <input
   type="file"
@@ -560,7 +596,11 @@ main{
 
 <div class="preview" id="preview">
 
-  <canvas id="canvas" width="1536" height="2048"></canvas>
+  <canvas
+    id="canvas"
+    width="1536"
+    height="2048"
+  ></canvas>
 
   <div class="shade left" id="shadeLeft"></div>
   <div class="shade right" id="shadeRight"></div>
@@ -667,11 +707,19 @@ main{
 
 <div class="device-panel" id="devicePanel">
 
-  <p class="label">📱 端末を選択</p>
+  <p class="label">
+    📱 端末を選択
+  </p>
 
-  <div class="device-grid" id="deviceGrid"></div>
+  <div
+    class="device-grid"
+    id="deviceGrid"
+  ></div>
 
-  <p class="device-note" id="deviceNote"></p>
+  <p
+    class="device-note"
+    id="deviceNote"
+  ></p>
 
 </div>
 
@@ -680,374 +728,428 @@ main{
 <script>
 (function(){
 
-const W = 1536;
-const H = 2048;
+  const W = 1536;
+  const H = 2048;
 
-const DEVICES = [
-  {
-    id:"iphone",
-    label:"iPhone",
-    ratioLabel:"19.5:9",
-    aspect:1179/2556,
-    note:"上下は画面いっぱい、左右が見切れます"
-  },
-  {
-    id:"xperia10vi",
-    label:"Xperia 10 VI",
-    ratioLabel:"21:9",
-    aspect:1080/2520,
-    note:"上下は画面いっぱい、左右が大きく見切れます"
-  },
-  {
-    id:"other-major",
-    label:"その他の主要スマホ",
-    ratioLabel:"20:9目安",
-    aspect:9/20,
-    note:"iPhone/Xperia以外の機種の目安です"
-  },
-  {
-    id:"ipad",
-    label:"iPad（A16）",
-    ratioLabel:"59:41",
-    aspect:1640/2360,
-    note:"上下左右とも、ほぼ画面いっぱいに表示されます"
+  const DEVICES = [
+    {
+      id:"iphone",
+      label:"iPhone",
+      ratioLabel:"19.5:9",
+      aspect:1179/2556,
+      note:"上下は画面いっぱい、左右が見切れます"
+    },
+    {
+      id:"xperia10vi",
+      label:"Xperia 10 VI",
+      ratioLabel:"21:9",
+      aspect:1080/2520,
+      note:"上下は画面いっぱい、左右が大きく見切れます"
+    },
+    {
+      id:"other-major",
+      label:"その他の主要スマホ",
+      ratioLabel:"20:9目安",
+      aspect:9/20,
+      note:"iPhone/Xperia以外の機種の目安です"
+    },
+    {
+      id:"ipad",
+      label:"iPad（A16）",
+      ratioLabel:"59:41",
+      aspect:1640/2360,
+      note:"上下左右とも、ほぼ画面いっぱいに表示されます"
+    }
+  ];
+
+  const canvas =
+    document.getElementById("canvas");
+
+  const ctx =
+    canvas.getContext("2d");
+
+  const uploadBtn =
+    document.getElementById("uploadBtn");
+
+  const fileInput =
+    document.getElementById("fileInput");
+
+  const guide =
+    document.getElementById("uiGuide");
+
+  const shadeLeft =
+    document.getElementById("shadeLeft");
+
+  const shadeRight =
+    document.getElementById("shadeRight");
+
+  const badge =
+    document.getElementById("badge");
+
+  const placeholder =
+    document.getElementById("placeholder");
+
+  const toggle =
+    document.getElementById("uiToggleBtn");
+
+  const panel =
+    document.getElementById("devicePanel");
+
+  const grid =
+    document.getElementById("deviceGrid");
+
+  const note =
+    document.getElementById("deviceNote");
+
+  const themeBtn =
+    document.getElementById("themeBtn");
+
+  let bgImage = null;
+  let selectedDeviceId = null;
+  let showUiGuide = false;
+
+
+  /* 背景画像を描画 */
+  function draw(){
+
+    ctx.clearRect(0,0,W,H);
+
+    if(!bgImage){
+
+      const g =
+        ctx.createLinearGradient(
+          0,0,0,H
+        );
+
+      g.addColorStop(
+        0,
+        "#1D1B29"
+      );
+
+      g.addColorStop(
+        1,
+        "#14131C"
+      );
+
+      ctx.fillStyle = g;
+
+      ctx.fillRect(
+        0,
+        0,
+        W,
+        H
+      );
+
+      placeholder.style.display =
+        "flex";
+
+      return;
+    }
+
+    placeholder.style.display =
+      "none";
+
+    const s =
+      H / bgImage.height;
+
+    const dw =
+      bgImage.width * s;
+
+    ctx.drawImage(
+      bgImage,
+      (W - dw) / 2,
+      0,
+      dw,
+      H
+    );
   }
-];
-
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
-
-const uploadBtn = document.getElementById("uploadBtn");
-const fileInput = document.getElementById("fileInput");
-
-const guide = document.getElementById("uiGuide");
-
-const shadeLeft = document.getElementById("shadeLeft");
-const shadeRight = document.getElementById("shadeRight");
-
-const badge = document.getElementById("badge");
-const placeholder = document.getElementById("placeholder");
-
-const toggle = document.getElementById("uiToggleBtn");
-
-const panel = document.getElementById("devicePanel");
-const grid = document.getElementById("deviceGrid");
-const note = document.getElementById("deviceNote");
-
-const themeBtn = document.getElementById("themeBtn");
-
-let bgImage = null;
-let selectedDeviceId = null;
-let showUiGuide = false;
 
 
-/* 背景画像を描画 */
-function draw(){
+  /* 左右の見切れ幅 */
+  function margin(aspect){
 
-  ctx.clearRect(0,0,W,H);
-
-  if(!bgImage){
-
-    const g = ctx.createLinearGradient(0,0,0,H);
-
-    g.addColorStop(0,"#1D1B29");
-    g.addColorStop(1,"#14131C");
-
-    ctx.fillStyle = g;
-    ctx.fillRect(0,0,W,H);
-
-    placeholder.style.display = "flex";
-
-    return;
+    return Math.max(
+      0,
+      (1 - aspect * (H / W)) / 2
+    );
   }
 
-  placeholder.style.display = "none";
 
-  /*
-    縦方向を基準に画像を合わせる。
-    元画像の縦横比を維持するため、
-    横方向だけ中央配置する。
-  */
-  const s = H / bgImage.height;
-  const dw = bgImage.width * s;
+  /* プレビュー状態を更新 */
+  function update(){
 
-  ctx.drawImage(
-    bgImage,
-    (W - dw) / 2,
-    0,
-    dw,
-    H
-  );
-}
+    const d =
+      DEVICES.find(
+        x => x.id === selectedDeviceId
+      ) || null;
 
+    if(d){
 
-/* 左右の見切れ幅 */
-function margin(aspect){
+      const m =
+        margin(d.aspect);
 
-  return Math.max(
-    0,
-    (1 - aspect * (H / W)) / 2
-  );
+      if(m > .001){
 
-}
+        const width =
+          m * 100 + "%";
 
+        /*
+          左右のshadeをそれぞれ独立して設定。
+          iPhoneでも左側・右側の両方に
+          正確な見切れ幅を設定する。
+        */
+        shadeLeft.style.width = width;
+        shadeRight.style.width = width;
 
-/* プレビュー状態を更新 */
-function update(){
+        badge.style.display =
+          "block";
 
-  const d =
-    DEVICES.find(
-      x => x.id === selectedDeviceId
-    ) || null;
+        badge.className =
+          "badge warn";
 
-  if(d){
+        badge.textContent =
+          "⚠️ " +
+          d.label +
+          "は左右が見切れます";
 
-    const m = margin(d.aspect);
+      }else{
 
-    if(m > .001){
+        shadeLeft.style.width =
+          "0%";
 
-      shadeLeft.style.width =
         shadeRight.style.width =
-        m * 100 + "%";
+          "0%";
 
-      badge.style.display = "block";
-      badge.className = "badge warn";
+        badge.style.display =
+          "block";
 
-      badge.textContent =
-        "⚠️ " +
-        d.label +
-        "は左右が見切れます";
+        badge.className =
+          "badge ok";
+
+        badge.textContent =
+          "✅ " +
+          d.label +
+          "はほぼ全体が見えます";
+      }
+
+      note.textContent =
+        d.note;
 
     }else{
 
       shadeLeft.style.width =
-        shadeRight.style.width =
         "0%";
 
-      badge.style.display = "block";
-      badge.className = "badge ok";
+      shadeRight.style.width =
+        "0%";
 
-      badge.textContent =
-        "✅ " +
-        d.label +
-        "はほぼ全体が見えます";
+      badge.style.display =
+        "none";
+
+      note.textContent =
+        "";
     }
 
-    note.textContent = d.note;
-
-  }else{
-
-    shadeLeft.style.width =
-      shadeRight.style.width =
-      "0%";
-
-    badge.style.display = "none";
-    note.textContent = "";
-  }
-
-  guide.classList.toggle(
-    "visible",
-    showUiGuide
-  );
-
-  toggle.classList.toggle(
-    "active",
-    showUiGuide
-  );
-
-  panel.classList.toggle(
-    "prompt",
-    !!bgImage && !selectedDeviceId
-  );
-}
-
-
-/* HTMLエスケープ */
-function esc(v){
-
-  return String(v)
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-
-}
-
-
-/* 端末ボタンを生成 */
-function render(){
-
-  grid.innerHTML = "";
-
-  DEVICES.forEach(d => {
-
-    const b = document.createElement("button");
-
-    b.type = "button";
-
-    b.className =
-      "device-card" +
-      (
-        selectedDeviceId === d.id
-          ? " active"
-          : ""
-      );
-
-    b.innerHTML =
-      '<span class="row">' +
-        '<span class="dot"></span>' +
-        '<span class="name">' +
-          esc(d.label) +
-        '</span>' +
-      '</span>' +
-      '<span class="ratio">' +
-        esc(d.ratioLabel) +
-      '</span>';
-
-    b.onclick = () => {
-
-      selectedDeviceId =
-        selectedDeviceId === d.id
-          ? null
-          : d.id;
-
-      render();
-      update();
-
-    };
-
-    grid.appendChild(b);
-
-  });
-
-}
-
-
-/* アップロードボタン */
-uploadBtn.onclick = () => {
-
-  fileInput.click();
-
-};
-
-
-/* 画像選択 */
-fileInput.onchange = e => {
-
-  const f =
-    e.target.files &&
-    e.target.files[0];
-
-  if(!f) return;
-
-  if(!f.type.startsWith("image/")){
-
-    alert(
-      "画像ファイルを選択してください。"
+    guide.classList.toggle(
+      "visible",
+      showUiGuide
     );
 
-    return;
+    toggle.classList.toggle(
+      "active",
+      showUiGuide
+    );
+
+    panel.classList.toggle(
+      "prompt",
+      !!bgImage && !selectedDeviceId
+    );
   }
 
-  const r = new FileReader();
 
-  r.onload = () => {
+  /* HTMLエスケープ */
+  function esc(v){
 
-    const img = new Image();
+    return String(v)
+      .replace(/&/g,"&amp;")
+      .replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;")
+      .replace(/'/g,"&#039;");
+  }
 
-    img.onload = () => {
 
-      bgImage = img;
+  /* 端末ボタンを生成 */
+  function render(){
 
-      uploadBtn.textContent =
-        "🔄 画像を変更する";
+    grid.innerHTML = "";
 
-      uploadBtn.classList.remove(
-        "pulse"
-      );
+    DEVICES.forEach(d => {
 
-      draw();
-      update();
+      const b =
+        document.createElement("button");
 
-    };
+      b.type = "button";
 
-    img.onerror = () => {
+      b.className =
+        "device-card" +
+        (
+          selectedDeviceId === d.id
+            ? " active"
+            : ""
+        );
 
-      alert(
-        "画像を読み込めませんでした。"
-      );
+      b.innerHTML =
+        '<span class="row">' +
+          '<span class="dot"></span>' +
+          '<span class="name">' +
+            esc(d.label) +
+          '</span>' +
+        '</span>' +
+        '<span class="ratio">' +
+          esc(d.ratioLabel) +
+        '</span>';
 
-    };
+      b.onclick = () => {
 
-    img.src = r.result;
+        selectedDeviceId =
+          selectedDeviceId === d.id
+            ? null
+            : d.id;
 
+        render();
+        update();
+      };
+
+      grid.appendChild(b);
+    });
+  }
+
+
+  /* アップロードボタン */
+  uploadBtn.onclick = () => {
+
+    fileInput.click();
   };
 
-  r.readAsDataURL(f);
 
-};
+  /* 画像選択 */
+  fileInput.onchange = e => {
+
+    const f =
+      e.target.files &&
+      e.target.files[0];
+
+    if(!f) return;
+
+    if(!f.type.startsWith("image/")){
+
+      alert(
+        "画像ファイルを選択してください。"
+      );
+
+      return;
+    }
+
+    const r =
+      new FileReader();
+
+    r.onload = () => {
+
+      const img =
+        new Image();
+
+      img.onload = () => {
+
+        bgImage = img;
+
+        uploadBtn.textContent =
+          "🔄 画像を変更する";
+
+        uploadBtn.classList.remove(
+          "pulse"
+        );
+
+        draw();
+        update();
+      };
+
+      img.onerror = () => {
+
+        alert(
+          "画像を読み込めませんでした。"
+        );
+      };
+
+      img.src =
+        r.result;
+    };
+
+    r.readAsDataURL(f);
+  };
 
 
-/* 配信UI表示切替 */
-toggle.onclick = () => {
+  /* 配信UI表示切替 */
+  toggle.onclick = () => {
 
-  showUiGuide = !showUiGuide;
+    showUiGuide =
+      !showUiGuide;
 
+    update();
+  };
+
+
+  /* テーマ */
+  const KEY =
+    "haishin-preview:theme";
+
+  function apply(t){
+
+    document.documentElement
+      .classList
+      .toggle(
+        "light",
+        t === "light"
+      );
+
+    themeBtn.textContent =
+      t === "light"
+        ? "☀️"
+        : "🌙";
+  }
+
+  apply(
+    localStorage.getItem(KEY) ||
+    "dark"
+  );
+
+  themeBtn.onclick = () => {
+
+    const cur =
+      document.documentElement
+        .classList
+        .contains("light")
+        ? "light"
+        : "dark";
+
+    const next =
+      cur === "light"
+        ? "dark"
+        : "light";
+
+    apply(next);
+
+    localStorage.setItem(
+      KEY,
+      next
+    );
+  };
+
+
+  /* 初期化 */
+  render();
+  draw();
   update();
-
-};
-
-
-/* テーマ */
-const KEY =
-  "haishin-preview:theme";
-
-function apply(t){
-
-  document.documentElement.classList.toggle(
-    "light",
-    t === "light"
-  );
-
-  themeBtn.textContent =
-    t === "light"
-      ? "☀️"
-      : "🌙";
-}
-
-apply(
-  localStorage.getItem(KEY) || "dark"
-);
-
-themeBtn.onclick = () => {
-
-  const cur =
-    document.documentElement.classList.contains(
-      "light"
-    )
-      ? "light"
-      : "dark";
-
-  const next =
-    cur === "light"
-      ? "dark"
-      : "light";
-
-  apply(next);
-
-  localStorage.setItem(
-    KEY,
-    next
-  );
-
-};
-
-
-/* 初期化 */
-render();
-draw();
-update();
 
 })();
 </script>
