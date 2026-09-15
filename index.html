@@ -230,10 +230,20 @@ main{
   text-shadow:0 1px 3px rgba(0,0,0,.55)
 }
 
+
+/* =========================================================
+   上部UI
+   IMG-4920の座標に合わせて調整
+   ========================================================= */
+
 .creator-avatar{
   position:absolute;
+
   left:calc(314 / 1536 * 100%);
-  top:calc(116 / 2048 * 100%);
+
+  /* IMG-4920：約113px → 1536×2048では約151px */
+  top:calc(151 / 2048 * 100%);
+
   width:calc(102 / 1536 * 100%);
   aspect-ratio:1;
   border-radius:50%;
@@ -257,7 +267,10 @@ main{
 
 .creator-name{
   left:calc(426 / 1536 * 100%);
-  top:calc(127 / 2048 * 100%);
+
+  /* IMG-4920：約120px → 約160px */
+  top:calc(160 / 2048 * 100%);
+
   width:calc(250 / 1536 * 100%);
   height:calc(34 / 2048 * 100%);
   display:flex;
@@ -268,7 +281,10 @@ main{
 
 .creator-info{
   left:calc(426 / 1536 * 100%);
-  top:calc(175 / 2048 * 100%);
+
+  /* IMG-4920：約155px → 約207px */
+  top:calc(207 / 2048 * 100%);
+
   width:calc(316 / 1536 * 100%);
   height:calc(34 / 2048 * 100%);
   display:flex;
@@ -279,6 +295,7 @@ main{
 
 .listener-avatar{
   position:absolute;
+
   width:calc(71 / 1536 * 100%);
   aspect-ratio:1;
   border-radius:50%;
@@ -293,33 +310,39 @@ main{
   color:#fff
 }
 
+
+/* IMG-4920：約120px → 約160px */
+
 .listener-avatar.a{
   left:calc(769 / 1536 * 100%);
-  top:calc(131 / 2048 * 100%);
+  top:calc(160 / 2048 * 100%);
   background:linear-gradient(135deg,#ff9a9e,#fad0c4)
 }
 
 .listener-avatar.b{
   left:calc(878 / 1536 * 100%);
-  top:calc(131 / 2048 * 100%);
+  top:calc(160 / 2048 * 100%);
   background:linear-gradient(135deg,#a18cd1,#fbc2eb)
 }
 
 .listener-avatar.c{
   left:calc(959 / 1536 * 100%);
-  top:calc(131 / 2048 * 100%);
+  top:calc(160 / 2048 * 100%);
   background:linear-gradient(135deg,#84fab0,#8fd3f4)
 }
 
 .listener-avatar.d{
   left:calc(1040 / 1536 * 100%);
-  top:calc(131 / 2048 * 100%);
+  top:calc(160 / 2048 * 100%);
   background:linear-gradient(135deg,#f6d365,#fda085)
 }
 
 .close-button{
   left:calc(1173 / 1536 * 100%);
-  top:calc(139 / 2048 * 100%);
+
+  /* IMG-4920：約128px → 約171px */
+  top:calc(171 / 2048 * 100%);
+
   width:calc(55 / 1536 * 100%);
   height:calc(55 / 2048 * 100%);
   display:flex;
@@ -331,10 +354,7 @@ main{
 
 /* =========================================================
    歌詞
-   添付スクショの「恋心よ」の位置に合わせる
-   スクショ：709×1536
-   文字上端：約906px
-   1536×2048プレビューへ換算：約1208px
+   IMG-4920の「恋心よ」に合わせる
    ========================================================= */
 
 .lyrics{
@@ -342,8 +362,12 @@ main{
   left:50%;
 
   /*
-   * 「恋心よ」の文字上端を
-   * プレビュー座標 約1208px に合わせる
+   * IMG-4920
+   * 「恋心よ」文字上端：約906px
+   *
+   * 1536×2048プレビューへ換算
+   * 906 × (2048 / 1536)
+   * ≒ 1208px
    */
   top:calc(1208 / 2048 * 100%);
 
@@ -359,16 +383,25 @@ main{
 }
 
 
+/* =========================================================
+   コメント
+   ========================================================= */
+
 .comment-area{
   position:absolute;
+
   left:calc(315 / 1536 * 100%);
   top:calc(1225 / 2048 * 100%);
+
   width:calc(805 / 1536 * 100%);
   height:calc(597 / 2048 * 100%);
+
   overflow:hidden;
+
   display:flex;
   flex-direction:column;
   justify-content:flex-end;
+
   padding:3% 2.2% 3%
 }
 
@@ -395,63 +428,122 @@ main{
   opacity:.82
 }
 
+
+/* =========================================================
+   右側ボタン
+   IMG-4920の実測位置に合わせる
+   ========================================================= */
+
 .side-button{
   position:absolute;
   left:calc(1146 / 1536 * 100%);
+
   width:calc(71 / 1536 * 100%);
   aspect-ratio:1;
   border-radius:50%;
+
   display:flex;
   align-items:center;
   justify-content:center;
+
   background:rgba(80,82,91,.78);
   border:1px solid rgba(255,255,255,.18);
   box-shadow:0 3px 8px rgba(0,0,0,.25);
+
   color:#fff;
   font-size:clamp(10px,2vw,20px)
 }
 
+
+/*
+ * IMG-4920
+ * 右ボタン① 上端：約1142px
+ * → 1536×2048：約1523px
+ */
+
 .side-button.one{
-  top:calc(1505 / 2048 * 100%)
+  top:calc(1523 / 2048 * 100%)
 }
+
+
+/*
+ * IMG-4920
+ * 右ボタン② 上端：約1229px
+ * → 1536×2048：約1639px
+ */
 
 .side-button.two{
-  top:calc(1626 / 2048 * 100%)
+  top:calc(1639 / 2048 * 100%)
 }
 
+
+/*
+ * IMG-4920
+ * 右ボタン③ 上端：約1316px
+ * → 1536×2048：約1755px
+ */
+
 .side-button.three{
-  top:calc(1747 / 2048 * 100%)
+  top:calc(1755 / 2048 * 100%)
 }
+
+
+/* =========================================================
+   コメント入力欄
+   ========================================================= */
 
 .comment-input{
   position:absolute;
+
   left:calc(315 / 1536 * 100%);
-  top:calc(1854 / 2048 * 100%);
+
+  /*
+   * IMG-4920：約1392px
+   * → 約1856px
+   */
+  top:calc(1856 / 2048 * 100%);
+
   width:calc(563 / 1536 * 100%);
   height:calc(100 / 2048 * 100%);
+
   border-radius:999px;
   background:rgba(35,35,42,.82);
   border:1px solid rgba(255,255,255,.12);
+
   display:flex;
   align-items:center;
+
   padding-left:5%;
+
   color:rgba(255,255,255,.7);
   font-size:clamp(7px,1.4vw,15px)
 }
 
+
+/* =========================================================
+   下部ボタン
+   ========================================================= */
+
 .bottom-button{
   position:absolute;
+
   top:calc(1868 / 2048 * 100%);
+
   width:calc(71 / 1536 * 100%);
   aspect-ratio:1;
   border-radius:50%;
+
   display:flex;
   align-items:center;
   justify-content:center;
+
   background:rgba(80,82,91,.78);
   border:1px solid rgba(255,255,255,.18);
+
   color:#fff;
+
   font-size:clamp(10px,2vw,20px);
+
   box-shadow:0 3px 8px rgba(0,0,0,.25)
 }
 
@@ -467,19 +559,30 @@ main{
   left:calc(1146 / 1536 * 100%)
 }
 
+
+/* =========================================================
+   UI表示切替
+   ========================================================= */
+
 .ui-toggle{
   position:absolute;
   right:8px;
   bottom:8px;
+
   width:40px;
   height:40px;
+
   border-radius:999px;
   border:none;
+
   font-size:18px;
   cursor:pointer;
+
   background:rgb(var(--ink)/.7);
   color:rgb(var(--paper));
+
   box-shadow:0 2px 8px rgba(0,0,0,.3);
+
   z-index:200
 }
 
@@ -488,11 +591,19 @@ main{
   color:rgb(var(--ink))
 }
 
+
+/* =========================================================
+   端末選択
+   ========================================================= */
+
 .device-panel{
   margin-top:16px;
+
   border-radius:20px;
   border:2px solid rgb(var(--line));
+
   background:rgb(var(--panel));
+
   padding:20px
 }
 
@@ -515,18 +626,24 @@ main{
 }
 
 @media(min-width:480px){
+
   .device-grid{
     grid-template-columns:repeat(4,1fr)
   }
+
 }
 
 .device-card{
   text-align:left;
+
   border-radius:16px;
   border:2px solid rgb(var(--line));
+
   background:transparent;
   color:rgb(var(--paper));
+
   padding:12px;
+
   cursor:pointer
 }
 
@@ -544,9 +661,13 @@ main{
 .device-card .dot{
   width:16px;
   height:16px;
+
   border-radius:999px;
+
   border:2px solid rgb(var(--line));
+
   flex-shrink:0;
+
   display:flex;
   align-items:center;
   justify-content:center
@@ -558,9 +679,12 @@ main{
 
 .device-card.active .dot:after{
   content:"";
+
   width:8px;
   height:8px;
+
   border-radius:999px;
+
   background:rgb(var(--coral))
 }
 
@@ -571,8 +695,11 @@ main{
 
 .device-card .ratio{
   display:block;
+
   margin-top:4px;
+
   font-size:11px;
+
   color:rgb(var(--muted))
 }
 
@@ -589,8 +716,15 @@ main{
 <header>
 
   <div>
-    <h1>配信プレビューさん</h1>
-    <p>カスタム背景が配信でどう見えるか確認できます</p>
+
+    <h1>
+      配信プレビューさん
+    </h1>
+
+    <p>
+      カスタム背景が配信でどう見えるか確認できます
+    </p>
+
   </div>
 
   <button
@@ -630,30 +764,36 @@ main{
     height="2048"
   ></canvas>
 
+
   <div
     class="shade left"
     id="shadeLeft"
   ></div>
+
 
   <div
     class="shade right"
     id="shadeRight"
   ></div>
 
+
   <div
     class="crop-line left"
     id="cropLineLeft"
   ></div>
+
 
   <div
     class="crop-line right"
     id="cropLineRight"
   ></div>
 
+
   <div
     class="badge"
     id="badge"
   ></div>
+
 
   <div
     class="placeholder"
@@ -663,88 +803,149 @@ main{
     配信画面を再現したプレビューを表示します
   </div>
 
+
   <div id="uiGuide">
 
     <div class="creator-avatar"></div>
+
 
     <div class="creator-name fake-ui">
       配信者A
     </div>
 
+
     <div class="creator-info fake-ui">
       ♡ 33　配信中
     </div>
 
-    <div class="listener-avatar a">A</div>
-    <div class="listener-avatar b">B</div>
-    <div class="listener-avatar c">C</div>
-    <div class="listener-avatar d">D</div>
+
+    <div class="listener-avatar a">
+      A
+    </div>
+
+    <div class="listener-avatar b">
+      B
+    </div>
+
+    <div class="listener-avatar c">
+      C
+    </div>
+
+    <div class="listener-avatar d">
+      D
+    </div>
+
 
     <div class="close-button fake-ui">
       ×
     </div>
 
+
     <div class="lyrics">
       ここに歌詞が表示される
     </div>
 
+
     <div class="comment-area">
 
       <div class="comment">
-        <span class="name">リスナーA</span>
+        <span class="name">
+          リスナーA
+        </span>
         こんにちは！
       </div>
 
+
       <div class="comment highlight">
-        <span class="name">リスナーB</span>
+        <span class="name">
+          リスナーB
+        </span>
         素敵な歌声です！
       </div>
 
+
       <div class="comment">
-        <span class="name">リスナーC</span>
+        <span class="name">
+          リスナーC
+        </span>
         今日も楽しみにしてました
       </div>
 
+
       <div class="comment highlight">
-        <span class="name">リスナーD</span>
+        <span class="name">
+          リスナーD
+        </span>
         👏👏👏
       </div>
 
+
       <div class="comment">
-        <span class="name">リスナーE</span>
+        <span class="name">
+          リスナーE
+        </span>
         ありがとうございます！
       </div>
 
+
       <div class="comment">
-        <span class="name">リスナーF</span>
+        <span class="name">
+          リスナーF
+        </span>
         次の曲も楽しみです
       </div>
 
+
       <div class="comment highlight">
-        <span class="name">リスナーG</span>
+        <span class="name">
+          リスナーG
+        </span>
         すごく綺麗です✨
       </div>
 
+
       <div class="comment">
-        <span class="name">リスナーH</span>
+        <span class="name">
+          リスナーH
+        </span>
         聴いてます！
       </div>
 
     </div>
 
-    <div class="side-button one">♡</div>
-    <div class="side-button two">🎁</div>
-    <div class="side-button three">♪</div>
+
+    <div class="side-button one">
+      ♡
+    </div>
+
+    <div class="side-button two">
+      🎁
+    </div>
+
+    <div class="side-button three">
+      ♪
+    </div>
+
 
     <div class="comment-input">
       コメントを入力…
     </div>
 
-    <div class="bottom-button one">☁</div>
-    <div class="bottom-button two">♛</div>
-    <div class="bottom-button three">…</div>
+
+    <div class="bottom-button one">
+      ☁
+    </div>
+
+    <div class="bottom-button two">
+      ♛
+    </div>
+
+    <div class="bottom-button three">
+      …
+    </div>
 
   </div>
+
 
   <button
     class="ui-toggle"
@@ -756,6 +957,7 @@ main{
 
 </div>
 
+
 <div
   class="device-panel"
   id="devicePanel"
@@ -765,10 +967,12 @@ main{
     📱 端末を選択
   </p>
 
+
   <div
     class="device-grid"
     id="deviceGrid"
   ></div>
+
 
   <p
     class="device-note"
@@ -778,6 +982,7 @@ main{
 </div>
 
 </main>
+
 
 <script>
 (function(){
@@ -826,47 +1031,62 @@ main{
   const canvas =
     document.getElementById("canvas");
 
+
   const ctx =
     canvas.getContext("2d");
+
 
   const uploadBtn =
     document.getElementById("uploadBtn");
 
+
   const fileInput =
     document.getElementById("fileInput");
+
 
   const guide =
     document.getElementById("uiGuide");
 
+
   const shadeLeft =
     document.getElementById("shadeLeft");
+
 
   const shadeRight =
     document.getElementById("shadeRight");
 
+
   const cropLineLeft =
     document.getElementById("cropLineLeft");
+
 
   const cropLineRight =
     document.getElementById("cropLineRight");
 
+
   const badge =
     document.getElementById("badge");
+
 
   const placeholder =
     document.getElementById("placeholder");
 
+
   const toggle =
     document.getElementById("uiToggleBtn");
+
 
   const panel =
     document.getElementById("devicePanel");
 
+
   const grid =
     document.getElementById("deviceGrid");
 
+
   const note =
     document.getElementById("deviceNote");
+
 
   const themeBtn =
     document.getElementById("themeBtn");
@@ -903,17 +1123,22 @@ main{
           H
         );
 
+
       g.addColorStop(
         0,
         "#1D1B29"
       );
+
 
       g.addColorStop(
         1,
         "#14131C"
       );
 
-      ctx.fillStyle = g;
+
+      ctx.fillStyle =
+        g;
+
 
       ctx.fillRect(
         0,
@@ -922,8 +1147,10 @@ main{
         H
       );
 
+
       placeholder.style.display =
         "flex";
+
 
       return;
     }
@@ -935,6 +1162,7 @@ main{
 
     const s =
       H / bgImage.height;
+
 
     const dw =
       bgImage.width * s;
@@ -992,16 +1220,16 @@ main{
         shadeLeft.style.width =
           width;
 
+
         shadeRight.style.width =
           width;
 
 
-        /*
-         * 左右の境界線
-         */
+        /* 左右の境界線 */
 
         cropLineLeft.style.left =
           (m * 100) + "%";
+
 
         cropLineRight.style.left =
           (100 - m * 100) + "%";
@@ -1010,6 +1238,7 @@ main{
         cropLineLeft.style.display =
           "block";
 
+
         cropLineRight.style.display =
           "block";
 
@@ -1017,8 +1246,10 @@ main{
         badge.style.display =
           "block";
 
+
         badge.className =
           "badge warn";
+
 
         badge.textContent =
           "⚠️ " +
@@ -1030,12 +1261,14 @@ main{
         shadeLeft.style.width =
           "0%";
 
+
         shadeRight.style.width =
           "0%";
 
 
         cropLineLeft.style.display =
           "none";
+
 
         cropLineRight.style.display =
           "none";
@@ -1044,8 +1277,10 @@ main{
         badge.style.display =
           "block";
 
+
         badge.className =
           "badge ok";
+
 
         badge.textContent =
           "✅ " +
@@ -1062,6 +1297,7 @@ main{
       shadeLeft.style.width =
         "0%";
 
+
       shadeRight.style.width =
         "0%";
 
@@ -1069,12 +1305,14 @@ main{
       cropLineLeft.style.display =
         "none";
 
+
       cropLineRight.style.display =
         "none";
 
 
       badge.style.display =
         "none";
+
 
       note.textContent =
         "";
@@ -1086,10 +1324,12 @@ main{
       showUiGuide
     );
 
+
     toggle.classList.toggle(
       "active",
       showUiGuide
     );
+
 
     panel.classList.toggle(
       "prompt",
@@ -1119,13 +1359,15 @@ main{
 
   function render(){
 
-    grid.innerHTML = "";
+    grid.innerHTML =
+      "";
 
 
     DEVICES.forEach(d => {
 
       const b =
         document.createElement("button");
+
 
       b.type =
         "button";
@@ -1163,6 +1405,7 @@ main{
             ? null
             : d.id;
 
+
         render();
 
         update();
@@ -1195,7 +1438,8 @@ main{
       e.target.files[0];
 
 
-    if(!f) return;
+    if(!f)
+      return;
 
 
     if(!f.type.startsWith("image/")){
@@ -1264,6 +1508,7 @@ main{
 
     showUiGuide =
       !showUiGuide;
+
 
     update();
   };
