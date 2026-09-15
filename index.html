@@ -7,12 +7,44 @@
 <meta name="description" content="ColorSingのカスタム背景が配信画面でどう見えるか確認できるプレビューです。">
 
 <style>
-:root{--ink:20 19 28;--panel:29 27 41;--line:51 47 68;--paper:250 247 241;--muted:199 194 214;--coral:255 111 89;--teal:47 182 166;--gold:245 185 66}
-html.light{--ink:250 247 241;--panel:255 255 255;--line:224 219 232;--paper:30 27 41;--muted:96 90 112}
-*{box-sizing:border-box}
-html,body{height:100%;margin:0}
-body{background:rgb(var(--ink));color:rgb(var(--paper));font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic",Meiryo,sans-serif;-webkit-font-smoothing:antialiased}
-button{font:inherit}
+:root{
+  --ink:20 19 28;
+  --panel:29 27 41;
+  --line:51 47 68;
+  --paper:250 247 241;
+  --muted:199 194 214;
+  --coral:255 111 89;
+  --teal:47 182 166;
+  --gold:245 185 66
+}
+
+html.light{
+  --ink:250 247 241;
+  --panel:255 255 255;
+  --line:224 219 232;
+  --paper:30 27 41;
+  --muted:96 90 112
+}
+
+*{
+  box-sizing:border-box
+}
+
+html,body{
+  height:100%;
+  margin:0
+}
+
+body{
+  background:rgb(var(--ink));
+  color:rgb(var(--paper));
+  font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic",Meiryo,sans-serif;
+  -webkit-font-smoothing:antialiased
+}
+
+button{
+  font:inherit
+}
 
 header{
   display:flex;
@@ -266,7 +298,6 @@ main{
   font-size:clamp(14px,2.5vw,28px)
 }
 
-/* 歌詞表示 */
 .lyrics{
   position:absolute;
   left:50%;
@@ -513,691 +544,510 @@ main{
     <h1>配信プレビューさん</h1>
     <p>カスタム背景が配信でどう見えるか確認できます</p>
   </div>
-
-  <button
-    class="theme-btn"
-    id="themeBtn"
-    aria-label="ライト/ダークモード切替"
-  >
-    🌙
-  </button>
+  <button class="theme-btn" id="themeBtn" aria-label="ライト/ダークモード切替">🌙</button>
 </header>
 
 <main>
 
+<button class="upload-btn pulse" id="uploadBtn">🖼 画像をアップロード</button>
+
+<input
+  type="file"
+  id="fileInput"
+  accept="image/png,image/jpeg,image/webp"
+  style="display:none"
+>
+
+<div class="preview" id="preview">
+
+  <canvas id="canvas" width="1536" height="2048"></canvas>
+
+  <div class="shade left" id="shadeLeft"></div>
+  <div class="shade right" id="shadeRight"></div>
+
+  <div class="badge" id="badge"></div>
+
+  <div class="placeholder" id="placeholder">
+    画像をアップロードすると、<br>
+    配信画面を再現したプレビューを表示します
+  </div>
+
+  <div id="uiGuide">
+
+    <div class="creator-avatar"></div>
+
+    <div class="creator-name fake-ui">
+      配信者A
+    </div>
+
+    <div class="creator-info fake-ui">
+      ♡ 33　配信中
+    </div>
+
+    <div class="listener-avatar a">A</div>
+    <div class="listener-avatar b">B</div>
+    <div class="listener-avatar c">C</div>
+    <div class="listener-avatar d">D</div>
+
+    <div class="close-button fake-ui">
+      ×
+    </div>
+
+    <div class="lyrics">
+      ここに歌詞が表示される
+    </div>
+
+    <div class="comment-area">
+
+      <div class="comment">
+        <span class="name">リスナーA</span>
+        こんにちは！
+      </div>
+
+      <div class="comment highlight">
+        <span class="name">リスナーB</span>
+        素敵な歌声です！
+      </div>
+
+      <div class="comment">
+        <span class="name">リスナーC</span>
+        今日も楽しみにしてました
+      </div>
+
+      <div class="comment highlight">
+        <span class="name">リスナーD</span>
+        👏👏👏
+      </div>
+
+      <div class="comment">
+        <span class="name">リスナーE</span>
+        ありがとうございます！
+      </div>
+
+      <div class="comment">
+        <span class="name">リスナーF</span>
+        次の曲も楽しみです
+      </div>
+
+      <div class="comment highlight">
+        <span class="name">リスナーG</span>
+        すごく綺麗です✨
+      </div>
+
+      <div class="comment">
+        <span class="name">リスナーH</span>
+        聴いてます！
+      </div>
+
+    </div>
+
+    <div class="side-button one">♡</div>
+    <div class="side-button two">🎁</div>
+    <div class="side-button three">♪</div>
+
+    <div class="comment-input">
+      コメントを入力…
+    </div>
+
+    <div class="bottom-button one">☁</div>
+    <div class="bottom-button two">♛</div>
+    <div class="bottom-button three">…</div>
+
+  </div>
+
   <button
-    class="upload-btn pulse"
-    id="uploadBtn"
+    class="ui-toggle"
+    id="uiToggleBtn"
+    aria-label="配信画面UIとの重なりを確認"
   >
-    🖼 画像をアップロード
+    👥
   </button>
 
-  <input
-    type="file"
-    id="fileInput"
-    accept="image/png,image/jpeg,image/webp"
-    style="display:none"
-  >
+</div>
 
-  <div
-    class="preview"
-    id="preview"
-  >
+<div class="device-panel" id="devicePanel">
 
-    <canvas
-      id="canvas"
-      width="1536"
-      height="2048"
-    ></canvas>
+  <p class="label">📱 端末を選択</p>
 
-    <div
-      class="shade left"
-      id="shadeLeft"
-    ></div>
+  <div class="device-grid" id="deviceGrid"></div>
 
-    <div
-      class="shade right"
-      id="shadeRight"
-    ></div>
+  <p class="device-note" id="deviceNote"></p>
 
-    <div
-      class="badge"
-      id="badge"
-    ></div>
-
-    <div
-      class="placeholder"
-      id="placeholder"
-    >
-      画像をアップロードすると、<br>
-      配信画面を再現したプレビューを表示します
-    </div>
-
-    <div id="uiGuide">
-
-      <div class="creator-avatar"></div>
-
-      <div class="creator-name fake-ui">
-        配信者A
-      </div>
-
-      <div class="creator-info fake-ui">
-        ♡ 33　配信中
-      </div>
-
-      <div class="listener-avatar a">
-        A
-      </div>
-
-      <div class="listener-avatar b">
-        B
-      </div>
-
-      <div class="listener-avatar c">
-        C
-      </div>
-
-      <div class="listener-avatar d">
-        D
-      </div>
-
-      <div class="close-button fake-ui">
-        ×
-      </div>
-
-      <!-- 「恋心よ」から「ここに歌詞が表示される」に変更 -->
-      <div class="lyrics">
-        ここに歌詞が表示される
-      </div>
-
-      <div class="comment-area">
-
-        <div class="comment">
-          <span class="name">リスナーA</span>
-          こんにちは！
-        </div>
-
-        <div class="comment highlight">
-          <span class="name">リスナーB</span>
-          素敵な歌声です！
-        </div>
-
-        <div class="comment">
-          <span class="name">リスナーC</span>
-          今日も楽しみにしてました
-        </div>
-
-        <div class="comment highlight">
-          <span class="name">リスナーD</span>
-          👏👏👏
-        </div>
-
-        <div class="comment">
-          <span class="name">リスナーE</span>
-          ありがとうございます！
-        </div>
-
-        <div class="comment">
-          <span class="name">リスナーF</span>
-          次の曲も楽しみです
-        </div>
-
-        <div class="comment highlight">
-          <span class="name">リスナーG</span>
-          すごく綺麗です✨
-        </div>
-
-        <div class="comment">
-          <span class="name">リスナーH</span>
-          聴いてます！
-        </div>
-
-      </div>
-
-      <div class="side-button one">
-        ♡
-      </div>
-
-      <div class="side-button two">
-        🎁
-      </div>
-
-      <div class="side-button three">
-        ♪
-      </div>
-
-      <div class="comment-input">
-        コメントを入力…
-      </div>
-
-      <div class="bottom-button one">
-        ☁
-      </div>
-
-      <div class="bottom-button two">
-        ♛
-      </div>
-
-      <div class="bottom-button three">
-        …
-      </div>
-
-    </div>
-
-    <button
-      class="ui-toggle"
-      id="uiToggleBtn"
-      aria-label="配信画面UIとの重なりを確認"
-    >
-      👥
-    </button>
-
-  </div>
-
-  <div
-    class="device-panel"
-    id="devicePanel"
-  >
-
-    <p class="label">
-      📱 端末を選択
-    </p>
-
-    <div
-      class="device-grid"
-      id="deviceGrid"
-    ></div>
-
-    <p
-      class="device-note"
-      id="deviceNote"
-    ></p>
-
-  </div>
+</div>
 
 </main>
 
 <script>
 (function(){
 
-  const W = 1536;
-  const H = 2048;
+const W = 1536;
+const H = 2048;
 
-  const DEVICES = [
+const DEVICES = [
+  {
+    id:"iphone",
+    label:"iPhone",
+    ratioLabel:"19.5:9",
+    aspect:1179/2556,
+    note:"上下は画面いっぱい、左右が見切れます"
+  },
+  {
+    id:"xperia10vi",
+    label:"Xperia 10 VI",
+    ratioLabel:"21:9",
+    aspect:1080/2520,
+    note:"上下は画面いっぱい、左右が大きく見切れます"
+  },
+  {
+    id:"other-major",
+    label:"その他の主要スマホ",
+    ratioLabel:"20:9目安",
+    aspect:9/20,
+    note:"iPhone/Xperia以外の機種の目安です"
+  },
+  {
+    id:"ipad",
+    label:"iPad（A16）",
+    ratioLabel:"59:41",
+    aspect:1640/2360,
+    note:"上下左右とも、ほぼ画面いっぱいに表示されます"
+  }
+];
 
-    {
-      id:"iphone",
-      label:"iPhone",
-      ratioLabel:"19.5:9",
-      aspect:1179/2556,
-      note:"上下は画面いっぱい、左右が見切れます"
-    },
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
 
-    {
-      id:"xperia10vi",
-      label:"Xperia 10 VI",
-      ratioLabel:"21:9",
-      aspect:1080/2520,
-      note:"上下は画面いっぱい、左右が大きく見切れます"
-    },
+const uploadBtn = document.getElementById("uploadBtn");
+const fileInput = document.getElementById("fileInput");
 
-    {
-      id:"other-major",
-      label:"その他の主要スマホ",
-      ratioLabel:"20:9目安",
-      aspect:9/20,
-      note:"iPhone/Xperia以外の機種の目安です"
-    },
+const guide = document.getElementById("uiGuide");
 
-    {
-      id:"ipad",
-      label:"iPad（A16）",
-      ratioLabel:"59:41",
-      aspect:1640/2360,
-      note:"上下左右とも、ほぼ画面いっぱいに表示されます"
-    }
+const shadeLeft = document.getElementById("shadeLeft");
+const shadeRight = document.getElementById("shadeRight");
 
-  ];
+const badge = document.getElementById("badge");
+const placeholder = document.getElementById("placeholder");
 
-  const canvas =
-    document.getElementById("canvas");
+const toggle = document.getElementById("uiToggleBtn");
 
-  const ctx =
-    canvas.getContext("2d");
+const panel = document.getElementById("devicePanel");
+const grid = document.getElementById("deviceGrid");
+const note = document.getElementById("deviceNote");
 
-  const uploadBtn =
-    document.getElementById("uploadBtn");
+const themeBtn = document.getElementById("themeBtn");
 
-  const fileInput =
-    document.getElementById("fileInput");
-
-  const guide =
-    document.getElementById("uiGuide");
-
-  const shadeLeft =
-    document.getElementById("shadeLeft");
-
-  const shadeRight =
-    document.getElementById("shadeRight");
-
-  const badge =
-    document.getElementById("badge");
-
-  const placeholder =
-    document.getElementById("placeholder");
-
-  const toggle =
-    document.getElementById("uiToggleBtn");
-
-  const panel =
-    document.getElementById("devicePanel");
-
-  const grid =
-    document.getElementById("deviceGrid");
-
-  const note =
-    document.getElementById("deviceNote");
-
-  const themeBtn =
-    document.getElementById("themeBtn");
+let bgImage = null;
+let selectedDeviceId = null;
+let showUiGuide = false;
 
 
-  let bgImage = null;
+/* 背景画像を描画 */
+function draw(){
 
-  let selectedDeviceId = null;
+  ctx.clearRect(0,0,W,H);
 
-  let showUiGuide = false;
+  if(!bgImage){
 
+    const g = ctx.createLinearGradient(0,0,0,H);
 
-  function draw(){
+    g.addColorStop(0,"#1D1B29");
+    g.addColorStop(1,"#14131C");
 
-    ctx.clearRect(
-      0,
-      0,
-      W,
-      H
-    );
+    ctx.fillStyle = g;
+    ctx.fillRect(0,0,W,H);
 
-    if(!bgImage){
+    placeholder.style.display = "flex";
 
-      const g =
-        ctx.createLinearGradient(
-          0,
-          0,
-          0,
-          H
-        );
-
-      g.addColorStop(
-        0,
-        "#1D1B29"
-      );
-
-      g.addColorStop(
-        1,
-        "#14131C"
-      );
-
-      ctx.fillStyle = g;
-
-      ctx.fillRect(
-        0,
-        0,
-        W,
-        H
-      );
-
-      placeholder.style.display =
-        "flex";
-
-      return;
-    }
-
-    placeholder.style.display =
-      "none";
-
-    const s =
-      H / bgImage.height;
-
-    const dw =
-      bgImage.width * s;
-
-    ctx.drawImage(
-      bgImage,
-      (W - dw) / 2,
-      0,
-      dw,
-      H
-    );
-
+    return;
   }
 
+  placeholder.style.display = "none";
 
-  function margin(aspect){
+  /*
+    縦方向を基準に画像を合わせる。
+    元画像の縦横比を維持するため、
+    横方向だけ中央配置する。
+  */
+  const s = H / bgImage.height;
+  const dw = bgImage.width * s;
 
-    return Math.max(
-      0,
-      (
-        1 -
-        aspect *
-        (H / W)
-      ) / 2
-    );
-
-  }
+  ctx.drawImage(
+    bgImage,
+    (W - dw) / 2,
+    0,
+    dw,
+    H
+  );
+}
 
 
-  function update(){
+/* 左右の見切れ幅 */
+function margin(aspect){
 
-    const d =
-      DEVICES.find(
-        x => x.id === selectedDeviceId
-      ) || null;
+  return Math.max(
+    0,
+    (1 - aspect * (H / W)) / 2
+  );
 
-    if(d){
+}
 
-      const m =
-        margin(d.aspect);
 
-      if(m > 0.001){
+/* プレビュー状態を更新 */
+function update(){
 
-        left.style.width =
-          right.style.width =
-          m * 100 + "%";
+  const d =
+    DEVICES.find(
+      x => x.id === selectedDeviceId
+    ) || null;
 
-        badge.style.display =
-          "block";
+  if(d){
 
-        badge.className =
-          "badge warn";
+    const m = margin(d.aspect);
 
-        badge.textContent =
-          "⚠️ " +
-          d.label +
-          "は左右が見切れます";
+    if(m > .001){
 
-      }else{
+      shadeLeft.style.width =
+        shadeRight.style.width =
+        m * 100 + "%";
 
-        left.style.width =
-          right.style.width =
-          "0%";
+      badge.style.display = "block";
+      badge.className = "badge warn";
 
-        badge.style.display =
-          "block";
-
-        badge.className =
-          "badge ok";
-
-        badge.textContent =
-          "✅ " +
-          d.label +
-          "はほぼ全体が見えます";
-
-      }
-
-      note.textContent =
-        d.note;
+      badge.textContent =
+        "⚠️ " +
+        d.label +
+        "は左右が見切れます";
 
     }else{
 
-      left.style.width =
-        right.style.width =
+      shadeLeft.style.width =
+        shadeRight.style.width =
         "0%";
 
-      badge.style.display =
-        "none";
+      badge.style.display = "block";
+      badge.className = "badge ok";
 
-      note.textContent =
-        "";
-
+      badge.textContent =
+        "✅ " +
+        d.label +
+        "はほぼ全体が見えます";
     }
 
-    guide.classList.toggle(
-      "visible",
-      showUiGuide
-    );
+    note.textContent = d.note;
 
-    toggle.classList.toggle(
-      "active",
-      showUiGuide
-    );
+  }else{
 
-    panel.classList.toggle(
-      "prompt",
-      !!bgImage &&
-      !selectedDeviceId
-    );
+    shadeLeft.style.width =
+      shadeRight.style.width =
+      "0%";
 
+    badge.style.display = "none";
+    note.textContent = "";
   }
 
+  guide.classList.toggle(
+    "visible",
+    showUiGuide
+  );
 
-  function esc(v){
+  toggle.classList.toggle(
+    "active",
+    showUiGuide
+  );
 
-    return String(v)
-      .replace(
-        /&/g,
-        "&amp;"
-      )
-      .replace(
-        /</g,
-        "&lt;"
-      )
-      .replace(
-        />/g,
-        "&gt;"
-      )
-      .replace(
-        /"/g,
-        "&quot;"
-      )
-      .replace(
-        /'/g,
-        "&#039;"
+  panel.classList.toggle(
+    "prompt",
+    !!bgImage && !selectedDeviceId
+  );
+}
+
+
+/* HTMLエスケープ */
+function esc(v){
+
+  return String(v)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+/* 端末ボタンを生成 */
+function render(){
+
+  grid.innerHTML = "";
+
+  DEVICES.forEach(d => {
+
+    const b = document.createElement("button");
+
+    b.type = "button";
+
+    b.className =
+      "device-card" +
+      (
+        selectedDeviceId === d.id
+          ? " active"
+          : ""
       );
 
-  }
+    b.innerHTML =
+      '<span class="row">' +
+        '<span class="dot"></span>' +
+        '<span class="name">' +
+          esc(d.label) +
+        '</span>' +
+      '</span>' +
+      '<span class="ratio">' +
+        esc(d.ratioLabel) +
+      '</span>';
 
+    b.onclick = () => {
 
-  function render(){
+      selectedDeviceId =
+        selectedDeviceId === d.id
+          ? null
+          : d.id;
 
-    grid.innerHTML = "";
-
-    DEVICES.forEach(
-      d => {
-
-        const b =
-          document.createElement(
-            "button"
-          );
-
-        b.type =
-          "button";
-
-        b.className =
-          "device-card" +
-          (
-            selectedDeviceId === d.id
-              ? " active"
-              : ""
-          );
-
-        b.innerHTML =
-          '<span class="row">' +
-            '<span class="dot"></span>' +
-            '<span class="name">' +
-              esc(d.label) +
-            '</span>' +
-          '</span>' +
-          '<span class="ratio">' +
-            esc(d.ratioLabel) +
-          '</span>';
-
-        b.onclick =
-          () => {
-
-            selectedDeviceId =
-              selectedDeviceId === d.id
-                ? null
-                : d.id;
-
-            render();
-
-            update();
-
-          };
-
-        grid.appendChild(b);
-
-      }
-    );
-
-  }
-
-
-  uploadBtn.onclick =
-    () => fileInput.click();
-
-
-  fileInput.onchange =
-    e => {
-
-      const f =
-        e.target.files &&
-        e.target.files[0];
-
-      if(!f){
-        return;
-      }
-
-      if(
-        !f.type.startsWith(
-          "image/"
-        )
-      ){
-
-        alert(
-          "画像ファイルを選択してください。"
-        );
-
-        return;
-
-      }
-
-      const r =
-        new FileReader();
-
-      r.onload =
-        () => {
-
-          const img =
-            new Image();
-
-          img.onload =
-            () => {
-
-              bgImage =
-                img;
-
-              uploadBtn.textContent =
-                "🔄 画像を変更する";
-
-              uploadBtn.classList.remove(
-                "pulse"
-              );
-
-              draw();
-
-              update();
-
-            };
-
-          img.onerror =
-            () => {
-
-              alert(
-                "画像を読み込めませんでした。"
-              );
-
-            };
-
-          img.src =
-            r.result;
-
-        };
-
-      r.readAsDataURL(f);
-
-    };
-
-
-  toggle.onclick =
-    () => {
-
-      showUiGuide =
-        !showUiGuide;
-
+      render();
       update();
 
     };
 
+    grid.appendChild(b);
 
-  const KEY =
-    "haishin-preview:theme";
+  });
+
+}
 
 
-  function apply(t){
+/* アップロードボタン */
+uploadBtn.onclick = () => {
 
-    document.documentElement
-      .classList
-      .toggle(
-        "light",
-        t === "light"
-      );
+  fileInput.click();
 
-    themeBtn.textContent =
-      t === "light"
-        ? "☀️"
-        : "🌙";
+};
 
+
+/* 画像選択 */
+fileInput.onchange = e => {
+
+  const f =
+    e.target.files &&
+    e.target.files[0];
+
+  if(!f) return;
+
+  if(!f.type.startsWith("image/")){
+
+    alert(
+      "画像ファイルを選択してください。"
+    );
+
+    return;
   }
 
+  const r = new FileReader();
 
-  apply(
-    localStorage.getItem(KEY) ||
-    "dark"
-  );
+  r.onload = () => {
 
+    const img = new Image();
 
-  themeBtn.onclick =
-    () => {
+    img.onload = () => {
 
-      const cur =
-        document.documentElement
-          .classList
-          .contains("light")
-          ? "light"
-          : "dark";
+      bgImage = img;
 
-      const next =
-        cur === "light"
-          ? "dark"
-          : "light";
+      uploadBtn.textContent =
+        "🔄 画像を変更する";
 
-      apply(next);
+      uploadBtn.classList.remove(
+        "pulse"
+      );
 
-      localStorage.setItem(
-        KEY,
-        next
+      draw();
+      update();
+
+    };
+
+    img.onerror = () => {
+
+      alert(
+        "画像を読み込めませんでした。"
       );
 
     };
 
+    img.src = r.result;
 
-  render();
+  };
 
-  draw();
+  r.readAsDataURL(f);
+
+};
+
+
+/* 配信UI表示切替 */
+toggle.onclick = () => {
+
+  showUiGuide = !showUiGuide;
 
   update();
+
+};
+
+
+/* テーマ */
+const KEY =
+  "haishin-preview:theme";
+
+function apply(t){
+
+  document.documentElement.classList.toggle(
+    "light",
+    t === "light"
+  );
+
+  themeBtn.textContent =
+    t === "light"
+      ? "☀️"
+      : "🌙";
+}
+
+apply(
+  localStorage.getItem(KEY) || "dark"
+);
+
+themeBtn.onclick = () => {
+
+  const cur =
+    document.documentElement.classList.contains(
+      "light"
+    )
+      ? "light"
+      : "dark";
+
+  const next =
+    cur === "light"
+      ? "dark"
+      : "light";
+
+  apply(next);
+
+  localStorage.setItem(
+    KEY,
+    next
+  );
+
+};
+
+
+/* 初期化 */
+render();
+draw();
+update();
 
 })();
 </script>
