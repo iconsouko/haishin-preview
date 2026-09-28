@@ -7,6 +7,7 @@
 <meta name="description" content="ColorSingのカスタム背景が配信画面でどう見えるか確認できるプレビューです。">
 
 <style>
+
 :root{
   --ink:20 19 28;
   --panel:29 27 41;
@@ -15,7 +16,7 @@
   --muted:199 194 214;
   --coral:255 111 89;
   --teal:47 182 166;
-  --gold:245 185 66
+  --gold:245 185 66;
 }
 
 html.light{
@@ -23,28 +24,36 @@ html.light{
   --panel:255 255 255;
   --line:224 219 232;
   --paper:30 27 41;
-  --muted:96 90 112
+  --muted:96 90 112;
 }
 
 *{
-  box-sizing:border-box
+  box-sizing:border-box;
 }
 
 html,
 body{
   height:100%;
-  margin:0
+  margin:0;
 }
 
 body{
   background:rgb(var(--ink));
   color:rgb(var(--paper));
-  font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic",Meiryo,sans-serif;
-  -webkit-font-smoothing:antialiased
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Helvetica Neue",
+    "Hiragino Kaku Gothic ProN",
+    "Hiragino Sans",
+    "Yu Gothic",
+    Meiryo,
+    sans-serif;
+  -webkit-font-smoothing:antialiased;
 }
 
 button{
-  font:inherit
+  font:inherit;
 }
 
 header{
@@ -53,19 +62,19 @@ header{
   justify-content:space-between;
   max-width:700px;
   margin:auto;
-  padding:32px 24px 0
+  padding:32px 24px 0;
 }
 
 header h1{
   margin:0;
   font-size:26px;
-  letter-spacing:.02em
+  letter-spacing:.02em;
 }
 
 header p{
   margin:4px 0 0;
   font-size:13px;
-  color:rgb(var(--muted))
+  color:rgb(var(--muted));
 }
 
 .theme-btn{
@@ -77,13 +86,13 @@ header p{
   background:rgb(var(--panel));
   color:rgb(var(--paper));
   font-size:16px;
-  cursor:pointer
+  cursor:pointer;
 }
 
 main{
   max-width:700px;
   margin:auto;
-  padding:24px
+  padding:24px;
 }
 
 .upload-btn{
@@ -95,21 +104,21 @@ main{
   color:rgb(var(--teal));
   font-size:16px;
   font-weight:700;
-  cursor:pointer
+  cursor:pointer;
 }
 
 @keyframes softPulse{
   0%,100%{
-    opacity:1
+    opacity:1;
   }
 
   50%{
-    opacity:.55
+    opacity:.55;
   }
 }
 
 .pulse{
-  animation:softPulse 1.8s ease-in-out infinite
+  animation:softPulse 1.8s ease-in-out infinite;
 }
 
 
@@ -125,13 +134,13 @@ main{
   border-radius:20px;
   border:2px solid rgb(var(--line));
   background:rgb(var(--panel));
-  overflow:hidden
+  overflow:hidden;
 }
 
 #canvas{
   width:100%;
   height:100%;
-  display:block
+  display:block;
 }
 
 
@@ -146,37 +155,28 @@ main{
   width:0;
   background:rgba(0,0,0,.55);
   pointer-events:none;
-  z-index:80
+  z-index:80;
 }
 
 .shade.left{
-  left:0
+  left:0;
 }
 
 .shade.right{
-  right:0
+  right:0;
 }
 
 
 /* =========================================================
-   端末の境界線
-   ★ width:2px の実体線にして、細い見切れ幅でも確実に表示
+   端末境界線
    ========================================================= */
 
 .crop-line{
   position:absolute;
   top:0;
   bottom:0;
-
-  /*
-   * width:0 + border-left ではなく、
-   * 2px幅の実体を持たせる。
-   */
   width:2px;
 
-  /*
-   * 縦の点線
-   */
   background-image:
     repeating-linear-gradient(
       to bottom,
@@ -187,26 +187,21 @@ main{
     );
 
   pointer-events:none;
-
-  /*
-   * 見切れ部分より必ず前面
-   */
   z-index:95;
-
   display:none;
 }
 
 .crop-line.left{
-  left:0
+  left:0;
 }
 
 .crop-line.right{
-  left:0
+  left:0;
 }
 
 
 /* =========================================================
-   プレビュー注意書き
+   注意書き
    ========================================================= */
 
 .preview-note{
@@ -224,7 +219,7 @@ main{
 
 
 /* =========================================================
-   端末状態バッジ
+   端末状態
    ========================================================= */
 
 .badge{
@@ -240,15 +235,15 @@ main{
   color:rgb(var(--ink));
   box-shadow:0 2px 8px rgba(0,0,0,.25);
   display:none;
-  z-index:100
+  z-index:100;
 }
 
 .badge.warn{
-  background:rgb(var(--gold))
+  background:rgb(var(--gold));
 }
 
 .badge.ok{
-  background:rgb(var(--teal))
+  background:rgb(var(--teal));
 }
 
 
@@ -267,7 +262,7 @@ main{
   font-size:14px;
   color:rgb(var(--paper)/.5);
   pointer-events:none;
-  z-index:2
+  z-index:2;
 }
 
 
@@ -280,23 +275,24 @@ main{
   inset:0;
   display:none;
   pointer-events:none;
-  z-index:30
+  z-index:30;
 }
 
 #uiGuide.visible{
-  display:block
+  display:block;
 }
 
 .fake-ui{
   position:absolute;
   color:#fff;
   user-select:none;
-  text-shadow:0 1px 3px rgba(0,0,0,.55)
+  text-shadow:0 1px 3px rgba(0,0,0,.55);
 }
 
 
 /* =========================================================
-   上部UI
+   配信者情報
+   実画面との比較によりアイコンを小型化
    ========================================================= */
 
 .creator-avatar{
@@ -305,10 +301,12 @@ main{
   left:calc(314 / 1536 * 100%);
   top:calc(151 / 2048 * 100%);
 
-  width:calc(102 / 1536 * 100%);
+  width:calc(70 / 1536 * 100%);
   aspect-ratio:1;
+
   border-radius:50%;
   overflow:hidden;
+
   border:2px solid rgba(255,255,255,.9);
 
   background:
@@ -319,24 +317,29 @@ main{
       #8338ec
     );
 
-  box-shadow:0 2px 7px rgba(0,0,0,.35)
+  box-shadow:
+    0 2px 7px rgba(0,0,0,.35);
 }
 
 .creator-avatar:before{
   content:"A";
+
   position:absolute;
   inset:0;
+
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:clamp(16px,3vw,30px);
+
+  font-size:clamp(13px,2.2vw,24px);
   font-weight:900;
-  color:#fff
+
+  color:#fff;
 }
 
 .creator-name{
-  left:calc(426 / 1536 * 100%);
-  top:calc(160 / 2048 * 100%);
+  left:calc(421 / 1536 * 100%);
+  top:calc(159 / 2048 * 100%);
 
   width:calc(250 / 1536 * 100%);
   height:calc(34 / 2048 * 100%);
@@ -345,26 +348,104 @@ main{
   align-items:center;
 
   font-size:clamp(7px,1.35vw,15px);
-  font-weight:800
+  font-weight:800;
 }
 
 .creator-info{
-  left:calc(426 / 1536 * 100%);
-  top:calc(207 / 2048 * 100%);
+  left:calc(421 / 1536 * 100%);
+  top:calc(200 / 2048 * 100%);
 
   width:calc(316 / 1536 * 100%);
-  height:calc(34 / 2048 * 100%);
+  height:calc(32 / 2048 * 100%);
 
   display:flex;
   align-items:center;
 
   font-size:clamp(6px,1.1vw,13px);
-  opacity:.92
+  opacity:.92;
+}
+
+
+/* =========================================================
+   現在歌唱中の曲
+   ========================================================= */
+
+.current-song{
+  position:absolute;
+
+  left:calc(315 / 1536 * 100%);
+  top:calc(272 / 2048 * 100%);
+
+  width:calc(381 / 1536 * 100%);
+  height:calc(66 / 2048 * 100%);
+
+  display:flex;
+  align-items:center;
+
+  padding:
+    0
+    calc(16 / 1536 * 100%);
+
+  border-radius:999px;
+
+  background:rgba(238,238,242,.72);
+
+  color:#111;
+
+  box-shadow:
+    0 1px 3px rgba(0,0,0,.18);
+
+  font-size:clamp(8px,1.5vw,17px);
+  font-weight:700;
+
+  text-shadow:none;
+
+  overflow:hidden;
+}
+
+.current-song-icon{
+  flex:0 0 auto;
+
+  width:calc(45 / 1536 * 100%);
+  aspect-ratio:1;
+
+  margin-right:
+    calc(9 / 1536 * 100%);
+
+  border-radius:50%;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  background:
+    radial-gradient(
+      circle at 35% 35%,
+      #e8f1ff 0 18%,
+      #8ab7ff 19% 42%,
+      #5e7dcc 43% 62%,
+      #d8d9e2 63% 100%
+    );
+
+  border:
+    2px solid rgba(70,80,120,.65);
+
+  color:#5c6790;
+
+  font-size:clamp(10px,1.8vw,20px);
+}
+
+.current-song-text{
+  min-width:0;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 
 /* =========================================================
    リスナーアイコン
+   前回の修正結果を維持
    ========================================================= */
 
 .listener-avatar{
@@ -374,9 +455,12 @@ main{
   aspect-ratio:1;
 
   border-radius:50%;
-  border:2px solid rgba(255,255,255,.85);
 
-  box-shadow:0 2px 7px rgba(0,0,0,.3);
+  border:
+    2px solid rgba(255,255,255,.85);
+
+  box-shadow:
+    0 2px 7px rgba(0,0,0,.3);
 
   overflow:hidden;
 
@@ -387,60 +471,65 @@ main{
   font-size:clamp(7px,1.3vw,14px);
   font-weight:900;
 
-  color:#fff
+  color:#fff;
 }
 
 .listener-avatar.a{
-  left:calc(769 / 1536 * 100%);
-  top:calc(160 / 2048 * 100%);
+  left:calc(862 / 1536 * 100%);
+  top:calc(161 / 2048 * 100%);
 
   background:
     linear-gradient(
       135deg,
       #ff9a9e,
       #fad0c4
-    )
+    );
 }
 
 .listener-avatar.b{
-  left:calc(878 / 1536 * 100%);
-  top:calc(160 / 2048 * 100%);
+  left:calc(938 / 1536 * 100%);
+  top:calc(161 / 2048 * 100%);
 
   background:
     linear-gradient(
       135deg,
       #a18cd1,
       #fbc2eb
-    )
+    );
 }
 
 .listener-avatar.c{
-  left:calc(959 / 1536 * 100%);
-  top:calc(160 / 2048 * 100%);
+  left:calc(1009 / 1536 * 100%);
+  top:calc(161 / 2048 * 100%);
 
   background:
     linear-gradient(
       135deg,
       #84fab0,
       #8fd3f4
-    )
+    );
 }
 
 .listener-avatar.d{
-  left:calc(1040 / 1536 * 100%);
-  top:calc(160 / 2048 * 100%);
+  left:calc(1090 / 1536 * 100%);
+  top:calc(161 / 2048 * 100%);
 
   background:
     linear-gradient(
       135deg,
       #f6d365,
       #fda085
-    )
+    );
 }
 
+
+/* =========================================================
+   閉じる
+   ========================================================= */
+
 .close-button{
-  left:calc(1173 / 1536 * 100%);
-  top:calc(171 / 2048 * 100%);
+  left:calc(1165 / 1536 * 100%);
+  top:calc(175 / 2048 * 100%);
 
   width:calc(55 / 1536 * 100%);
   height:calc(55 / 2048 * 100%);
@@ -449,7 +538,7 @@ main{
   align-items:center;
   justify-content:center;
 
-  font-size:clamp(14px,2.5vw,28px)
+  font-size:clamp(14px,2.5vw,28px);
 }
 
 
@@ -461,6 +550,7 @@ main{
   position:absolute;
 
   left:50%;
+
   top:calc(1208 / 2048 * 100%);
 
   transform:translateX(-50%);
@@ -477,67 +567,98 @@ main{
 
   line-height:1.2;
 
-  text-shadow:0 2px 5px rgba(0,0,0,.65)
+  text-shadow:
+    0 2px 5px rgba(0,0,0,.65);
 }
 
 
 /* =========================================================
    コメント
+   ★ flex-endを廃止
+   ★ 8行を固定ピッチで配置
    ========================================================= */
 
 .comment-area{
   position:absolute;
 
   left:calc(315 / 1536 * 100%);
-  top:calc(1225 / 2048 * 100%);
+  top:calc(1265 / 2048 * 100%);
 
   width:calc(805 / 1536 * 100%);
-  height:calc(597 / 2048 * 100%);
+  height:calc(590 / 2048 * 100%);
 
   overflow:hidden;
 
-  display:flex;
-  flex-direction:column;
-  justify-content:flex-end;
+  display:grid;
 
-  padding:3% 2.2% 3%
+  grid-template-rows:
+    repeat(8,1fr);
+
+  align-items:center;
+
+  padding:
+    0
+    calc(18 / 1536 * 100%);
 }
 
 .comment{
   width:fit-content;
   max-width:96%;
 
-  margin-top:1.5%;
+  min-height:
+    calc(50 / 2048 * 100%);
 
-  padding:1.25% 2.5%;
+  align-self:center;
+
+  display:flex;
+  align-items:center;
+
+  padding:
+    0
+    calc(14 / 1536 * 100%);
 
   border-radius:999px;
 
-  background:rgba(45,45,55,.76);
+  background:
+    rgba(45,45,55,.76);
 
   color:#fff;
 
-  font-size:clamp(7px,1.45vw,15px);
+  font-size:
+    clamp(7px,1.45vw,15px);
 
   font-weight:700;
 
-  line-height:1.25;
+  line-height:1.15;
 
-  text-shadow:0 1px 2px rgba(0,0,0,.5)
+  text-shadow:
+    0 1px 2px rgba(0,0,0,.5);
+
+  white-space:nowrap;
+
+  overflow:hidden;
+
+  text-overflow:ellipsis;
 }
 
 .comment.highlight{
-  background:rgba(71,157,220,.78)
+  background:
+    rgba(71,157,220,.78);
 }
 
 .comment .name{
+  flex:0 0 auto;
+
   margin-right:.5em;
-  opacity:.82
+
+  opacity:.82;
 }
 
 
 /* =========================================================
    右側ボタン
+   ★ 実画面に合わせて下げる
+   ★ 71 → 82
    ========================================================= */
 
 .side-button{
@@ -545,7 +666,7 @@ main{
 
   left:calc(1146 / 1536 * 100%);
 
-  width:calc(71 / 1536 * 100%);
+  width:calc(82 / 1536 * 100%);
   aspect-ratio:1;
 
   border-radius:50%;
@@ -554,32 +675,36 @@ main{
   align-items:center;
   justify-content:center;
 
-  background:rgba(80,82,91,.78);
+  background:
+    rgba(80,82,91,.82);
 
-  border:1px solid rgba(255,255,255,.18);
+  border:
+    1px solid rgba(255,255,255,.2);
 
-  box-shadow:0 3px 8px rgba(0,0,0,.25);
+  box-shadow:
+    0 3px 8px rgba(0,0,0,.28);
 
   color:#fff;
 
-  font-size:clamp(10px,2vw,20px)
+  font-size:
+    clamp(11px,2.1vw,22px);
 }
 
 .side-button.one{
-  top:calc(1523 / 2048 * 100%)
+  top:calc(1548 / 2048 * 100%);
 }
 
 .side-button.two{
-  top:calc(1639 / 2048 * 100%)
+  top:calc(1666 / 2048 * 100%);
 }
 
 .side-button.three{
-  top:calc(1755 / 2048 * 100%)
+  top:calc(1784 / 2048 * 100%);
 }
 
 
 /* =========================================================
-   コメント入力
+   コメント入力欄
    ========================================================= */
 
 .comment-input{
@@ -593,23 +718,29 @@ main{
 
   border-radius:999px;
 
-  background:rgba(35,35,42,.82);
+  background:
+    rgba(35,35,42,.82);
 
-  border:1px solid rgba(255,255,255,.12);
+  border:
+    1px solid rgba(255,255,255,.12);
 
   display:flex;
   align-items:center;
 
   padding-left:5%;
 
-  color:rgba(255,255,255,.7);
+  color:
+    rgba(255,255,255,.7);
 
-  font-size:clamp(7px,1.4vw,15px)
+  font-size:
+    clamp(7px,1.4vw,15px);
 }
 
 
 /* =========================================================
    下部ボタン
+   ★ 実画面のX位置へ移動
+   ★ 大きな背景円を廃止
    ========================================================= */
 
 .bottom-button{
@@ -617,7 +748,7 @@ main{
 
   top:calc(1868 / 2048 * 100%);
 
-  width:calc(71 / 1536 * 100%);
+  width:calc(54 / 1536 * 100%);
   aspect-ratio:1;
 
   border-radius:50%;
@@ -626,27 +757,72 @@ main{
   align-items:center;
   justify-content:center;
 
-  background:rgba(80,82,91,.78);
+  background:transparent;
 
-  border:1px solid rgba(255,255,255,.18);
+  border:none;
+
+  box-shadow:none;
 
   color:#fff;
 
-  font-size:clamp(10px,2vw,20px);
+  font-size:
+    clamp(9px,1.7vw,18px);
 
-  box-shadow:0 3px 8px rgba(0,0,0,.25)
+  text-shadow:
+    0 1px 3px rgba(0,0,0,.8);
 }
 
 .bottom-button.one{
-  left:calc(903 / 1536 * 100%)
+  left:calc(951 / 1536 * 100%);
 }
 
 .bottom-button.two{
-  left:calc(1024 / 1536 * 100%)
+  left:calc(1057 / 1536 * 100%);
 }
 
 .bottom-button.three{
-  left:calc(1146 / 1536 * 100%)
+  left:calc(1178 / 1536 * 100%);
+}
+
+
+/* =========================================================
+   王冠
+   Unicode文字ではなくCSS形状で再現
+   ========================================================= */
+
+.crown-mark{
+  position:relative;
+
+  width:calc(30 / 1536 * 100%);
+  height:calc(24 / 2048 * 100%);
+
+  min-width:14px;
+  min-height:12px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #fff 0%,
+      #e8e8e8 100%
+    );
+
+  clip-path:
+    polygon(
+      0 10%,
+      22% 52%,
+      38% 18%,
+      50% 58%,
+      64% 18%,
+      80% 52%,
+      100% 10%,
+      91% 100%,
+      9% 100%
+    );
+
+  filter:
+    drop-shadow(
+      0 1px 2px rgba(0,0,0,.7)
+    );
 }
 
 
@@ -671,18 +847,24 @@ main{
 
   cursor:pointer;
 
-  background:rgb(var(--ink)/.7);
+  background:
+    rgb(var(--ink)/.7);
 
-  color:rgb(var(--paper));
+  color:
+    rgb(var(--paper));
 
-  box-shadow:0 2px 8px rgba(0,0,0,.3);
+  box-shadow:
+    0 2px 8px rgba(0,0,0,.3);
 
-  z-index:200
+  z-index:200;
 }
 
 .ui-toggle.active{
-  background:rgb(var(--coral));
-  color:rgb(var(--ink))
+  background:
+    rgb(var(--coral));
+
+  color:
+    rgb(var(--ink));
 }
 
 
@@ -695,21 +877,24 @@ main{
 
   border-radius:20px;
 
-  border:2px solid rgb(var(--line));
+  border:
+    2px solid rgb(var(--line));
 
-  background:rgb(var(--panel));
+  background:
+    rgb(var(--panel));
 
-  padding:20px
+  padding:20px;
 }
 
 .device-panel.prompt{
-  border-color:rgb(var(--coral));
+  border-color:
+    rgb(var(--coral));
 
   animation:
     softPulse
     1.8s
     ease-in-out
-    infinite
+    infinite;
 }
 
 .device-panel .label{
@@ -719,7 +904,8 @@ main{
 
   font-weight:700;
 
-  color:rgb(var(--muted))
+  color:
+    rgb(var(--muted));
 }
 
 .device-grid{
@@ -728,14 +914,14 @@ main{
   grid-template-columns:
     repeat(2,1fr);
 
-  gap:8px
+  gap:8px;
 }
 
 @media(min-width:480px){
 
   .device-grid{
     grid-template-columns:
-      repeat(4,1fr)
+      repeat(4,1fr);
   }
 
 }
@@ -745,22 +931,25 @@ main{
 
   border-radius:16px;
 
-  border:2px solid rgb(var(--line));
+  border:
+    2px solid rgb(var(--line));
 
   background:transparent;
 
-  color:rgb(var(--paper));
+  color:
+    rgb(var(--paper));
 
   padding:12px;
 
-  cursor:pointer
+  cursor:pointer;
 }
 
 .device-card.active{
-  border-color:rgb(var(--coral));
+  border-color:
+    rgb(var(--coral));
 
   background:
-    rgb(var(--coral)/.1)
+    rgb(var(--coral)/.1);
 }
 
 .device-card .row{
@@ -768,7 +957,7 @@ main{
 
   align-items:center;
 
-  gap:8px
+  gap:8px;
 }
 
 .device-card .dot{
@@ -777,19 +966,20 @@ main{
 
   border-radius:999px;
 
-  border:2px solid rgb(var(--line));
+  border:
+    2px solid rgb(var(--line));
 
   flex-shrink:0;
 
   display:flex;
 
   align-items:center;
-
-  justify-content:center
+  justify-content:center;
 }
 
 .device-card.active .dot{
-  border-color:rgb(var(--coral))
+  border-color:
+    rgb(var(--coral));
 }
 
 .device-card.active .dot:after{
@@ -800,13 +990,14 @@ main{
 
   border-radius:999px;
 
-  background:rgb(var(--coral))
+  background:
+    rgb(var(--coral));
 }
 
 .device-card .name{
   font-size:13px;
 
-  font-weight:700
+  font-weight:700;
 }
 
 .device-card .ratio{
@@ -816,7 +1007,8 @@ main{
 
   font-size:11px;
 
-  color:rgb(var(--muted))
+  color:
+    rgb(var(--muted));
 }
 
 .device-note{
@@ -824,12 +1016,16 @@ main{
 
   font-size:12px;
 
-  color:rgb(var(--muted))
+  color:
+    rgb(var(--muted));
 }
+
 </style>
 </head>
 
+
 <body>
+
 
 <header>
 
@@ -859,6 +1055,7 @@ main{
 
 <main>
 
+
 <button
   class="upload-btn pulse"
   id="uploadBtn"
@@ -880,6 +1077,7 @@ main{
   id="preview"
 >
 
+
   <canvas
     id="canvas"
     width="1536"
@@ -898,12 +1096,6 @@ main{
     id="shadeRight"
   ></div>
 
-
-  <!--
-    境界線を見切れ領域とは独立して描画。
-    iPad（A16）のような見切れ幅が小さい端末でも
-    左右の線が確実に表示される。
-  -->
 
   <div
     class="crop-line left"
@@ -934,6 +1126,11 @@ main{
 
   <div id="uiGuide">
 
+
+    <!-- =====================================================
+         配信者情報
+         ===================================================== -->
+
     <div class="creator-avatar"></div>
 
 
@@ -947,37 +1144,68 @@ main{
     </div>
 
 
+    <!-- =====================================================
+         現在歌唱中の曲
+         ===================================================== -->
+
+    <div class="current-song">
+
+      <div class="current-song-icon">
+        ♪
+      </div>
+
+      <div class="current-song-text">
+        曲名 / アーティスト名
+      </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         リスナー
+         ===================================================== -->
+
     <div class="listener-avatar a">
       A
     </div>
-
 
     <div class="listener-avatar b">
       B
     </div>
 
-
     <div class="listener-avatar c">
       C
     </div>
-
 
     <div class="listener-avatar d">
       D
     </div>
 
 
+    <!-- =====================================================
+         閉じる
+         ===================================================== -->
+
     <div class="close-button fake-ui">
       ×
     </div>
 
+
+    <!-- =====================================================
+         歌詞
+         ===================================================== -->
 
     <div class="lyrics">
       ここに歌詞が表示される
     </div>
 
 
+    <!-- =====================================================
+         コメント
+         ===================================================== -->
+
     <div class="comment-area">
+
 
       <div class="comment">
         <span class="name">
@@ -1042,42 +1270,56 @@ main{
         聴いてます！
       </div>
 
+
     </div>
 
 
+    <!-- =====================================================
+         右側ボタン
+         ===================================================== -->
+
     <div class="side-button one">
-      ♡
+      ✨
     </div>
 
 
     <div class="side-button two">
-      🎁
+      ♥
     </div>
 
 
     <div class="side-button three">
-      ♪
+      🎁
     </div>
 
+
+    <!-- =====================================================
+         コメント入力
+         ===================================================== -->
 
     <div class="comment-input">
       コメントを入力…
     </div>
 
 
+    <!-- =====================================================
+         下部ボタン
+         ===================================================== -->
+
     <div class="bottom-button one">
-      ☁
+      ◌
     </div>
 
 
     <div class="bottom-button two">
-      ♛
+      <span class="crown-mark"></span>
     </div>
 
 
     <div class="bottom-button three">
       …
     </div>
+
 
   </div>
 
@@ -1090,12 +1332,9 @@ main{
     👥
   </button>
 
+
 </div>
 
-
-<!-- =======================================================
-     重要な注意書き
-     ======================================================= -->
 
 <p class="preview-note">
   ※ <strong>あくまでも目安です。</strong>
@@ -1124,16 +1363,19 @@ main{
     id="deviceNote"
   ></p>
 
+
 </div>
+
 
 </main>
 
 
 <script>
+
 (function(){
 
-  const W = 1536;
 
+  const W = 1536;
   const H = 2048;
 
 
@@ -1330,6 +1572,7 @@ main{
 
 
       return;
+
     }
 
 
@@ -1346,6 +1589,7 @@ main{
 
 
     ctx.drawImage(
+
       bgImage,
 
       (W - dw) / 2,
@@ -1355,26 +1599,28 @@ main{
       dw,
 
       H
+
     );
+
   }
 
 
   /* =========================================================
-     左右の見切れ幅を計算
+     左右見切れ幅
      ========================================================= */
 
   function margin(aspect){
 
     return Math.max(
       0,
-
       (1 - aspect * (H / W)) / 2
     );
+
   }
 
 
   /* =========================================================
-     プレビュー状態更新
+     表示更新
      ========================================================= */
 
   function update(){
@@ -1398,10 +1644,6 @@ main{
           m * 100 + "%";
 
 
-        /* -----------------------------------------
-           見切れ領域
-           ----------------------------------------- */
-
         shadeLeft.style.width =
           width;
 
@@ -1409,16 +1651,6 @@ main{
         shadeRight.style.width =
           width;
 
-
-        /* -----------------------------------------
-           境界線
-           
-           左線：
-           見切れ領域の右端
-
-           右線：
-           右側見切れ領域の左端
-           ----------------------------------------- */
 
         cropLineLeft.style.left =
           "calc(" +
@@ -1455,10 +1687,6 @@ main{
 
       }else{
 
-        /* -----------------------------------------
-           見切れなし
-           ----------------------------------------- */
-
         shadeLeft.style.width =
           "0%";
 
@@ -1487,6 +1715,7 @@ main{
           "✅ " +
           d.label +
           "はほぼ全体が見えます";
+
       }
 
 
@@ -1517,12 +1746,9 @@ main{
 
       note.textContent =
         "";
+
     }
 
-
-    /* -----------------------------------------
-       配信UI
-       ----------------------------------------- */
 
     guide.classList.toggle(
       "visible",
@@ -1536,16 +1762,15 @@ main{
     );
 
 
-    /* -----------------------------------------
-       端末選択促進
-       ----------------------------------------- */
-
     panel.classList.toggle(
+
       "prompt",
 
       !!bgImage &&
       !selectedDeviceId
+
     );
+
   }
 
 
@@ -1581,11 +1806,12 @@ main{
         /'/g,
         "&#039;"
       );
+
   }
 
 
   /* =========================================================
-     端末ボタン生成
+     端末ボタン
      ========================================================= */
 
   function render(){
@@ -1645,14 +1871,17 @@ main{
           render();
 
           update();
+
         };
 
 
         grid.appendChild(
           b
         );
+
       }
     );
+
   }
 
 
@@ -1663,6 +1892,7 @@ main{
   uploadBtn.onclick = () => {
 
     fileInput.click();
+
   };
 
 
@@ -1692,6 +1922,7 @@ main{
       );
 
       return;
+
     }
 
 
@@ -1723,6 +1954,7 @@ main{
         draw();
 
         update();
+
       };
 
 
@@ -1731,15 +1963,18 @@ main{
         alert(
           "画像を読み込めませんでした。"
         );
+
       };
 
 
       img.src =
         r.result;
+
     };
 
 
     r.readAsDataURL(f);
+
   };
 
 
@@ -1754,6 +1989,7 @@ main{
 
 
     update();
+
   };
 
 
@@ -1779,6 +2015,7 @@ main{
       t === "light"
         ? "☀️"
         : "🌙";
+
   }
 
 
@@ -1811,6 +2048,7 @@ main{
       KEY,
       next
     );
+
   };
 
 
@@ -1824,7 +2062,9 @@ main{
 
   update();
 
+
 })();
+
 </script>
 
 </body>
