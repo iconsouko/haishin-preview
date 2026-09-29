@@ -103,9 +103,9 @@ main{
 .recommended-card{
   margin-bottom:16px;
 
-  padding:13px 15px;
+  padding:14px 16px;
 
-  border-radius:12px;
+  border-radius:14px;
 
   border:
     1px solid rgb(var(--line));
@@ -117,7 +117,7 @@ main{
 
   align-items:center;
 
-  gap:14px;
+  gap:16px;
 
   min-width:0;
 }
@@ -127,7 +127,7 @@ main{
 
   min-width:0;
 
-  padding-right:14px;
+  padding-right:16px;
 
   border-right:
     1px solid rgb(var(--line));
@@ -136,16 +136,18 @@ main{
 .recommended-official{
   display:block;
 
-  margin-bottom:3px;
+  margin-bottom:2px;
 
   color:
     rgb(var(--muted));
 
-  font-size:9px;
+  font-size:10px;
 
   font-weight:700;
 
-  letter-spacing:.04em;
+  letter-spacing:.02em;
+
+  line-height:1.2;
 
   white-space:nowrap;
 }
@@ -154,11 +156,13 @@ main{
   display:block;
 
   color:
-    rgb(var(--muted));
+    rgb(var(--paper));
 
-  font-size:12px;
+  font-size:14px;
 
-  font-weight:700;
+  font-weight:800;
+
+  line-height:1.25;
 
   white-space:nowrap;
 }
@@ -176,11 +180,11 @@ main{
     rgb(var(--paper));
 
   font-size:
-    clamp(17px,4.2vw,22px);
+    clamp(18px,4.5vw,23px);
 
   font-weight:800;
 
-  line-height:1.05;
+  line-height:1.15;
 
   letter-spacing:.01em;
 
@@ -194,12 +198,14 @@ main{
 
   gap:7px;
 
-  margin-top:5px;
+  margin-top:4px;
 
   color:
     rgb(var(--muted));
 
   font-size:10px;
+
+  font-weight:700;
 
   line-height:1.2;
 
@@ -1314,21 +1320,21 @@ main{
 @media(max-width:480px){
 
   .recommended-card{
-    gap:10px;
+    gap:12px;
 
-    padding:12px 12px;
+    padding:13px 13px;
   }
 
   .recommended-label{
-    padding-right:10px;
+    padding-right:12px;
   }
 
   .recommended-official{
-    font-size:8px;
+    font-size:10px;
   }
 
   .recommended-title{
-    font-size:11px;
+    font-size:14px;
   }
 
   .recommended-size-main{
@@ -1336,7 +1342,7 @@ main{
   }
 
   .recommended-size-sub{
-    font-size:9px;
+    font-size:10px;
 
     gap:6px;
   }
