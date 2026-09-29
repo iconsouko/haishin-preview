@@ -95,15 +95,149 @@ main{
   padding:24px;
 }
 
+
+/* =========================================================
+   ColorSing公式 推奨サイズ
+   ========================================================= */
+
+.recommended-card{
+  margin-bottom:16px;
+
+  padding:13px 15px;
+
+  border-radius:12px;
+
+  border:
+    1px solid rgb(var(--line));
+
+  background:
+    rgb(var(--panel));
+
+  display:flex;
+
+  align-items:center;
+
+  gap:14px;
+
+  min-width:0;
+}
+
+.recommended-label{
+  flex:0 0 auto;
+
+  min-width:0;
+
+  padding-right:14px;
+
+  border-right:
+    1px solid rgb(var(--line));
+}
+
+.recommended-official{
+  display:block;
+
+  margin-bottom:3px;
+
+  color:
+    rgb(var(--muted));
+
+  font-size:9px;
+
+  font-weight:700;
+
+  letter-spacing:.04em;
+
+  white-space:nowrap;
+}
+
+.recommended-title{
+  display:block;
+
+  color:
+    rgb(var(--muted));
+
+  font-size:12px;
+
+  font-weight:700;
+
+  white-space:nowrap;
+}
+
+.recommended-size{
+  flex:1 1 auto;
+
+  min-width:0;
+}
+
+.recommended-size-main{
+  display:block;
+
+  color:
+    rgb(var(--paper));
+
+  font-size:
+    clamp(17px,4.2vw,22px);
+
+  font-weight:800;
+
+  line-height:1.05;
+
+  letter-spacing:.01em;
+
+  white-space:nowrap;
+}
+
+.recommended-size-sub{
+  display:flex;
+
+  align-items:center;
+
+  gap:7px;
+
+  margin-top:5px;
+
+  color:
+    rgb(var(--muted));
+
+  font-size:10px;
+
+  line-height:1.2;
+
+  white-space:nowrap;
+}
+
+.recommended-size-sub strong{
+  color:
+    rgb(var(--muted));
+
+  font-weight:700;
+}
+
+
+/* =========================================================
+   アップロード
+   ========================================================= */
+
 .upload-btn{
   width:100%;
+
   padding:20px;
+
   border-radius:20px;
-  border:2px solid rgb(var(--teal)/.4);
-  background:rgb(var(--teal)/.1);
-  color:rgb(var(--teal));
+
+  border:
+    2px solid rgb(var(--teal)/.4);
+
+  background:
+    rgb(var(--teal)/.1);
+
+  color:
+    rgb(var(--teal));
+
   font-size:16px;
+
   font-weight:700;
+
   cursor:pointer;
 }
 
@@ -118,7 +252,11 @@ main{
 }
 
 .pulse{
-  animation:softPulse 1.8s ease-in-out infinite;
+  animation:
+    softPulse
+    1.8s
+    ease-in-out
+    infinite;
 }
 
 
@@ -128,12 +266,21 @@ main{
 
 .preview{
   position:relative;
+
   margin-top:16px;
+
   width:100%;
+
   aspect-ratio:1536/2048;
+
   border-radius:20px;
-  border:2px solid rgb(var(--line));
-  background:rgb(var(--panel));
+
+  border:
+    2px solid rgb(var(--line));
+
+  background:
+    rgb(var(--panel));
+
   overflow:hidden;
 }
 
@@ -150,11 +297,17 @@ main{
 
 .shade{
   position:absolute;
+
   top:0;
   bottom:0;
+
   width:0;
-  background:rgba(0,0,0,.55);
+
+  background:
+    rgba(0,0,0,.55);
+
   pointer-events:none;
+
   z-index:80;
 }
 
@@ -173,8 +326,10 @@ main{
 
 .crop-line{
   position:absolute;
+
   top:0;
   bottom:0;
+
   width:2px;
 
   background-image:
@@ -187,7 +342,9 @@ main{
     );
 
   pointer-events:none;
+
   z-index:95;
+
   display:none;
 }
 
@@ -206,26 +363,41 @@ main{
 
 .badge{
   position:absolute;
+
   top:8px;
   left:50%;
+
   transform:translateX(-50%);
+
   white-space:nowrap;
+
   border-radius:999px;
+
   padding:6px 14px;
+
   font-size:11px;
+
   font-weight:700;
-  color:rgb(var(--ink));
-  box-shadow:0 2px 8px rgba(0,0,0,.25);
+
+  color:
+    rgb(var(--ink));
+
+  box-shadow:
+    0 2px 8px rgba(0,0,0,.25);
+
   display:none;
+
   z-index:100;
 }
 
 .badge.warn{
-  background:rgb(var(--gold));
+  background:
+    rgb(var(--gold));
 }
 
 .badge.ok{
-  background:rgb(var(--teal));
+  background:
+    rgb(var(--teal));
 }
 
 
@@ -235,15 +407,25 @@ main{
 
 .placeholder{
   position:absolute;
+
   inset:0;
+
   display:flex;
+
   align-items:center;
   justify-content:center;
+
   text-align:center;
+
   padding:0 32px;
+
   font-size:14px;
-  color:rgb(var(--paper)/.5);
+
+  color:
+    rgb(var(--paper)/.5);
+
   pointer-events:none;
+
   z-index:2;
 }
 
@@ -254,9 +436,13 @@ main{
 
 #uiGuide{
   position:absolute;
+
   inset:0;
+
   display:none;
+
   pointer-events:none;
+
   z-index:30;
 }
 
@@ -266,9 +452,13 @@ main{
 
 .fake-ui{
   position:absolute;
+
   color:#fff;
+
   user-select:none;
-  text-shadow:0 1px 3px rgba(0,0,0,.55);
+
+  text-shadow:
+    0 1px 3px rgba(0,0,0,.55);
 }
 
 
@@ -283,12 +473,15 @@ main{
   top:calc(151 / 2048 * 100%);
 
   width:calc(62 / 1536 * 100%);
+
   aspect-ratio:1;
 
   border-radius:50%;
+
   overflow:hidden;
 
-  border:2px solid rgba(255,255,255,.9);
+  border:
+    2px solid rgba(255,255,255,.9);
 
   background:
     linear-gradient(
@@ -306,13 +499,17 @@ main{
   content:"A";
 
   position:absolute;
+
   inset:0;
 
   display:flex;
+
   align-items:center;
   justify-content:center;
 
-  font-size:clamp(12px,2vw,22px);
+  font-size:
+    clamp(12px,2vw,22px);
+
   font-weight:900;
 
   color:#fff;
@@ -326,9 +523,12 @@ main{
   height:calc(34 / 2048 * 100%);
 
   display:flex;
+
   align-items:center;
 
-  font-size:clamp(7px,1.35vw,15px);
+  font-size:
+    clamp(7px,1.35vw,15px);
+
   font-weight:800;
 }
 
@@ -340,9 +540,12 @@ main{
   height:calc(32 / 2048 * 100%);
 
   display:flex;
+
   align-items:center;
 
-  font-size:clamp(6px,1.1vw,13px);
+  font-size:
+    clamp(6px,1.1vw,13px);
+
   opacity:.92;
 }
 
@@ -361,6 +564,7 @@ main{
   height:calc(66 / 2048 * 100%);
 
   display:flex;
+
   align-items:center;
 
   padding:
@@ -369,14 +573,17 @@ main{
 
   border-radius:999px;
 
-  background:rgba(238,238,242,.72);
+  background:
+    rgba(238,238,242,.72);
 
   color:#111;
 
   box-shadow:
     0 1px 3px rgba(0,0,0,.18);
 
-  font-size:clamp(8px,1.5vw,17px);
+  font-size:
+    clamp(8px,1.5vw,17px);
+
   font-weight:700;
 
   text-shadow:none;
@@ -388,6 +595,7 @@ main{
   flex:0 0 auto;
 
   width:calc(45 / 1536 * 100%);
+
   aspect-ratio:1;
 
   margin-right:
@@ -396,6 +604,7 @@ main{
   border-radius:50%;
 
   display:flex;
+
   align-items:center;
   justify-content:center;
 
@@ -413,13 +622,17 @@ main{
 
   color:#5c6790;
 
-  font-size:clamp(10px,1.8vw,20px);
+  font-size:
+    clamp(10px,1.8vw,20px);
 }
 
 .current-song-text{
   min-width:0;
+
   white-space:nowrap;
+
   overflow:hidden;
+
   text-overflow:ellipsis;
 }
 
@@ -432,6 +645,7 @@ main{
   position:absolute;
 
   width:calc(71 / 1536 * 100%);
+
   aspect-ratio:1;
 
   border-radius:50%;
@@ -445,10 +659,13 @@ main{
   overflow:hidden;
 
   display:flex;
+
   align-items:center;
   justify-content:center;
 
-  font-size:clamp(7px,1.3vw,14px);
+  font-size:
+    clamp(7px,1.3vw,14px);
+
   font-weight:900;
 
   color:#fff;
@@ -515,10 +732,12 @@ main{
   height:calc(55 / 2048 * 100%);
 
   display:flex;
+
   align-items:center;
   justify-content:center;
 
-  font-size:clamp(14px,2.5vw,28px);
+  font-size:
+    clamp(14px,2.5vw,28px);
 }
 
 
@@ -539,9 +758,11 @@ main{
 
   text-align:center;
 
-  color:rgba(255,255,255,.96);
+  color:
+    rgba(255,255,255,.96);
 
-  font-size:clamp(9px,2.1vw,23px);
+  font-size:
+    clamp(9px,2.1vw,23px);
 
   font-weight:800;
 
@@ -581,6 +802,7 @@ main{
 
 .comment{
   width:fit-content;
+
   max-width:96%;
 
   min-height:
@@ -589,6 +811,7 @@ main{
   align-self:center;
 
   display:flex;
+
   align-items:center;
 
   padding:
@@ -643,11 +866,13 @@ main{
   left:calc(1146 / 1536 * 100%);
 
   width:calc(70 / 1536 * 100%);
+
   aspect-ratio:1;
 
   border-radius:50%;
 
   display:flex;
+
   align-items:center;
   justify-content:center;
 
@@ -703,6 +928,7 @@ main{
     1px solid rgba(255,255,255,.12);
 
   display:flex;
+
   align-items:center;
 
   padding-left:5%;
@@ -726,11 +952,13 @@ main{
   top:calc(1866 / 2048 * 100%);
 
   width:calc(54 / 1536 * 100%);
+
   aspect-ratio:1;
 
   border-radius:50%;
 
   display:flex;
+
   align-items:center;
   justify-content:center;
 
@@ -776,6 +1004,7 @@ main{
   position:relative;
 
   width:calc(28 / 1536 * 100%);
+
   height:calc(23 / 2048 * 100%);
 
   min-width:13px;
@@ -1057,11 +1286,60 @@ main{
 }
 
 
+/*
+ * 「スマートフォンで配信する場合」を
+ * このプレビューの主な対象として明確に見せる
+ */
+.usage-note .usage-focus{
+  display:inline;
+
+  color:
+    rgb(var(--paper));
+
+  font-weight:900;
+
+  background:
+    rgb(var(--paper)/.08);
+
+  border-radius:4px;
+
+  padding:2px 4px;
+}
+
+
 /* =========================================================
    小さい画面
    ========================================================= */
 
 @media(max-width:480px){
+
+  .recommended-card{
+    gap:10px;
+
+    padding:12px 12px;
+  }
+
+  .recommended-label{
+    padding-right:10px;
+  }
+
+  .recommended-official{
+    font-size:8px;
+  }
+
+  .recommended-title{
+    font-size:11px;
+  }
+
+  .recommended-size-main{
+    font-size:19px;
+  }
+
+  .recommended-size-sub{
+    font-size:9px;
+
+    gap:6px;
+  }
 
   .usage-note{
     padding:14px 15px;
@@ -1108,6 +1386,56 @@ main{
 
 <main>
 
+
+<!-- =======================================================
+     ColorSing公式 推奨サイズ
+     ======================================================= -->
+
+<div class="recommended-card">
+
+  <div class="recommended-label">
+
+    <span class="recommended-official">
+      ColorSing公式
+    </span>
+
+    <span class="recommended-title">
+      推奨サイズ
+    </span>
+
+  </div>
+
+
+  <div class="recommended-size">
+
+    <span class="recommended-size-main">
+      1536 × 2048 px
+    </span>
+
+    <span class="recommended-size-sub">
+
+      <strong>
+        3:4
+      </strong>
+
+      <span>
+        ｜
+      </span>
+
+      <strong>
+        PNG / JPG
+      </strong>
+
+    </span>
+
+  </div>
+
+</div>
+
+
+<!-- =======================================================
+     アップロード
+     ======================================================= -->
 
 <button
   class="upload-btn pulse"
@@ -1407,10 +1735,17 @@ main{
   </p>
 
   <p>
-    このサービスは、<strong>スマートフォンで配信する場合のカスタム背景の見え方</strong>を確認することを主な目的としています。
+    このサービスは、
+    <strong class="usage-focus">
+      スマートフォンで配信する場合
+    </strong>
+    のカスタム背景の見え方を確認することを主な目的としています。
     iPadなどタブレットから配信する場合は、実際の配信画面と表示が異なることがあります。
     また、ColorSingアプリで行う画像の拡大・縮小・移動などの調整操作を完全に再現するものではありません。
-    <strong>画像の表示範囲や見切れ方を確認するための目安</strong>としてご利用ください。
+    <strong>
+      画像の表示範囲や見切れ方を確認するための目安
+    </strong>
+    としてご利用ください。
   </p>
 
 </div>
@@ -1458,7 +1793,7 @@ main{
       aspect:1080/2520,
 
       note:
-        "上下は画面いっぱい、左右が大きく見えます"
+        "上下は画面いっぱい、左右が大きく見切れます"
     },
 
 
