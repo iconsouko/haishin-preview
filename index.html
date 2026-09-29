@@ -201,24 +201,6 @@ main{
 
 
 /* =========================================================
-   注意書き
-   ========================================================= */
-
-.preview-note{
-  margin:8px 4px 0;
-  text-align:center;
-  font-size:12px;
-  line-height:1.5;
-  color:rgb(var(--muted));
-}
-
-.preview-note strong{
-  color:rgb(var(--paper));
-  font-weight:700;
-}
-
-
-/* =========================================================
    端末状態
    ========================================================= */
 
@@ -300,7 +282,6 @@ main{
   left:calc(314 / 1536 * 100%);
   top:calc(151 / 2048 * 100%);
 
-  /* 実画面に合わせて縮小 */
   width:calc(62 / 1536 * 100%);
   aspect-ratio:1;
 
@@ -1021,6 +1002,77 @@ main{
     rgb(var(--muted));
 }
 
+
+/* =========================================================
+   このプレビューについて
+   ========================================================= */
+
+.usage-note{
+  margin-top:16px;
+
+  padding:16px 18px;
+
+  border-radius:16px;
+
+  border:
+    1px solid rgb(var(--line));
+
+  background:
+    rgb(var(--panel));
+
+  color:
+    rgb(var(--muted));
+
+  font-size:12px;
+
+  line-height:1.7;
+}
+
+.usage-note-title{
+  display:flex;
+
+  align-items:center;
+
+  gap:6px;
+
+  margin:0 0 7px;
+
+  color:
+    rgb(var(--paper));
+
+  font-size:13px;
+
+  font-weight:800;
+}
+
+.usage-note p{
+  margin:0;
+}
+
+.usage-note strong{
+  color:
+    rgb(var(--paper));
+
+  font-weight:700;
+}
+
+
+/* =========================================================
+   小さい画面
+   ========================================================= */
+
+@media(max-width:480px){
+
+  .usage-note{
+    padding:14px 15px;
+
+    font-size:11px;
+
+    line-height:1.65;
+  }
+
+}
+
 </style>
 </head>
 
@@ -1319,12 +1371,6 @@ main{
 </div>
 
 
-<p class="preview-note">
-  ※ <strong>あくまでも目安です。</strong>
-  実際の配信画面では、端末・画面サイズ・表示環境などにより見え方が異なる場合があります。
-</p>
-
-
 <div
   class="device-panel"
   id="devicePanel"
@@ -1346,6 +1392,26 @@ main{
     id="deviceNote"
   ></p>
 
+
+</div>
+
+
+<!-- =======================================================
+     このプレビューについて
+     ======================================================= -->
+
+<div class="usage-note">
+
+  <p class="usage-note-title">
+    💡 このプレビューについて
+  </p>
+
+  <p>
+    このサービスは、<strong>スマートフォンで配信する場合のカスタム背景の見え方</strong>を確認することを主な目的としています。
+    iPadなどタブレットから配信する場合は、実際の配信画面と表示が異なることがあります。
+    また、ColorSingアプリで行う画像の拡大・縮小・移動などの調整操作を完全に再現するものではありません。
+    <strong>画像の表示範囲や見切れ方を確認するための目安</strong>としてご利用ください。
+  </p>
 
 </div>
 
