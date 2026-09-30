@@ -5,2456 +5,514 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>配信プレビューさん | カスタム背景の見え方チェック</title>
 <meta name="description" content="ColorSingのカスタム背景が配信画面でどう見えるか確認できるプレビューです。">
-
 <style>
-
-:root{
-  --ink:20 19 28;
-  --panel:29 27 41;
-  --line:51 47 68;
-  --paper:250 247 241;
-  --muted:199 194 214;
-  --coral:255 111 89;
-  --teal:47 182 166;
-  --gold:245 185 66;
-}
-
-html.light{
-  --ink:250 247 241;
-  --panel:255 255 255;
-  --line:224 219 232;
-  --paper:30 27 41;
-  --muted:96 90 112;
-}
-
-*{
-  box-sizing:border-box;
-}
-
-html,
-body{
-  height:100%;
-  margin:0;
-}
-
-body{
-  background:rgb(var(--ink));
-  color:rgb(var(--paper));
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Helvetica Neue",
-    "Hiragino Kaku Gothic ProN",
-    "Hiragino Sans",
-    "Yu Gothic",
-    Meiryo,
-    sans-serif;
-  -webkit-font-smoothing:antialiased;
-}
-
-button{
-  font:inherit;
-}
-
-header{
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  max-width:700px;
-  margin:auto;
-  padding:32px 24px 0;
-}
-
-header h1{
-  margin:0;
-  font-size:26px;
-  letter-spacing:.02em;
-}
-
-header p{
-  margin:4px 0 0;
-  font-size:13px;
-  color:rgb(var(--muted));
-}
-
-.theme-btn{
-  flex-shrink:0;
-  width:36px;
-  height:36px;
-  border-radius:999px;
-  border:2px solid rgb(var(--line));
-  background:rgb(var(--panel));
-  color:rgb(var(--paper));
-  font-size:16px;
-  cursor:pointer;
-}
-
-main{
-  max-width:700px;
-  margin:auto;
-  padding:24px;
-}
-
-
-/* =========================================================
-   ColorSing公式 推奨サイズ
-   ========================================================= */
-
-.recommended-card{
-  margin-bottom:16px;
-
-  padding:14px 16px;
-
-  border-radius:14px;
-
-  border:
-    1px solid rgb(var(--line));
-
-  background:
-    rgb(var(--panel));
-
-  display:flex;
-
-  align-items:center;
-
-  gap:16px;
-
-  min-width:0;
-}
-
-.recommended-label{
-  flex:0 0 auto;
-
-  min-width:0;
-
-  padding-right:16px;
-
-  border-right:
-    1px solid rgb(var(--line));
-}
-
-.recommended-official{
-  display:block;
-
-  margin-bottom:2px;
-
-  color:
-    rgb(var(--muted));
-
-  font-size:10px;
-
-  font-weight:700;
-
-  letter-spacing:.02em;
-
-  line-height:1.2;
-
-  white-space:nowrap;
-}
-
-.recommended-title{
-  display:block;
-
-  color:
-    rgb(var(--paper));
-
-  font-size:14px;
-
-  font-weight:800;
-
-  line-height:1.25;
-
-  white-space:nowrap;
-}
-
-.recommended-size{
-  flex:1 1 auto;
-
-  min-width:0;
-}
-
-.recommended-size-main{
-  display:block;
-
-  color:
-    rgb(var(--paper));
-
-  font-size:
-    clamp(18px,4.5vw,23px);
-
-  font-weight:800;
-
-  line-height:1.15;
-
-  letter-spacing:.01em;
-
-  white-space:nowrap;
-}
-
-.recommended-size-sub{
-  display:flex;
-
-  align-items:center;
-
-  gap:7px;
-
-  margin-top:4px;
-
-  color:
-    rgb(var(--muted));
-
-  font-size:10px;
-
-  font-weight:700;
-
-  line-height:1.2;
-
-  white-space:nowrap;
-}
-
-.recommended-size-sub strong{
-  color:
-    rgb(var(--muted));
-
-  font-weight:700;
-}
-
-
-/* =========================================================
-   アップロード
-   ========================================================= */
-
-.upload-btn{
-  width:100%;
-
-  padding:20px;
-
-  border-radius:20px;
-
-  border:
-    2px solid rgb(var(--teal)/.4);
-
-  background:
-    rgb(var(--teal)/.1);
-
-  color:
-    rgb(var(--teal));
-
-  font-size:16px;
-
-  font-weight:700;
-
-  cursor:pointer;
-}
-
-@keyframes softPulse{
-  0%,100%{
-    opacity:1;
-  }
-
-  50%{
-    opacity:.55;
-  }
-}
-
-.pulse{
-  animation:
-    softPulse
-    1.8s
-    ease-in-out
-    infinite;
-}
-
-
-/* =========================================================
-   プレビュー
-   ========================================================= */
-
-.preview{
-  position:relative;
-
-  margin-top:16px;
-
-  width:100%;
-
-  aspect-ratio:1536/2048;
-
-  border-radius:20px;
-
-  border:
-    2px solid rgb(var(--line));
-
-  background:
-    rgb(var(--panel));
-
-  overflow:hidden;
-}
-
-#canvas{
-  width:100%;
-  height:100%;
-  display:block;
-}
-
-
-/* =========================================================
-   見切れ部分
-   ========================================================= */
-
-.shade{
-  position:absolute;
-
-  top:0;
-  bottom:0;
-
-  width:0;
-
-  background:
-    rgba(0,0,0,.55);
-
-  pointer-events:none;
-
-  z-index:80;
-}
-
-.shade.left{
-  left:0;
-}
-
-.shade.right{
-  right:0;
-}
-
-
-/* =========================================================
-   端末境界線
-   ========================================================= */
-
-.crop-line{
-  position:absolute;
-
-  top:0;
-  bottom:0;
-
-  width:2px;
-
-  background-image:
-    repeating-linear-gradient(
-      to bottom,
-      rgba(255,255,255,.95) 0,
-      rgba(255,255,255,.95) 5px,
-      transparent 5px,
-      transparent 10px
-    );
-
-  pointer-events:none;
-
-  z-index:95;
-
-  display:none;
-}
-
-.crop-line.left{
-  left:0;
-}
-
-.crop-line.right{
-  left:0;
-}
-
-
-/* =========================================================
-   端末状態
-   ========================================================= */
-
-.badge{
-  position:absolute;
-
-  top:8px;
-  left:50%;
-
-  transform:translateX(-50%);
-
-  white-space:nowrap;
-
-  border-radius:999px;
-
-  padding:6px 14px;
-
-  font-size:11px;
-
-  font-weight:700;
-
-  color:
-    rgb(var(--ink));
-
-  box-shadow:
-    0 2px 8px rgba(0,0,0,.25);
-
-  display:none;
-
-  z-index:100;
-}
-
-.badge.warn{
-  background:
-    rgb(var(--gold));
-}
-
-.badge.ok{
-  background:
-    rgb(var(--teal));
-}
-
-
-/* =========================================================
-   プレースホルダー
-   ========================================================= */
-
-.placeholder{
-  position:absolute;
-
-  inset:0;
-
-  display:flex;
-
-  align-items:center;
-  justify-content:center;
-
-  text-align:center;
-
-  padding:0 32px;
-
-  font-size:14px;
-
-  color:
-    rgb(var(--paper)/.5);
-
-  pointer-events:none;
-
-  z-index:2;
-}
-
-
-/* =========================================================
-   配信UI
-   ========================================================= */
-
-#uiGuide{
-  position:absolute;
-
-  inset:0;
-
-  display:none;
-
-  pointer-events:none;
-
-  z-index:30;
-}
-
-#uiGuide.visible{
-  display:block;
-}
-
-.fake-ui{
-  position:absolute;
-
-  color:#fff;
-
-  user-select:none;
-
-  text-shadow:
-    0 1px 3px rgba(0,0,0,.55);
-}
-
-
-/* =========================================================
-   配信者情報
-   ========================================================= */
-
-.creator-avatar{
-  position:absolute;
-
-  left:calc(314 / 1536 * 100%);
-  top:calc(151 / 2048 * 100%);
-
-  width:calc(62 / 1536 * 100%);
-
-  aspect-ratio:1;
-
-  border-radius:50%;
-
-  overflow:hidden;
-
-  border:
-    2px solid rgba(255,255,255,.9);
-
-  background:
-    linear-gradient(
-      135deg,
-      #ffd166,
-      #ef476f 45%,
-      #8338ec
-    );
-
-  box-shadow:
-    0 2px 7px rgba(0,0,0,.35);
-}
-
-.creator-avatar:before{
-  content:"A";
-
-  position:absolute;
-
-  inset:0;
-
-  display:flex;
-
-  align-items:center;
-  justify-content:center;
-
-  font-size:
-    clamp(12px,2vw,22px);
-
-  font-weight:900;
-
-  color:#fff;
-}
-
-.creator-name{
-  left:calc(421 / 1536 * 100%);
-  top:calc(159 / 2048 * 100%);
-
-  width:calc(250 / 1536 * 100%);
-  height:calc(34 / 2048 * 100%);
-
-  display:flex;
-
-  align-items:center;
-
-  font-size:
-    clamp(7px,1.35vw,15px);
-
-  font-weight:800;
-}
-
-.creator-info{
-  left:calc(421 / 1536 * 100%);
-  top:calc(200 / 2048 * 100%);
-
-  width:calc(316 / 1536 * 100%);
-  height:calc(32 / 2048 * 100%);
-
-  display:flex;
-
-  align-items:center;
-
-  font-size:
-    clamp(6px,1.1vw,13px);
-
-  opacity:.92;
-}
-
-
-/* =========================================================
-   現在歌唱中の曲
-   ========================================================= */
-
-.current-song{
-  position:absolute;
-
-  left:calc(315 / 1536 * 100%);
-  top:calc(272 / 2048 * 100%);
-
-  width:calc(381 / 1536 * 100%);
-  height:calc(66 / 2048 * 100%);
-
-  display:flex;
-
-  align-items:center;
-
-  padding:
-    0
-    calc(16 / 1536 * 100%);
-
-  border-radius:999px;
-
-  background:
-    rgba(238,238,242,.72);
-
-  color:#111;
-
-  box-shadow:
-    0 1px 3px rgba(0,0,0,.18);
-
-  font-size:
-    clamp(8px,1.5vw,17px);
-
-  font-weight:700;
-
-  text-shadow:none;
-
-  overflow:hidden;
-}
-
-.current-song-icon{
-  flex:0 0 auto;
-
-  width:calc(45 / 1536 * 100%);
-
-  aspect-ratio:1;
-
-  margin-right:
-    calc(9 / 1536 * 100%);
-
-  border-radius:50%;
-
-  display:flex;
-
-  align-items:center;
-  justify-content:center;
-
-  background:
-    radial-gradient(
-      circle at 35% 35%,
-      #e8f1ff 0 18%,
-      #8ab7ff 19% 42%,
-      #5e7dcc 43% 62%,
-      #d8d9e2 63% 100%
-    );
-
-  border:
-    2px solid rgba(70,80,120,.65);
-
-  color:#5c6790;
-
-  font-size:
-    clamp(10px,1.8vw,20px);
-}
-
-.current-song-text{
-  min-width:0;
-
-  white-space:nowrap;
-
-  overflow:hidden;
-
-  text-overflow:ellipsis;
-}
-
-
-/* =========================================================
-   リスナーアイコン
-   ========================================================= */
-
-.listener-avatar{
-  position:absolute;
-
-  width:calc(71 / 1536 * 100%);
-
-  aspect-ratio:1;
-
-  border-radius:50%;
-
-  border:
-    2px solid rgba(255,255,255,.85);
-
-  box-shadow:
-    0 2px 7px rgba(0,0,0,.3);
-
-  overflow:hidden;
-
-  display:flex;
-
-  align-items:center;
-  justify-content:center;
-
-  font-size:
-    clamp(7px,1.3vw,14px);
-
-  font-weight:900;
-
-  color:#fff;
-}
-
-.listener-avatar.a{
-  left:calc(862 / 1536 * 100%);
-  top:calc(161 / 2048 * 100%);
-
-  background:
-    linear-gradient(
-      135deg,
-      #ff9a9e,
-      #fad0c4
-    );
-}
-
-.listener-avatar.b{
-  left:calc(938 / 1536 * 100%);
-  top:calc(161 / 2048 * 100%);
-
-  background:
-    linear-gradient(
-      135deg,
-      #a18cd1,
-      #fbc2eb
-    );
-}
-
-.listener-avatar.c{
-  left:calc(1009 / 1536 * 100%);
-  top:calc(161 / 2048 * 100%);
-
-  background:
-    linear-gradient(
-      135deg,
-      #84fab0,
-      #8fd3f4
-    );
-}
-
-.listener-avatar.d{
-  left:calc(1090 / 1536 * 100%);
-  top:calc(161 / 2048 * 100%);
-
-  background:
-    linear-gradient(
-      135deg,
-      #f6d365,
-      #fda085
-    );
-}
-
-
-/* =========================================================
-   閉じる
-   ========================================================= */
-
-.close-button{
-  left:calc(1165 / 1536 * 100%);
-  top:calc(175 / 2048 * 100%);
-
-  width:calc(55 / 1536 * 100%);
-  height:calc(55 / 2048 * 100%);
-
-  display:flex;
-
-  align-items:center;
-  justify-content:center;
-
-  font-size:
-    clamp(14px,2.5vw,28px);
-}
-
-
-/* =========================================================
-   歌詞
-   ========================================================= */
-
-.lyrics{
-  position:absolute;
-
-  left:50%;
-
-  top:calc(1208 / 2048 * 100%);
-
-  transform:translateX(-50%);
-
-  width:62%;
-
-  text-align:center;
-
-  color:
-    rgba(255,255,255,.96);
-
-  font-size:
-    clamp(9px,2.1vw,23px);
-
-  font-weight:800;
-
-  line-height:1.2;
-
-  text-shadow:
-    0 2px 5px rgba(0,0,0,.65);
-}
-
-
-/* =========================================================
-   コメント
-   ========================================================= */
-
-.comment-area{
-  position:absolute;
-
-  left:calc(315 / 1536 * 100%);
-  top:calc(1265 / 2048 * 100%);
-
-  width:calc(805 / 1536 * 100%);
-  height:calc(590 / 2048 * 100%);
-
-  overflow:hidden;
-
-  display:grid;
-
-  grid-template-rows:
-    repeat(8,1fr);
-
-  align-items:center;
-
-  padding:
-    0
-    calc(18 / 1536 * 100%);
-}
-
-.comment{
-  width:fit-content;
-
-  max-width:96%;
-
-  min-height:
-    calc(50 / 2048 * 100%);
-
-  align-self:center;
-
-  display:flex;
-
-  align-items:center;
-
-  padding:
-    0
-    calc(14 / 1536 * 100%);
-
-  border-radius:999px;
-
-  background:
-    rgba(45,45,55,.76);
-
-  color:#fff;
-
-  font-size:
-    clamp(7px,1.45vw,15px);
-
-  font-weight:700;
-
-  line-height:1.15;
-
-  text-shadow:
-    0 1px 2px rgba(0,0,0,.5);
-
-  white-space:nowrap;
-
-  overflow:hidden;
-
-  text-overflow:ellipsis;
-}
-
-.comment.highlight{
-  background:
-    rgba(71,157,220,.78);
-}
-
-.comment .name{
-  flex:0 0 auto;
-
-  margin-right:.5em;
-
-  opacity:.82;
-}
-
-
-/* =========================================================
-   右側ボタン
-   ========================================================= */
-
-.side-button{
-  position:absolute;
-
-  left:calc(1146 / 1536 * 100%);
-
-  width:calc(70 / 1536 * 100%);
-
-  aspect-ratio:1;
-
-  border-radius:50%;
-
-  display:flex;
-
-  align-items:center;
-  justify-content:center;
-
-  background:
-    rgba(80,82,91,.82);
-
-  border:
-    1px solid rgba(255,255,255,.2);
-
-  box-shadow:
-    0 3px 8px rgba(0,0,0,.28);
-
-  color:#fff;
-
-  font-size:
-    clamp(10px,1.9vw,20px);
-}
-
-.side-button.one{
-  top:calc(1548 / 2048 * 100%);
-}
-
-.side-button.two{
-  top:calc(1664 / 2048 * 100%);
-}
-
-.side-button.three{
-  top:calc(1780 / 2048 * 100%);
-}
-
-
-/* =========================================================
-   コメント入力欄
-   ========================================================= */
-
-.comment-input{
-  position:absolute;
-
-  left:calc(315 / 1536 * 100%);
-
-  top:calc(1870 / 2048 * 100%);
-
-  width:calc(563 / 1536 * 100%);
-
-  height:calc(87 / 2048 * 100%);
-
-  border-radius:999px;
-
-  background:
-    rgba(35,35,42,.82);
-
-  border:
-    1px solid rgba(255,255,255,.12);
-
-  display:flex;
-
-  align-items:center;
-
-  padding-left:5%;
-
-  color:
-    rgba(255,255,255,.7);
-
-  font-size:
-    clamp(7px,1.4vw,15px);
-}
-
-
-/* =========================================================
-   下部ボタン
-   実画面の右下UIを再計測して調整
-   ========================================================= */
-
-.bottom-button{
-  position:absolute;
-
-  top:calc(1866 / 2048 * 100%);
-
-  width:calc(54 / 1536 * 100%);
-
-  aspect-ratio:1;
-
-  border-radius:50%;
-
-  display:flex;
-
-  align-items:center;
-  justify-content:center;
-
-  background:transparent;
-
-  border:none;
-
-  box-shadow:none;
-
-  color:#fff;
-
-  font-size:
-    clamp(9px,1.7vw,18px);
-
-  text-shadow:
-    0 1px 3px rgba(0,0,0,.8);
-}
-
-
-/* 左側の補助ボタン */
-.bottom-button.one{
-  left:calc(946 / 1536 * 100%);
-}
-
+:root{--ink:20 19 28;--panel:29 27 41;--line:51 47 68;--paper:250 247 241;--muted:199 194 214;--coral:255 111 89;--teal:47 182 166;--gold:245 185 66}
+html.light{--ink:250 247 241;--panel:255 255 255;--line:224 219 232;--paper:30 27 41;--muted:96 90 112}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:rgb(var(--ink));color:rgb(var(--paper));font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic",Meiryo,sans-serif;-webkit-font-smoothing:antialiased}
+button{font:inherit}
+header{display:flex;align-items:flex-start;justify-content:space-between;max-width:700px;margin:auto;padding:32px 24px 0}
+header h1{margin:0;font-size:26px;letter-spacing:.02em}
+header p{margin:4px 0 0;font-size:13px;color:rgb(var(--muted))}
+.theme-btn{flex-shrink:0;width:36px;height:36px;border-radius:999px;border:2px solid rgb(var(--line));background:rgb(var(--panel));color:rgb(var(--paper));font-size:16px;cursor:pointer}
+main{max-width:700px;margin:auto;padding:24px}
+
+/* ColorSing公式 推奨サイズ */
+.recommended-card{margin-bottom:16px;padding:14px 16px;border-radius:14px;border:1px solid rgb(var(--line));background:rgb(var(--panel));display:flex;align-items:center;gap:16px;min-width:0}
+.recommended-label{flex:0 0 auto;min-width:0;padding-right:16px;border-right:1px solid rgb(var(--line))}
+.recommended-official{display:block;margin-bottom:2px;color:rgb(var(--muted));font-size:10px;font-weight:700;letter-spacing:.02em;line-height:1.2;white-space:nowrap}
+.recommended-title{display:block;color:rgb(var(--paper));font-size:14px;font-weight:800;line-height:1.25;white-space:nowrap}
+.recommended-size{flex:1 1 auto;min-width:0}
+.recommended-size-main{display:block;color:rgb(var(--paper));font-size:clamp(18px,4.5vw,23px);font-weight:800;line-height:1.15;letter-spacing:.01em;white-space:nowrap}
+.recommended-size-sub{display:flex;align-items:center;gap:7px;margin-top:4px;color:rgb(var(--muted));font-size:10px;font-weight:700;line-height:1.2;white-space:nowrap}
+.recommended-size-sub strong{color:rgb(var(--muted));font-weight:700}
+
+/* アップロード */
+.upload-btn{width:100%;padding:20px;border-radius:20px;border:2px solid rgb(var(--teal)/.4);background:rgb(var(--teal)/.1);color:rgb(var(--teal));font-size:16px;font-weight:700;cursor:pointer}
+@keyframes softPulse{0%,100%{opacity:1}50%{opacity:.55}}
+.pulse{animation:softPulse 1.8s ease-in-out infinite}
+
+/* プレビュー */
+.preview{position:relative;margin-top:16px;width:100%;aspect-ratio:1536/2048;border-radius:20px;border:2px solid rgb(var(--line));background:rgb(var(--panel));overflow:hidden}
+#canvas{width:100%;height:100%;display:block}
+
+/* 見切れ部分 */
+.shade{position:absolute;top:0;bottom:0;width:0;background:rgba(0,0,0,.55);pointer-events:none;z-index:80}
+.shade.left{left:0}
+.shade.right{right:0}
+
+/* 端末境界線 */
+.crop-line{position:absolute;top:0;bottom:0;width:2px;background-image:repeating-linear-gradient(to bottom,rgba(255,255,255,.95) 0,rgba(255,255,255,.95) 5px,transparent 5px,transparent 10px);pointer-events:none;z-index:95;display:none}
+.crop-line.left{left:0}
+.crop-line.right{left:0}
+
+/* 端末状態 */
+.badge{position:absolute;top:8px;left:50%;transform:translateX(-50%);white-space:nowrap;border-radius:999px;padding:6px 14px;font-size:11px;font-weight:700;color:rgb(var(--ink));box-shadow:0 2px 8px rgba(0,0,0,.25);display:none;z-index:100}
+.badge.warn{background:rgb(var(--gold))}
+.badge.ok{background:rgb(var(--teal))}
+
+/* プレースホルダー */
+.placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 32px;font-size:14px;color:rgb(var(--paper)/.5);pointer-events:none;z-index:2}
+
+/* 配信UI */
+#uiGuide{position:absolute;inset:0;display:none;pointer-events:none;z-index:30}
+#uiGuide.visible{display:block}
+.fake-ui{position:absolute;color:#fff;user-select:none;text-shadow:0 1px 3px rgba(0,0,0,.55)}
+
+/* 配信者情報 */
+.creator-avatar{position:absolute;left:calc(314 / 1536 * 100%);top:calc(151 / 2048 * 100%);width:calc(62 / 1536 * 100%);aspect-ratio:1;border-radius:50%;overflow:hidden;border:2px solid rgba(255,255,255,.9);background:linear-gradient(135deg,#ffd166,#ef476f 45%,#8338ec);box-shadow:0 2px 7px rgba(0,0,0,.35)}
+.creator-avatar:before{content:"A";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:clamp(12px,2vw,22px);font-weight:900;color:#fff}
+.creator-name{left:calc(421 / 1536 * 100%);top:calc(159 / 2048 * 100%);width:calc(250 / 1536 * 100%);height:calc(34 / 2048 * 100%);display:flex;align-items:center;font-size:clamp(7px,1.35vw,15px);font-weight:800}
+.creator-info{left:calc(421 / 1536 * 100%);top:calc(200 / 2048 * 100%);width:calc(316 / 1536 * 100%);height:calc(32 / 2048 * 100%);display:flex;align-items:center;font-size:clamp(6px,1.1vw,13px);opacity:.92}
+
+/* 現在歌唱中の曲 */
+.current-song{position:absolute;left:calc(315 / 1536 * 100%);top:calc(272 / 2048 * 100%);width:calc(381 / 1536 * 100%);height:calc(66 / 2048 * 100%);display:flex;align-items:center;padding:0 calc(16 / 1536 * 100%);border-radius:999px;background:rgba(238,238,242,.72);color:#111;box-shadow:0 1px 3px rgba(0,0,0,.18);font-size:clamp(8px,1.5vw,17px);font-weight:700;text-shadow:none;overflow:hidden}
+.current-song-icon{flex:0 0 auto;width:calc(45 / 1536 * 100%);aspect-ratio:1;margin-right:calc(9 / 1536 * 100%);border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 35% 35%,#e8f1ff 0 18%,#8ab7ff 19% 42%,#5e7dcc 43% 62%,#d8d9e2 63% 100%);border:2px solid rgba(70,80,120,.65);color:#5c6790;font-size:clamp(10px,1.8vw,20px)}
+.current-song-text{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* リスナーアイコン */
+.listener-avatar{position:absolute;width:calc(71 / 1536 * 100%);aspect-ratio:1;border-radius:50%;border:2px solid rgba(255,255,255,.85);box-shadow:0 2px 7px rgba(0,0,0,.3);overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:clamp(7px,1.3vw,14px);font-weight:900;color:#fff}
+.listener-avatar.a{left:calc(862 / 1536 * 100%);top:calc(161 / 2048 * 100%);background:linear-gradient(135deg,#ff9a9e,#fad0c4)}
+.listener-avatar.b{left:calc(938 / 1536 * 100%);top:calc(161 / 2048 * 100%);background:linear-gradient(135deg,#a18cd1,#fbc2eb)}
+.listener-avatar.c{left:calc(1009 / 1536 * 100%);top:calc(161 / 2048 * 100%);background:linear-gradient(135deg,#84fab0,#8fd3f4)}
+.listener-avatar.d{left:calc(1090 / 1536 * 100%);top:calc(161 / 2048 * 100%);background:linear-gradient(135deg,#f6d365,#fda085)}
+
+/* 閉じる */
+.close-button{left:calc(1165 / 1536 * 100%);top:calc(175 / 2048 * 100%);width:calc(55 / 1536 * 100%);height:calc(55 / 2048 * 100%);display:flex;align-items:center;justify-content:center;font-size:clamp(14px,2.5vw,28px)}
+
+/* 歌詞 */
+.lyrics{position:absolute;left:50%;top:calc(1208 / 2048 * 100%);transform:translateX(-50%);width:62%;text-align:center;color:rgba(255,255,255,.96);font-size:clamp(9px,2.1vw,23px);font-weight:800;line-height:1.2;text-shadow:0 2px 5px rgba(0,0,0,.65)}
+
+/* コメント */
+.comment-area{position:absolute;left:calc(315 / 1536 * 100%);top:calc(1265 / 2048 * 100%);width:calc(805 / 1536 * 100%);height:calc(590 / 2048 * 100%);overflow:hidden;display:grid;grid-template-rows:repeat(8,1fr);align-items:center;padding:0 calc(18 / 1536 * 100%)}
+.comment{width:fit-content;max-width:96%;min-height:calc(50 / 2048 * 100%);align-self:center;display:flex;align-items:center;padding:0 calc(14 / 1536 * 100%);border-radius:999px;background:rgba(45,45,55,.76);color:#fff;font-size:clamp(7px,1.45vw,15px);font-weight:700;line-height:1.15;text-shadow:0 1px 2px rgba(0,0,0,.5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.comment.highlight{background:rgba(71,157,220,.78)}
+.comment .name{flex:0 0 auto;margin-right:.5em;opacity:.82}
+
+/* 右側ボタン */
+.side-button{position:absolute;left:calc(1146 / 1536 * 100%);width:calc(70 / 1536 * 100%);aspect-ratio:1;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(80,82,91,.82);border:1px solid rgba(255,255,255,.2);box-shadow:0 3px 8px rgba(0,0,0,.28);color:#fff;font-size:clamp(10px,1.9vw,20px)}
+.side-button.one{top:calc(1548 / 2048 * 100%)}
+.side-button.two{top:calc(1664 / 2048 * 100%)}
+.side-button.three{top:calc(1780 / 2048 * 100%)}
+
+/* コメント入力欄 */
+.comment-input{position:absolute;left:calc(315 / 1536 * 100%);top:calc(1870 / 2048 * 100%);width:calc(563 / 1536 * 100%);height:calc(87 / 2048 * 100%);border-radius:999px;background:rgba(35,35,42,.82);border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;padding-left:5%;color:rgba(255,255,255,.7);font-size:clamp(7px,1.4vw,15px)}
+
+/* 下部ボタン */
+.bottom-button{position:absolute;top:calc(1866 / 2048 * 100%);width:calc(54 / 1536 * 100%);aspect-ratio:1;border-radius:50%;display:flex;align-items:center;justify-content:center;background:transparent;border:none;box-shadow:none;color:#fff;font-size:clamp(9px,1.7vw,18px);text-shadow:0 1px 3px rgba(0,0,0,.8)}
+.bottom-button.one{left:calc(946 / 1536 * 100%)}
+.bottom-button.two{left:calc(1050 / 1536 * 100%)}
+.bottom-button.three{left:calc(1158 / 1536 * 100%)}
 
 /* 王冠 */
-.bottom-button.two{
-  left:calc(1050 / 1536 * 100%);
-}
-
-
-/* 三点メニュー */
-.bottom-button.three{
-  left:calc(1158 / 1536 * 100%);
-}
-
-
-/* =========================================================
-   王冠
-   ========================================================= */
-
-.crown-mark{
-  position:relative;
-
-  width:calc(28 / 1536 * 100%);
-
-  height:calc(23 / 2048 * 100%);
-
-  min-width:13px;
-  min-height:11px;
-
-  background:
-    linear-gradient(
-      180deg,
-      #fff 0%,
-      #e8e8e8 100%
-    );
-
-  clip-path:
-    polygon(
-      0 10%,
-      22% 52%,
-      38% 18%,
-      50% 58%,
-      64% 18%,
-      80% 52%,
-      100% 10%,
-      91% 100%,
-      9% 100%
-    );
-
-  filter:
-    drop-shadow(
-      0 1px 2px rgba(0,0,0,.7)
-    );
-}
-
-
-/* =========================================================
-   UI切替ボタン
-   ========================================================= */
-
-.ui-toggle{
-  position:absolute;
-
-  right:8px;
-  bottom:8px;
-
-  width:40px;
-  height:40px;
-
-  border-radius:999px;
-
-  border:none;
-
-  font-size:18px;
-
-  cursor:pointer;
-
-  background:
-    rgb(var(--ink)/.7);
-
-  color:
-    rgb(var(--paper));
-
-  box-shadow:
-    0 2px 8px rgba(0,0,0,.3);
-
-  z-index:200;
-}
-
-.ui-toggle.active{
-  background:
-    rgb(var(--coral));
-
-  color:
-    rgb(var(--ink));
-}
-
-
-/* =========================================================
-   端末選択
-   ========================================================= */
-
-.device-panel{
-  margin-top:16px;
-
-  border-radius:20px;
-
-  border:
-    2px solid rgb(var(--line));
-
-  background:
-    rgb(var(--panel));
-
-  padding:20px;
-}
-
-.device-panel.prompt{
-  border-color:
-    rgb(var(--coral));
-
-  animation:
-    softPulse
-    1.8s
-    ease-in-out
-    infinite;
-}
-
-.device-panel .label{
-  margin:0 0 8px;
-
-  font-size:12px;
-
-  font-weight:700;
-
-  color:
-    rgb(var(--muted));
-}
-
-.device-grid{
-  display:grid;
-
-  grid-template-columns:
-    repeat(2,1fr);
-
-  gap:8px;
-}
-
-@media(min-width:480px){
-
-  .device-grid{
-    grid-template-columns:
-      repeat(4,1fr);
-  }
-
-}
-
-.device-card{
-  text-align:left;
-
-  border-radius:16px;
-
-  border:
-    2px solid rgb(var(--line));
-
-  background:transparent;
-
-  color:
-    rgb(var(--paper));
-
-  padding:12px;
-
-  cursor:pointer;
-}
-
-.device-card.active{
-  border-color:
-    rgb(var(--coral));
-
-  background:
-    rgb(var(--coral)/.1);
-}
-
-.device-card .row{
-  display:flex;
-
-  align-items:center;
-
-  gap:8px;
-}
-
-.device-card .dot{
-  width:16px;
-  height:16px;
-
-  border-radius:999px;
-
-  border:
-    2px solid rgb(var(--line));
-
-  flex-shrink:0;
-
-  display:flex;
-
-  align-items:center;
-  justify-content:center;
-}
-
-.device-card.active .dot{
-  border-color:
-    rgb(var(--coral));
-}
-
-.device-card.active .dot:after{
-  content:"";
-
-  width:8px;
-  height:8px;
-
-  border-radius:999px;
-
-  background:
-    rgb(var(--coral));
-}
-
-.device-card .name{
-  font-size:13px;
-
-  font-weight:700;
-}
-
-.device-card .ratio{
-  display:block;
-
-  margin-top:4px;
-
-  font-size:11px;
-
-  color:
-    rgb(var(--muted));
-}
-
-.device-note{
-  margin-top:8px;
-
-  font-size:12px;
-
-  color:
-    rgb(var(--muted));
-}
-
-
-/* =========================================================
-   このプレビューについて
-   ========================================================= */
-
-.usage-note{
-  margin-top:16px;
-
-  padding:16px 18px;
-
-  border-radius:16px;
-
-  border:
-    1px solid rgb(var(--line));
-
-  background:
-    rgb(var(--panel));
-
-  color:
-    rgb(var(--muted));
-
-  font-size:12px;
-
-  line-height:1.7;
-}
-
-.usage-note-title{
-  display:flex;
-
-  align-items:center;
-
-  gap:6px;
-
-  margin:0 0 7px;
-
-  color:
-    rgb(var(--paper));
-
-  font-size:13px;
-
-  font-weight:800;
-}
-
-.usage-note p{
-  margin:0;
-}
-
-.usage-note strong{
-  color:
-    rgb(var(--paper));
-
-  font-weight:700;
-}
-
-
-/*
- * 「スマートフォンで配信する場合」を
- * このプレビューの主な対象として明確に見せる
- */
-.usage-note .usage-focus{
-  display:inline;
-
-  color:
-    rgb(var(--paper));
-
-  font-weight:900;
-
-  background:
-    rgb(var(--paper)/.08);
-
-  border-radius:4px;
-
-  padding:2px 4px;
-}
-
-
-/* =========================================================
-   小さい画面
-   ========================================================= */
-
+.crown-mark{position:relative;width:calc(28 / 1536 * 100%);height:calc(23 / 2048 * 100%);min-width:13px;min-height:11px;background:linear-gradient(180deg,#fff 0%,#e8e8e8 100%);clip-path:polygon(0 10%,22% 52%,38% 18%,50% 58%,64% 18%,80% 52%,100% 10%,91% 100%,9% 100%);filter:drop-shadow(0 1px 2px rgba(0,0,0,.7))}
+
+/* UI切替ボタン */
+.ui-toggle{position:absolute;right:8px;bottom:8px;width:40px;height:40px;border-radius:999px;border:none;font-size:18px;cursor:pointer;background:rgb(var(--ink)/.7);color:rgb(var(--paper));box-shadow:0 2px 8px rgba(0,0,0,.3);z-index:200}
+.ui-toggle.active{background:rgb(var(--coral));color:rgb(var(--ink))}
+
+/* 端末選択 */
+.device-panel{margin-top:16px;border-radius:20px;border:2px solid rgb(var(--line));background:rgb(var(--panel));padding:20px}
+.device-panel.prompt{border-color:rgb(var(--coral));animation:softPulse 1.8s ease-in-out infinite}
+.device-panel .label{margin:0 0 8px;font-size:12px;font-weight:700;color:rgb(var(--muted))}
+.device-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+@media(min-width:480px){.device-grid{grid-template-columns:repeat(4,1fr)}}
+.device-card{text-align:left;border-radius:16px;border:2px solid rgb(var(--line));background:transparent;color:rgb(var(--paper));padding:12px;cursor:pointer}
+.device-card.active{border-color:rgb(var(--coral));background:rgb(var(--coral)/.1)}
+.device-card .row{display:flex;align-items:center;gap:8px}
+.device-card .dot{width:16px;height:16px;border-radius:999px;border:2px solid rgb(var(--line));flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.device-card.active .dot{border-color:rgb(var(--coral))}
+.device-card.active .dot:after{content:"";width:8px;height:8px;border-radius:999px;background:rgb(var(--coral))}
+.device-card .name{font-size:13px;font-weight:700}
+.device-card .ratio{display:block;margin-top:4px;font-size:11px;color:rgb(var(--muted))}
+.device-note{margin-top:8px;font-size:12px;color:rgb(var(--muted))}
+
+/* このプレビューについて */
+.usage-note{margin-top:16px;padding:16px 18px;border-radius:16px;border:1px solid rgb(var(--line));background:rgb(var(--panel));color:rgb(var(--muted));font-size:12px;line-height:1.7}
+.usage-note-title{display:flex;align-items:center;gap:6px;margin:0 0 7px;color:rgb(var(--paper));font-size:13px;font-weight:800}
+.usage-note p{margin:0}
+.usage-note strong{color:rgb(var(--paper));font-weight:700}
+.usage-note .usage-focus{display:inline;color:rgb(var(--paper));font-weight:900;background:rgb(var(--paper)/.08);border-radius:4px;padding:2px 4px}
+
+/* 配信のおとも（他サービス紹介） */
+.more{margin-top:28px;padding-top:20px;border-top:1px dashed rgb(var(--line));display:grid;gap:8px}
+.more-title{margin:0;font-size:13px;font-weight:800}
+.more-sub{margin:0 0 4px;font-size:11px;color:rgb(var(--muted))}
+.more-card{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;border:1px solid rgb(var(--line));background:rgb(var(--panel));color:rgb(var(--paper));text-decoration:none}
+.more-card.main{border-color:rgb(var(--teal)/.5)}
+.more-card:focus-visible,.more-all:focus-visible{outline:2px solid rgb(var(--teal));outline-offset:2px}
+.more-card .ico{font-style:normal;font-size:22px;flex-shrink:0}
+.more-card .txt{flex:1;min-width:0}
+.more-card .txt b{display:block;font-size:13px}
+.more-card .txt span{display:block;margin-top:2px;font-size:11px;color:rgb(var(--muted))}
+.more-card .go{font-style:normal;font-size:14px;color:rgb(var(--muted));flex-shrink:0}
+.more-all{justify-self:end;margin-top:2px;font-size:12px;color:rgb(var(--muted));text-decoration:none}
+
+/* 小さい画面 */
 @media(max-width:480px){
-
-  .recommended-card{
-    gap:12px;
-
-    padding:13px 13px;
-  }
-
-  .recommended-label{
-    padding-right:12px;
-  }
-
-  .recommended-official{
-    font-size:10px;
-  }
-
-  .recommended-title{
-    font-size:14px;
-  }
-
-  .recommended-size-main{
-    font-size:19px;
-  }
-
-  .recommended-size-sub{
-    font-size:10px;
-
-    gap:6px;
-  }
-
-  .usage-note{
-    padding:14px 15px;
-
-    font-size:11px;
-
-    line-height:1.65;
-  }
-
+  .recommended-card{gap:12px;padding:13px}
+  .recommended-label{padding-right:12px}
+  .recommended-official{font-size:10px}
+  .recommended-title{font-size:14px}
+  .recommended-size-main{font-size:19px}
+  .recommended-size-sub{font-size:10px;gap:6px}
+  .usage-note{padding:14px 15px;font-size:11px;line-height:1.65}
 }
-
 </style>
 </head>
 
-
 <body>
 
-
 <header>
-
   <div>
-
-    <h1>
-      配信プレビューさん
-    </h1>
-
-    <p>
-      カスタム背景が配信でどう見えるか確認できます
-    </p>
-
+    <h1>配信プレビューさん</h1>
+    <p>カスタム背景が配信でどう見えるか確認できます</p>
   </div>
-
-
-  <button
-    class="theme-btn"
-    id="themeBtn"
-    aria-label="ライト/ダークモード切替"
-  >
-    🌙
-  </button>
-
+  <button class="theme-btn" id="themeBtn" aria-label="ライト/ダークモード切替">🌙</button>
 </header>
-
 
 <main>
 
-
-<!-- =======================================================
-     ColorSing公式 推奨サイズ
-     ======================================================= -->
-
+<!-- ColorSing公式 推奨サイズ -->
 <div class="recommended-card">
-
   <div class="recommended-label">
-
-    <span class="recommended-official">
-      ColorSing公式
-    </span>
-
-    <span class="recommended-title">
-      推奨サイズ
-    </span>
-
+    <span class="recommended-official">ColorSing公式</span>
+    <span class="recommended-title">推奨サイズ</span>
   </div>
-
-
   <div class="recommended-size">
-
-    <span class="recommended-size-main">
-      1536 × 2048 px
-    </span>
-
+    <span class="recommended-size-main">1536 × 2048 px</span>
     <span class="recommended-size-sub">
-
-      <strong>
-        3:4
-      </strong>
-
-      <span>
-        ｜
-      </span>
-
-      <strong>
-        PNG / JPG
-      </strong>
-
+      <strong>3:4</strong>
+      <span>｜</span>
+      <strong>PNG / JPG</strong>
     </span>
-
   </div>
-
 </div>
 
+<!-- アップロード -->
+<button class="upload-btn pulse" id="uploadBtn">🖼 画像をアップロード</button>
+<input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp" style="display:none">
 
-<!-- =======================================================
-     アップロード
-     ======================================================= -->
-
-<button
-  class="upload-btn pulse"
-  id="uploadBtn"
->
-  🖼 画像をアップロード
-</button>
-
-
-<input
-  type="file"
-  id="fileInput"
-  accept="image/png,image/jpeg,image/webp"
-  style="display:none"
->
-
-
-<div
-  class="preview"
-  id="preview"
->
-
-
-  <canvas
-    id="canvas"
-    width="1536"
-    height="2048"
-  ></canvas>
-
-
-  <div
-    class="shade left"
-    id="shadeLeft"
-  ></div>
-
-
-  <div
-    class="shade right"
-    id="shadeRight"
-  ></div>
-
-
-  <div
-    class="crop-line left"
-    id="cropLineLeft"
-  ></div>
-
-
-  <div
-    class="crop-line right"
-    id="cropLineRight"
-  ></div>
-
-
-  <div
-    class="badge"
-    id="badge"
-  ></div>
-
-
-  <div
-    class="placeholder"
-    id="placeholder"
-  >
+<div class="preview" id="preview">
+  <canvas id="canvas" width="1536" height="2048"></canvas>
+  <div class="shade left" id="shadeLeft"></div>
+  <div class="shade right" id="shadeRight"></div>
+  <div class="crop-line left" id="cropLineLeft"></div>
+  <div class="crop-line right" id="cropLineRight"></div>
+  <div class="badge" id="badge"></div>
+  <div class="placeholder" id="placeholder">
     画像をアップロードすると、<br>
     配信画面を再現したプレビューを表示します
   </div>
 
-
   <div id="uiGuide">
-
-
     <!-- 配信者情報 -->
-
     <div class="creator-avatar"></div>
-
-
-    <div class="creator-name fake-ui">
-      配信者A
-    </div>
-
-
-    <div class="creator-info fake-ui">
-      ♡ 33　配信中
-    </div>
-
+    <div class="creator-name fake-ui">配信者A</div>
+    <div class="creator-info fake-ui">♡ 33　配信中</div>
 
     <!-- 現在歌唱中の曲 -->
-
     <div class="current-song">
-
-      <div class="current-song-icon">
-        ♪
-      </div>
-
-      <div class="current-song-text">
-        曲名 / アーティスト名
-      </div>
-
+      <div class="current-song-icon">♪</div>
+      <div class="current-song-text">曲名 / アーティスト名</div>
     </div>
-
 
     <!-- リスナー -->
-
-    <div class="listener-avatar a">
-      A
-    </div>
-
-    <div class="listener-avatar b">
-      B
-    </div>
-
-    <div class="listener-avatar c">
-      C
-    </div>
-
-    <div class="listener-avatar d">
-      D
-    </div>
-
+    <div class="listener-avatar a">A</div>
+    <div class="listener-avatar b">B</div>
+    <div class="listener-avatar c">C</div>
+    <div class="listener-avatar d">D</div>
 
     <!-- 閉じる -->
-
-    <div class="close-button fake-ui">
-      ×
-    </div>
-
+    <div class="close-button fake-ui">×</div>
 
     <!-- 歌詞 -->
-
-    <div class="lyrics">
-      ここに歌詞が表示される
-    </div>
-
+    <div class="lyrics">ここに歌詞が表示される</div>
 
     <!-- コメント -->
-
     <div class="comment-area">
-
-
-      <div class="comment">
-        <span class="name">
-          リスナーA
-        </span>
-        こんにちは！
-      </div>
-
-
-      <div class="comment highlight">
-        <span class="name">
-          リスナーB
-        </span>
-        素敵な歌声です！
-      </div>
-
-
-      <div class="comment">
-        <span class="name">
-          リスナーC
-        </span>
-        今日も楽しみにしてました
-      </div>
-
-
-      <div class="comment highlight">
-        <span class="name">
-          リスナーD
-        </span>
-        👏👏👏
-      </div>
-
-
-      <div class="comment">
-        <span class="name">
-          リスナーE
-        </span>
-        ありがとうございます！
-      </div>
-
-
-      <div class="comment">
-        <span class="name">
-          リスナーF
-        </span>
-        次の曲も楽しみです
-      </div>
-
-
-      <div class="comment highlight">
-        <span class="name">
-          リスナーG
-        </span>
-        すごく綺麗です✨
-      </div>
-
-
-      <div class="comment">
-        <span class="name">
-          リスナーH
-        </span>
-        聴いてます！
-      </div>
-
-
+      <div class="comment"><span class="name">リスナーA</span>こんにちは！</div>
+      <div class="comment highlight"><span class="name">リスナーB</span>素敵な歌声です！</div>
+      <div class="comment"><span class="name">リスナーC</span>今日も楽しみにしてました</div>
+      <div class="comment highlight"><span class="name">リスナーD</span>👏👏👏</div>
+      <div class="comment"><span class="name">リスナーE</span>ありがとうございます！</div>
+      <div class="comment"><span class="name">リスナーF</span>次の曲も楽しみです</div>
+      <div class="comment highlight"><span class="name">リスナーG</span>すごく綺麗です✨</div>
+      <div class="comment"><span class="name">リスナーH</span>聴いてます！</div>
     </div>
-
 
     <!-- 右側ボタン -->
-
-    <div class="side-button one">
-      ✨
-    </div>
-
-
-    <div class="side-button two">
-      ♥
-    </div>
-
-
-    <div class="side-button three">
-      🎁
-    </div>
-
+    <div class="side-button one">✨</div>
+    <div class="side-button two">♥</div>
+    <div class="side-button three">🎁</div>
 
     <!-- コメント入力 -->
-
-    <div class="comment-input">
-      コメントを入力…
-    </div>
-
+    <div class="comment-input">コメントを入力…</div>
 
     <!-- 下部ボタン -->
-
-    <div class="bottom-button one">
-      ◌
-    </div>
-
-
-    <div class="bottom-button two">
-      <span class="crown-mark"></span>
-    </div>
-
-
-    <div class="bottom-button three">
-      …
-    </div>
-
-
+    <div class="bottom-button one">◌</div>
+    <div class="bottom-button two"><span class="crown-mark"></span></div>
+    <div class="bottom-button three">…</div>
   </div>
 
-
-  <button
-    class="ui-toggle"
-    id="uiToggleBtn"
-    aria-label="配信画面UIとの重なりを確認"
-  >
-    👥
-  </button>
-
-
+  <button class="ui-toggle" id="uiToggleBtn" aria-label="配信画面UIとの重なりを確認">👥</button>
 </div>
 
-
-<div
-  class="device-panel"
-  id="devicePanel"
->
-
-  <p class="label">
-    📱 端末を選択
-  </p>
-
-
-  <div
-    class="device-grid"
-    id="deviceGrid"
-  ></div>
-
-
-  <p
-    class="device-note"
-    id="deviceNote"
-  ></p>
-
-
+<div class="device-panel" id="devicePanel">
+  <p class="label">📱 端末を選択</p>
+  <div class="device-grid" id="deviceGrid"></div>
+  <p class="device-note" id="deviceNote"></p>
 </div>
 
-
-<!-- =======================================================
-     このプレビューについて
-     ======================================================= -->
-
+<!-- このプレビューについて -->
 <div class="usage-note">
-
-  <p class="usage-note-title">
-    💡 このプレビューについて
-  </p>
-
+  <p class="usage-note-title">💡 このプレビューについて</p>
   <p>
     このサービスは、
-    <strong class="usage-focus">
-      スマートフォンで配信する場合
-    </strong>
+    <strong class="usage-focus">スマートフォンで配信する場合</strong>
     のカスタム背景の見え方を確認することを主な目的としています。
     iPadなどタブレットから配信する場合は、実際の配信画面と表示が異なることがあります。
     また、ColorSingアプリで行う画像の拡大・縮小・移動などの調整操作を完全に再現するものではありません。
-    <strong>
-      画像の表示範囲や見切れ方を確認するための目安
-    </strong>
+    <strong>画像の表示範囲や見切れ方を確認するための目安</strong>
     としてご利用ください。
   </p>
-
 </div>
 
+<!-- 配信のおとも（他サービス紹介） -->
+<section class="more" aria-label="ほかのサービス">
+  <p class="more-title">🎧 配信のおとも</p>
+  <p class="more-sub">同じ作者がつくった、ほかのサービスです（別サイトが開きます）</p>
+
+  <a class="more-card main" href="https://iconsouko.github.io/icon-composer/?ref=haishin-preview" target="_blank" rel="noopener">
+    <i class="ico" aria-hidden="true">🎨</i>
+    <span class="txt"><b>アイコンリングさん</b><span>アイコンにリングを重ねて1枚の画像に。透過化も。</span></span>
+    <em class="go" aria-hidden="true">↗</em>
+  </a>
+
+  <a class="more-card" href="https://iconsouko.github.io/haishin-bingo/?ref=haishin-preview" target="_blank" rel="noopener">
+    <i class="ico" aria-hidden="true">🎯</i>
+    <span class="txt"><b>配信ビンゴさん</b><span>配信のテーマをビンゴで決めよう。選曲迷子から卒業。</span></span>
+    <em class="go" aria-hidden="true">↗</em>
+  </a>
+
+  <a class="more-card" href="https://iconsouko.github.io/icon-souko/index.html?ref=haishin-preview" target="_blank" rel="noopener">
+    <i class="ico" aria-hidden="true">📦</i>
+    <span class="txt"><b>アイコン倉庫さん</b><span>推しからもらったアイコンを集めて残せる場所。</span></span>
+    <em class="go" aria-hidden="true">↗</em>
+  </a>
+
+  <a class="more-all" href="https://iconsouko.github.io/portal/?ref=haishin-preview" target="_blank" rel="noopener">すべて見る</a>
+</section>
 
 </main>
 
-
 <script>
-
 (function(){
-
 
   const W = 1536;
   const H = 2048;
 
-
-  /* =========================================================
-     対応端末
-     ========================================================= */
-
+  /* 対応端末 */
   const DEVICES = [
-
-    {
-      id:"iphone",
-
-      label:"iPhone",
-
-      ratioLabel:"19.5:9",
-
-      aspect:1179/2556,
-
-      note:
-        "上下は画面いっぱい、左右が見切れます"
-    },
-
-
-    {
-      id:"xperia10vi",
-
-      label:"Xperia 10 VI",
-
-      ratioLabel:"21:9",
-
-      aspect:1080/2520,
-
-      note:
-        "上下は画面いっぱい、左右が大きく見切れます"
-    },
-
-
-    {
-      id:"other-major",
-
-      label:"その他の主要スマホ",
-
-      ratioLabel:"20:9目安",
-
-      aspect:9/20,
-
-      note:
-        "iPhone/Xperia以外の機種の目安です"
-    },
-
-
-    {
-      id:"ipad",
-
-      label:"iPad（A16）",
-
-      ratioLabel:"59:41",
-
-      aspect:1640/2360,
-
-      note:
-        "上下左右とも、ほぼ画面いっぱいに表示されます"
-    }
-
+    {id:"iphone",label:"iPhone",ratioLabel:"19.5:9",aspect:1179/2556,note:"上下は画面いっぱい、左右が見切れます"},
+    {id:"xperia10vi",label:"Xperia 10 VI",ratioLabel:"21:9",aspect:1080/2520,note:"上下は画面いっぱい、左右が大きく見切れます"},
+    {id:"other-major",label:"その他の主要スマホ",ratioLabel:"20:9目安",aspect:9/20,note:"iPhone/Xperia以外の機種の目安です"},
+    {id:"ipad",label:"iPad（A16）",ratioLabel:"59:41",aspect:1640/2360,note:"上下左右とも、ほぼ画面いっぱいに表示されます"}
   ];
 
-
-  /* =========================================================
-     DOM
-     ========================================================= */
-
-  const canvas =
-    document.getElementById("canvas");
-
-
-  const ctx =
-    canvas.getContext("2d");
-
-
-  const uploadBtn =
-    document.getElementById("uploadBtn");
-
-
-  const fileInput =
-    document.getElementById("fileInput");
-
-
-  const guide =
-    document.getElementById("uiGuide");
-
-
-  const shadeLeft =
-    document.getElementById("shadeLeft");
-
-
-  const shadeRight =
-    document.getElementById("shadeRight");
-
-
-  const cropLineLeft =
-    document.getElementById("cropLineLeft");
-
-
-  const cropLineRight =
-    document.getElementById("cropLineRight");
-
-
-  const badge =
-    document.getElementById("badge");
-
-
-  const placeholder =
-    document.getElementById("placeholder");
-
-
-  const toggle =
-    document.getElementById("uiToggleBtn");
-
-
-  const panel =
-    document.getElementById("devicePanel");
-
-
-  const grid =
-    document.getElementById("deviceGrid");
-
-
-  const note =
-    document.getElementById("deviceNote");
-
-
-  const themeBtn =
-    document.getElementById("themeBtn");
-
+  /* DOM */
+  const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
+  const uploadBtn = document.getElementById("uploadBtn");
+  const fileInput = document.getElementById("fileInput");
+  const guide = document.getElementById("uiGuide");
+  const shadeLeft = document.getElementById("shadeLeft");
+  const shadeRight = document.getElementById("shadeRight");
+  const cropLineLeft = document.getElementById("cropLineLeft");
+  const cropLineRight = document.getElementById("cropLineRight");
+  const badge = document.getElementById("badge");
+  const placeholder = document.getElementById("placeholder");
+  const toggle = document.getElementById("uiToggleBtn");
+  const panel = document.getElementById("devicePanel");
+  const grid = document.getElementById("deviceGrid");
+  const note = document.getElementById("deviceNote");
+  const themeBtn = document.getElementById("themeBtn");
 
   let bgImage = null;
-
   let selectedDeviceId = null;
-
   let showUiGuide = false;
 
-
-  /* =========================================================
-     背景画像描画
-     ========================================================= */
-
+  /* 背景画像描画 */
   function draw(){
-
-    ctx.clearRect(
-      0,
-      0,
-      W,
-      H
-    );
-
+    ctx.clearRect(0,0,W,H);
 
     if(!bgImage){
-
-      const g =
-        ctx.createLinearGradient(
-          0,
-          0,
-          0,
-          H
-        );
-
-
-      g.addColorStop(
-        0,
-        "#1D1B29"
-      );
-
-
-      g.addColorStop(
-        1,
-        "#14131C"
-      );
-
-
-      ctx.fillStyle =
-        g;
-
-
-      ctx.fillRect(
-        0,
-        0,
-        W,
-        H
-      );
-
-
-      placeholder.style.display =
-        "flex";
-
-
+      const g = ctx.createLinearGradient(0,0,0,H);
+      g.addColorStop(0,"#1D1B29");
+      g.addColorStop(1,"#14131C");
+      ctx.fillStyle = g;
+      ctx.fillRect(0,0,W,H);
+      placeholder.style.display = "flex";
       return;
-
     }
 
+    placeholder.style.display = "none";
 
-    placeholder.style.display =
-      "none";
-
-
-    const s =
-      H / bgImage.height;
-
-
-    const dw =
-      bgImage.width * s;
-
-
-    ctx.drawImage(
-
-      bgImage,
-
-      (W - dw) / 2,
-
-      0,
-
-      dw,
-
-      H
-
-    );
-
+    const s = H / bgImage.height;
+    const dw = bgImage.width * s;
+    ctx.drawImage(bgImage,(W - dw) / 2,0,dw,H);
   }
 
-
-  /* =========================================================
-     左右見切れ幅
-     ========================================================= */
-
+  /* 左右見切れ幅 */
   function margin(aspect){
-
-    return Math.max(
-      0,
-      (1 - aspect * (H / W)) / 2
-    );
-
+    return Math.max(0,(1 - aspect * (H / W)) / 2);
   }
 
-
-  /* =========================================================
-     表示更新
-     ========================================================= */
-
+  /* 表示更新 */
   function update(){
-
-    const d =
-      DEVICES.find(
-        x =>
-          x.id === selectedDeviceId
-      ) || null;
-
+    const d = DEVICES.find(x => x.id === selectedDeviceId) || null;
 
     if(d){
-
-      const m =
-        margin(d.aspect);
-
+      const m = margin(d.aspect);
 
       if(m > .001){
-
-        const width =
-          m * 100 + "%";
-
-
-        shadeLeft.style.width =
-          width;
-
-
-        shadeRight.style.width =
-          width;
-
-
-        cropLineLeft.style.left =
-          "calc(" +
-          (m * 100) +
-          "% - 1px)";
-
-
-        cropLineRight.style.left =
-          "calc(" +
-          (100 - m * 100) +
-          "% - 1px)";
-
-
-        cropLineLeft.style.display =
-          "block";
-
-
-        cropLineRight.style.display =
-          "block";
-
-
-        badge.style.display =
-          "block";
-
-
-        badge.className =
-          "badge warn";
-
-
-        badge.textContent =
-          "⚠️ " +
-          d.label +
-          "は左右が見切れます";
-
+        const width = m * 100 + "%";
+        shadeLeft.style.width = width;
+        shadeRight.style.width = width;
+        cropLineLeft.style.left = "calc(" + (m * 100) + "% - 1px)";
+        cropLineRight.style.left = "calc(" + (100 - m * 100) + "% - 1px)";
+        cropLineLeft.style.display = "block";
+        cropLineRight.style.display = "block";
+        badge.style.display = "block";
+        badge.className = "badge warn";
+        badge.textContent = "⚠️ " + d.label + "は左右が見切れます";
       }else{
-
-        shadeLeft.style.width =
-          "0%";
-
-
-        shadeRight.style.width =
-          "0%";
-
-
-        cropLineLeft.style.display =
-          "none";
-
-
-        cropLineRight.style.display =
-          "none";
-
-
-        badge.style.display =
-          "block";
-
-
-        badge.className =
-          "badge ok";
-
-
-        badge.textContent =
-          "✅ " +
-          d.label +
-          "はほぼ全体が見えます";
-
+        shadeLeft.style.width = "0%";
+        shadeRight.style.width = "0%";
+        cropLineLeft.style.display = "none";
+        cropLineRight.style.display = "none";
+        badge.style.display = "block";
+        badge.className = "badge ok";
+        badge.textContent = "✅ " + d.label + "はほぼ全体が見えます";
       }
 
-
-      note.textContent =
-        d.note;
-
+      note.textContent = d.note;
     }else{
-
-      shadeLeft.style.width =
-        "0%";
-
-
-      shadeRight.style.width =
-        "0%";
-
-
-      cropLineLeft.style.display =
-        "none";
-
-
-      cropLineRight.style.display =
-        "none";
-
-
-      badge.style.display =
-        "none";
-
-
-      note.textContent =
-        "";
-
+      shadeLeft.style.width = "0%";
+      shadeRight.style.width = "0%";
+      cropLineLeft.style.display = "none";
+      cropLineRight.style.display = "none";
+      badge.style.display = "none";
+      note.textContent = "";
     }
 
-
-    guide.classList.toggle(
-      "visible",
-      showUiGuide
-    );
-
-
-    toggle.classList.toggle(
-      "active",
-      showUiGuide
-    );
-
-
-    panel.classList.toggle(
-
-      "prompt",
-
-      !!bgImage &&
-      !selectedDeviceId
-
-    );
-
+    guide.classList.toggle("visible",showUiGuide);
+    toggle.classList.toggle("active",showUiGuide);
+    panel.classList.toggle("prompt",!!bgImage && !selectedDeviceId);
   }
 
-
-  /* =========================================================
-     HTMLエスケープ
-     ========================================================= */
-
+  /* HTMLエスケープ */
   function esc(v){
-
     return String(v)
-
-      .replace(
-        /&/g,
-        "&amp;"
-      )
-
-      .replace(
-        /</g,
-        "&lt;"
-      )
-
-      .replace(
-        />/g,
-        "&gt;"
-      )
-
-      .replace(
-        /"/g,
-        "&quot;"
-      )
-
-      .replace(
-        /'/g,
-        "&#039;"
-      );
-
+      .replace(/&/g,"&amp;")
+      .replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;")
+      .replace(/'/g,"&#039;");
   }
 
-
-  /* =========================================================
-     端末ボタン
-     ========================================================= */
-
+  /* 端末ボタン */
   function render(){
+    grid.innerHTML = "";
 
-    grid.innerHTML =
-      "";
+    DEVICES.forEach(d => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "device-card" + (selectedDeviceId === d.id ? " active" : "");
 
+      b.innerHTML =
+        '<span class="row">' +
+          '<span class="dot"></span>' +
+          '<span class="name">' + esc(d.label) + '</span>' +
+        '</span>' +
+        '<span class="ratio">' + esc(d.ratioLabel) + '</span>';
 
-    DEVICES.forEach(
-      d => {
+      b.onclick = () => {
+        selectedDeviceId = selectedDeviceId === d.id ? null : d.id;
+        render();
+        update();
+      };
 
-        const b =
-          document.createElement(
-            "button"
-          );
-
-
-        b.type =
-          "button";
-
-
-        b.className =
-          "device-card" +
-
-          (
-            selectedDeviceId === d.id
-              ? " active"
-              : ""
-          );
-
-
-        b.innerHTML =
-
-          '<span class="row">' +
-
-            '<span class="dot"></span>' +
-
-            '<span class="name">' +
-              esc(d.label) +
-            '</span>' +
-
-          '</span>' +
-
-          '<span class="ratio">' +
-            esc(d.ratioLabel) +
-          '</span>';
-
-
-        b.onclick = () => {
-
-          selectedDeviceId =
-            selectedDeviceId === d.id
-              ? null
-              : d.id;
-
-
-          render();
-
-          update();
-
-        };
-
-
-        grid.appendChild(
-          b
-        );
-
-      }
-    );
-
+      grid.appendChild(b);
+    });
   }
 
+  /* アップロード */
+  uploadBtn.onclick = () => { fileInput.click(); };
 
-  /* =========================================================
-     アップロード
-     ========================================================= */
-
-  uploadBtn.onclick = () => {
-
-    fileInput.click();
-
-  };
-
-
-  /* =========================================================
-     画像選択
-     ========================================================= */
-
+  /* 画像選択 */
   fileInput.onchange = e => {
+    const f = e.target.files && e.target.files[0];
+    if(!f) return;
 
-    const f =
-      e.target.files &&
-      e.target.files[0];
-
-
-    if(!f)
+    if(!f.type.startsWith("image/")){
+      alert("画像ファイルを選択してください。");
       return;
-
-
-    if(
-      !f.type.startsWith(
-        "image/"
-      )
-    ){
-
-      alert(
-        "画像ファイルを選択してください。"
-      );
-
-      return;
-
     }
 
-
-    const r =
-      new FileReader();
-
+    const r = new FileReader();
 
     r.onload = () => {
-
-      const img =
-        new Image();
-
+      const img = new Image();
 
       img.onload = () => {
-
-        bgImage =
-          img;
-
-
-        uploadBtn.textContent =
-          "🔄 画像を変更する";
-
-
-        uploadBtn.classList.remove(
-          "pulse"
-        );
-
-
+        bgImage = img;
+        uploadBtn.textContent = "🔄 画像を変更する";
+        uploadBtn.classList.remove("pulse");
         draw();
-
         update();
-
       };
-
 
       img.onerror = () => {
-
-        alert(
-          "画像を読み込めませんでした。"
-        );
-
+        alert("画像を読み込めませんでした。");
       };
 
-
-      img.src =
-        r.result;
-
+      img.src = r.result;
     };
 
-
     r.readAsDataURL(f);
-
   };
 
-
-  /* =========================================================
-     配信UI表示切替
-     ========================================================= */
-
+  /* 配信UI表示切替 */
   toggle.onclick = () => {
-
-    showUiGuide =
-      !showUiGuide;
-
-
+    showUiGuide = !showUiGuide;
     update();
-
   };
 
-
-  /* =========================================================
-     テーマ
-     ========================================================= */
-
-  const KEY =
-    "haishin-preview:theme";
-
+  /* テーマ */
+  const KEY = "haishin-preview:theme";
 
   function apply(t){
-
-    document.documentElement
-      .classList
-      .toggle(
-        "light",
-        t === "light"
-      );
-
-
-    themeBtn.textContent =
-      t === "light"
-        ? "☀️"
-        : "🌙";
-
+    document.documentElement.classList.toggle("light",t === "light");
+    themeBtn.textContent = t === "light" ? "☀️" : "🌙";
   }
 
-
-  apply(
-    localStorage.getItem(KEY) ||
-    "dark"
-  );
-
+  apply(localStorage.getItem(KEY) || "dark");
 
   themeBtn.onclick = () => {
-
-    const cur =
-      document.documentElement
-        .classList
-        .contains("light")
-        ? "light"
-        : "dark";
-
-
-    const next =
-      cur === "light"
-        ? "dark"
-        : "light";
-
-
+    const cur = document.documentElement.classList.contains("light") ? "light" : "dark";
+    const next = cur === "light" ? "dark" : "light";
     apply(next);
-
-
-    localStorage.setItem(
-      KEY,
-      next
-    );
-
+    localStorage.setItem(KEY,next);
   };
 
-
-  /* =========================================================
-     初期化
-     ========================================================= */
-
+  /* 初期化 */
   render();
-
   draw();
-
   update();
 
-
 })();
-
 </script>
 
 </body>
